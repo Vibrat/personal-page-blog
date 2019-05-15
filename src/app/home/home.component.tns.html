@@ -1,5 +1,10 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<ActionBar [title]="title"></ActionBar>
+<Page.actionBar>
+        <ActionBar title="ActionBar Style">
+            <NavigationButton text="Go Back" android.systemIcon="ic_menu_back"></NavigationButton>
+            <ActionItem ios.systemIcon="2" android.systemIcon="ic_menu_edit" ios.position="right"></ActionItem>
+        </ActionBar>
+</Page.actionBar>
 <StackLayout  class="p-20">
     <Label text="Welcome to {{ title }}!" class="h1 text-center" textWrap="true"></Label>
 </StackLayout>
