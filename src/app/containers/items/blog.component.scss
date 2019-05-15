@@ -1,0 +1,16 @@
+.published-date {
+    opacity: 0.67;
+}
+.container {
+    display: flex;
+    justify-content: space-around;
+    line-height: 2.0em;
+    letter-spacing: 0.8px;
+    > .anchors {
+        margin-left: 20px;
+        width: 200px;
+        @media screen and (max-width: 1200px) {
+            display: none;
+        }
+    }
+}

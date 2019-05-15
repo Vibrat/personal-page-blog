@@ -1,12 +1,5 @@
-.custom-grid {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    &::before {
-        content: none;
-    }
-    > item-card {
-        flex: 0 1 300px;
-        margin: 12px;
+nz-sider {
+    @media screen and (max-width: 1000px) {
+        display: none;
     }
 }
