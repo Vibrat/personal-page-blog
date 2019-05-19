@@ -11,7 +11,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 
+import { SharedModule } from "./shared/shared.module";
 import { ContainersModule } from "./containers/containers.module";
+import { AdminCanLoadService } from "./admin-canload.service";
 
 registerLocaleData(en);
 
@@ -28,8 +30,12 @@ registerLocaleData(en);
     HttpClientModule,
     BrowserAnimationsModule,
     ContainersModule,
+    SharedModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US }],
+  providers: [
+    { provide: NZ_I18N, useValue: en_US },
+    AdminCanLoadService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

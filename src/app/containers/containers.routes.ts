@@ -7,7 +7,6 @@ import { ResolverCard } from "./card.resolve.service";
 import { BlogComponent } from "./items/blog.component";
 import { CanActivateBlog } from "./Blog.guard.service";
 
-
 export const routes: Routes = [
     {
         path: 'blog',
@@ -17,7 +16,7 @@ export const routes: Routes = [
                 component: GridCardComponent,
                 canActivate: [CanActivateCard],
                 resolve: {
-                    cards: ResolverCard
+                    cards: ResolverCard,
                 }
             },
             {

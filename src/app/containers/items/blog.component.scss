@@ -14,3 +14,39 @@
         }
     }
 }
+
+.see-more {
+    .related {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        item-card {
+            @media screen and (min-width: 1488px) {
+               &:nth-child(4n) {
+                   padding-right: 0;
+                   padding-left: 24px;
+               }    
+               &:nth-child(4n + 1) {
+                   padding-left: 0;
+                   padding-right: 24px;
+               }
+            }
+            @media screen and (max-width: 1200px) {
+                &:nth-child(4n) {
+                    padding-right: 0;
+                    padding-left: 24px;
+                }    
+                &:nth-child(4n + 1) {
+                    padding-left: 0;
+                    padding-right: 24px;
+                }
+                flex: 0 0 250px;
+             }
+            @media screen and (max-width: 768px) {
+                flex: 1 1 100%;
+            }
+            flex: 0 0 280px;
+            padding: 12px 12px;
+        }
+    }
+}

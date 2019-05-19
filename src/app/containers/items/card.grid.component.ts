@@ -15,10 +15,12 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class GridCardComponent implements OnInit {
     public cards$: Observable<any>;
+    public display$: Observable<any>;
 
     constructor(private route: ActivatedRoute) {}
 
     ngOnInit() {
+        this.display$ = this.route.data.pipe(map(data => data['display']));
         this.cards$ = this.route.data.pipe(map(data => data['cards']));
     }
 } 

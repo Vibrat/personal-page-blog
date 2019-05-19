@@ -1,12 +1,21 @@
 import { Routes } from '@angular/router';
-
-import { BlogComponent} from "./containers/items/blog.component";
-import { HomeComponent } from './home/home.component';
+import { AdminCanLoadService } from "./admin-canload.service";
 
 export const routes: Routes = [
   {
-      path: '',
-      redirectTo: '/blog',
-      pathMatch: 'full',
-  },
+    path: '',
+    children: [
+      {
+        path: '',
+        redirectTo: '/blog',
+        pathMatch: 'full',
+      },
+      { 
+        path: 'admin',
+        loadChildren: './admin/admin.module#AdminModule',
+        canLoad: [AdminCanLoadService]
+      }
+    ]
+  }
+ 
 ];
