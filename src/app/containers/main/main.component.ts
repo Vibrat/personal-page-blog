@@ -9,9 +9,7 @@ import { GridDisplayService } from "../../shared/grid-display.service";
 })
 export class MainComponent implements OnInit {
 
-    public category$: Observable<boolean>;
-
     constructor(public grid: GridDisplayService) {}
 
-    ngOnInit() {  this.category$ = this.grid.getProperty('category'); }
+    ngOnInit() {}
 }

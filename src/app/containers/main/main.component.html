@@ -4,7 +4,7 @@
         <nz-breadcrumb-item>App</nz-breadcrumb-item>
 </nz-breadcrumb>
 <nz-layout style="padding:24px 0; background: #fff">
-<nz-sider [hidden]="!(category$ | async)" [nzWidth]="200" style="background:#fff">
+<nz-sider [hidden]="!(grid.getProperty('category') | async)" [nzWidth]="200" style="background:#fff">
     <ul nz-menu [nzMode]="'inline'" style="height:100%">
     <li nz-submenu>
         <span title><i nz-icon type="user"></i>subnav 1</span>

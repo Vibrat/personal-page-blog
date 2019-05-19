@@ -7,7 +7,7 @@ import { map } from "rxjs/operators";
 })
 export class GridDisplayService  {
     public display$: Observable<object> = of ({
-        category: false
+        category: true
     });
   
     public update(key, value) {
