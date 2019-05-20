@@ -1,46 +1,50 @@
-<div class="operate">
-    <button
-      nz-button
-      [disabled]="numberOfChecked === 0"
-      [nzType]="'primary'"
-      [nzLoading]="isOperating"
-      (click)="operateData()"
-    >
-      Reload
-    </button>
-    <span *ngIf="numberOfChecked">Selected {{ numberOfChecked }} items</span>
-  </div>
-  <nz-table
-    #rowSelectionTable
-    nzShowPagination
-    nzShowSizeChanger
-    [nzData]="listOfAllData"
-    (nzCurrentPageDataChange)="currentPageDataChange($event)"
-  >
+<nz-table #editRowTable nzBordered [nzData]="listOfData">
     <thead>
       <tr>
-        <th
-          nzShowCheckbox
-          [(nzChecked)]="isAllDisplayDataChecked"
-          [nzIndeterminate]="isIndeterminate"
-          (nzCheckedChange)="checkAll($event)"
-        ></th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Address</th>
+        <th nzWidth="25%">Name</th>
+        <th nzWidth="15%">Age</th>
+        <th nzWidth="40%">Address</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of rowSelectionTable.data">
-        <td
-          nzShowCheckbox
-          [(nzChecked)]="mapOfCheckedId[data.id]"
-          [nzDisabled]="data.disabled"
-          (nzCheckedChange)="refreshStatus()"
-        ></td>
-        <td>{{ data.name }}</td>
-        <td>{{ data.age }}</td>
-        <td>{{ data.address }}</td>
+      <tr *ngFor="let data of editRowTable.data">
+        <td>
+          <ng-container *ngIf="!editCache[data.id].edit; else nameInputTpl">
+            {{ data.name }}
+          </ng-container>
+          <ng-template #nameInputTpl>
+            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.name" />
+          </ng-template>
+        </td>
+        <td>
+          <ng-container *ngIf="!editCache[data.id].edit; else ageInputTpl">
+            {{ data.age }}
+          </ng-container>
+          <ng-template #ageInputTpl>
+            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.age" />
+          </ng-template>
+        </td>
+        <td>
+          <ng-container *ngIf="!editCache[data.id].edit; else addressInputTpl">
+            {{ data.address }}
+          </ng-container>
+          <ng-template #addressInputTpl>
+            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.address" />
+          </ng-template>
+        </td>
+        <td>
+          <div class="editable-row-operations">
+            <ng-container *ngIf="!editCache[data.id].edit; else saveTpl">
+              <a (click)="startEdit(data.id)">Edit</a>
+            </ng-container>
+            <admin-dashboard-password></admin-dashboard-password>
+            <ng-template #saveTpl>
+              <a (click)="saveEdit(data.id)">Save</a>
+              <a nz-popconfirm nzTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.id)">Cancel</a>
+            </ng-template>
+          </div>
+        </td>
       </tr>
     </tbody>
   </nz-table>

@@ -14,60 +14,45 @@ export interface Data {
   styleUrls: ["dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-  isAllDisplayDataChecked = false;
-  isOperating = false;
-  isIndeterminate = false;
-  listOfDisplayData: Data[] = [];
-  listOfAllData: Data[] = [];
-  mapOfCheckedId: { [key: string]: boolean } = {};
-  numberOfChecked = 0;
+  editCache: { [key: string]: any } = {};
+  listOfData: any[] = [];
 
-  currentPageDataChange($event: Data[]): void {
-    this.listOfDisplayData = $event;
-    this.refreshStatus();
+  startEdit(id: string): void {
+    this.editCache[id].edit = true;
   }
 
-  refreshStatus(): void {
-    this.isAllDisplayDataChecked = this.listOfDisplayData
-      .filter(item => !item.disabled)
-      .every(item => this.mapOfCheckedId[item.id]);
-    this.isIndeterminate =
-      this.listOfDisplayData
-        .filter(item => !item.disabled)
-        .some(item => this.mapOfCheckedId[item.id]) &&
-      !this.isAllDisplayDataChecked;
-    this.numberOfChecked = this.listOfAllData.filter(
-      item => this.mapOfCheckedId[item.id]
-    ).length;
+  cancelEdit(id: string): void {
+    const index = this.listOfData.findIndex(item => item.id === id);
+    this.editCache[id] = {
+      data: { ...this.listOfData[index] },
+      edit: false
+    };
   }
 
-  checkAll(value: boolean): void {
-    this.listOfDisplayData
-      .filter(item => !item.disabled)
-      .forEach(item => (this.mapOfCheckedId[item.id] = value));
-    this.refreshStatus();
+  saveEdit(id: string): void {
+    const index = this.listOfData.findIndex(item => item.id === id);
+    Object.assign(this.listOfData[index], this.editCache[id].data);
+    this.editCache[id].edit = false;
   }
 
-  operateData(): void {
-    this.isOperating = true;
-    setTimeout(() => {
-      this.listOfAllData.forEach(
-        item => (this.mapOfCheckedId[item.id] = false)
-      );
-      this.refreshStatus();
-      this.isOperating = false;
-    }, 1000);
+  updateEditCache(): void {
+    this.listOfData.forEach(item => {
+      this.editCache[item.id] = {
+        edit: false,
+        data: { ...item }
+      };
+    });
   }
 
   ngOnInit(): void {
     for (let i = 0; i < 100; i++) {
-      this.listOfAllData.push({
-        id: i,
-        name: `Edward King ${i}`,
+      this.listOfData.push({
+        id: `${i}`,
+        name: `Edrward ${i}`,
         age: 32,
-        address: `London, Park Lane no. ${i}`,
-        disabled: i % 2 === 0
+        address: `London Park no. ${i}`
       });
     }
+    this.updateEditCache();
   }
 }
