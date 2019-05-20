@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 
 import { PageLoginComponent } from "./containers/page-login/page-login.component";
 import { PageRegisterComponent } from "./containers/page-register/page-register.component";
+import { PageDashBoardComponent } from "./containers/page-dashboard/page-dashboard.component";
 
 export const routes: Routes = [
     {
@@ -19,6 +20,10 @@ export const routes: Routes = [
             { 
                 path: 'register',
                 component: PageRegisterComponent
+            },
+            {
+                path: 'dashboard',
+                component: PageDashBoardComponent
             }
         ]
     },

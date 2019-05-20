@@ -76,39 +76,13 @@
         >
       </nz-form-control>
     </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="website" nzRequired>Website</nz-form-label>
-      <nz-form-control [nzSm]="14" [nzXs]="24">
-        <input nz-input id="website" formControlName="website" placeholder="website" />
-        <nz-form-explain *ngIf="validateForm.get('website')?.dirty && validateForm.get('website')?.errors"
-          >Please input website!</nz-form-explain
-        >
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="captcha" nzRequired>Captcha</nz-form-label>
-      <nz-form-control [nzSm]="14" [nzXs]="24">
-        <div nz-row [nzGutter]="8">
-          <div nz-col [nzSpan]="12">
-            <input nz-input formControlName="captcha" id="captcha" />
-          </div>
-          <div nz-col [nzSpan]="12">
-            <button nz-button (click)="getCaptcha($event)">Get captcha</button>
-          </div>
-        </div>
-        <nz-form-explain *ngIf="validateForm.get('captcha')?.dirty && validateForm.get('captcha')?.errors"
-          >Please input the captcha you got!</nz-form-explain
-        >
-        <nz-form-extra>We must make sure that your are a human.</nz-form-extra>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item nz-row style="margin-bottom:8px;">
+    <!-- <nz-form-item nz-row style="margin-bottom:8px;">
       <nz-form-control [nzSpan]="14" [nzOffset]="6">
         <label nz-checkbox formControlName="agree">
           <span>I have read the <a>agreement</a></span>
         </label>
       </nz-form-control>
-    </nz-form-item>
+    </nz-form-item> -->
     <nz-form-item nz-row style="margin-bottom:8px;">
       <nz-form-control [nzSpan]="14" [nzOffset]="6">
         <button nz-button nzType="primary">Register</button>
