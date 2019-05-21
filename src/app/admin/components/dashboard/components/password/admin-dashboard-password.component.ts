@@ -26,6 +26,7 @@ export class AdminDashboardPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
+      username: [null],
       password: [null, [Validators.required]],
       passwordConfirm: [null, [Validators.required]]
     });
