@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
   styleUrls: ["admin-dashboard-password.component.scss"]
 })
 export class AdminDashboardPasswordComponent implements OnInit {
+  display: boolean;
   validateForm: FormGroup;
 
   submitForm(): void {
@@ -14,6 +15,10 @@ export class AdminDashboardPasswordComponent implements OnInit {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
+  }
+
+  onClick(): boolean {
+    return this.display = false; 
   }
 
   genderChange(value: string): void {
