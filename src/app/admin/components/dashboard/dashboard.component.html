@@ -36,9 +36,13 @@
         <td>
           <div class="editable-row-operations">
             <ng-container *ngIf="!editCache[data.id].edit; else saveTpl">
-              <a (click)="startEdit(data.id)">Edit</a>
+              <div class="btn-group">
+                <a (click)="startEdit(data.id)">Edit Profile</a>
+              </div>
+              <div class="btn-group">
+                <admin-dashboard-password></admin-dashboard-password>
+              </div>
             </ng-container>
-            <admin-dashboard-password></admin-dashboard-password>
             <ng-template #saveTpl>
               <a (click)="saveEdit(data.id)">Save</a>
               <a nz-popconfirm nzTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.id)">Cancel</a>
