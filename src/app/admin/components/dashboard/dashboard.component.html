@@ -1,7 +1,25 @@
-<nz-table #editRowTable nzBordered [nzData]="listOfData">
+<nz-table #editRowTable [nzData]="listOfDisplayData">
     <thead>
       <tr>
-        <th nzWidth="25%">Name</th>
+        <th nzWidth="25%" nzCustomFilter>
+          Name
+          <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
+              <i
+                nz-icon
+                nzType="search"
+                class="ant-table-filter-icon"
+                [class.ant-table-filter-open]="dropdown.nzVisible"
+                nz-dropdown
+              ></i>
+              <div class="search-box">
+                <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+                <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+                  Search
+                </button>
+                <button nz-button nzSize="small" (click)="reset()">Reset</button>
+              </div>
+            </nz-dropdown>
+        </th>
         <th nzWidth="15%">Age</th>
         <th nzWidth="40%">Address</th>
         <th>Action</th>
