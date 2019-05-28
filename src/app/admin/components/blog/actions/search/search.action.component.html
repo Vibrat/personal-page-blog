@@ -1,0 +1,19 @@
+<ng-template [ngIf]="viewport.onLgScreenObserver() | async" [ngIfElse]="xsScreen">
+    <nz-input-group [nzAddOnAfterIcon]="'search'">
+        <input type="text" nz-input [(ngModel)]="search" />
+    </nz-input-group>
+    </ng-template>
+    <ng-template #xsScreen>
+        <button 
+        nz-popover
+        nz-button
+        nzType="default" 
+        [(nzVisible)]="modalDisplay"
+        [nzContent]="popUp" 
+        nzTrigger="click">
+        <i nz-icon type="search"></i>
+    </button>
+    <ng-template #popUp>
+        Hello world
+    </ng-template>
+</ng-template>

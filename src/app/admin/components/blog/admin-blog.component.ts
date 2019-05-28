@@ -24,7 +24,7 @@ export class AdminBlogComponent implements OnInit {
   style = {
     action: {
       xs: {
-        span: 24,
+        span: 16,
         offset: 0
       },
       lg: {
@@ -34,7 +34,7 @@ export class AdminBlogComponent implements OnInit {
     },
     search: {
       xs: {
-        span: 24,
+        span: 8,
         offset: 0
       },
       lg: {

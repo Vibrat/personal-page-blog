@@ -1,22 +1,9 @@
 <div class="action-bar" nz-row>
-  <div nz-col [nzXs]="style.action.xs" [nzLg]="style.action.lg">Action Líst</div>
+  <div nz-col [nzXs]="style.action.xs" [nzLg]="style.action.lg">
+   <new-blog-action></new-blog-action>
+  </div>
   <div nz-col [nzXs]="style.search.xs" [nzLg]="style.search.lg" style="margin-bottom: 16px;">
-    <ng-template [ngIf]="viewport.onLgScreenObserver() | async" [ngIfElse]="xsScreen">
-      <nz-input-group [nzAddOnAfterIcon]="'search'">
-        <input type="text" nz-input [(ngModel)]="search" />
-      </nz-input-group>
-    </ng-template>
-    <ng-template #xsScreen>
-        <a 
-          nz-popover 
-          [(nzVisible)]="modalDisplay"
-          [nzContent]="popUp" 
-          nzTrigger="click">Search
-        </a>
-      <ng-template #popUp>
-        Hello world
-      </ng-template>
-    </ng-template>
+    <search-action></search-action>
   </div>
 </div>
 
