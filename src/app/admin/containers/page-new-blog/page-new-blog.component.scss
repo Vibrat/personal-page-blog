@@ -2,6 +2,36 @@ button {
   margin-left: 8px;
 }
 
+[nz-form] {
+  display: flex;
+  flex-direction: column;
+  @media screen and (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
+}
+
+nz-form-item {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  nz-form-control  textarea.content {
+    min-height: 400px;
+  }
+  @media screen and (max-width: 1300px) {
+    flex-direction: column;
+    nz-form-label, nz-form-control {
+      width: 100%;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    margin-bottom: 12px;
+  }
+}
+
+nz-form-label {
+  text-align: left;
+}
+
 [nz-col].action > nz-form-item {
   float: right;
 }

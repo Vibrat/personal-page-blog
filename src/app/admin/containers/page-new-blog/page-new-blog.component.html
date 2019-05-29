@@ -9,7 +9,7 @@
       </nz-form-item>
     </div>
   </div>  
-  <div nz-row>
+  <div nz-row [nzGutter]="'24'">
     <div nz-col [nzXs]="{ span: 24, offset: 0}" [nzLg]="{ span: 8, offset: 0 }">
     <nz-form-item>
       <nz-form-label [nzSpan]="7" nzRequired>Title</nz-form-label>
@@ -48,7 +48,6 @@
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="7" nzRequired>Password</nz-form-label>
-      <div>
         <nz-form-control [nzSpan]="12" nzHasFeedback>
           <input nz-input type="password" formControlName="password" (ngModelChange)="validateConfirmPassword()" />
           <nz-form-explain
@@ -56,7 +55,6 @@
             >Please input your password!</nz-form-explain
           >
         </nz-form-control>
-      </div>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="7" nzRequired>Confirm Password</nz-form-label>
@@ -72,17 +70,17 @@
         </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>Comment</nz-form-label>
-      <nz-form-control [nzSpan]="12">
-        <textarea formControlName="comment" nz-input rows="2" placeholder="write any thing"></textarea>
-        <nz-form-explain
-          *ngIf="validateForm.get('comment')?.dirty && validateForm.get('comment')?.hasError('required')"
-          >Please write something here!</nz-form-explain
-        >
-      </nz-form-control>
-    </nz-form-item>
     </div>
-    <div nz-col [nzXs]="{ span: 24, offset: 0 }" [nzLg]="{ span: 16, offset: 0 }">Col 2</div>
+    <div nz-col [nzXs]="{ span: 24, offset: 0 }" [nzLg]="{ span: 16, offset: 0 }">
+      <nz-form-item>
+        <nz-form-control [nzSpan]="24">
+          <nz-form-label [nzSpan]="24" nzRequired>Description</nz-form-label>
+          <textarea class="content" formControlName="comment" nz-input rows="2" placeholder="write any thing"></textarea>
+          <nz-form-explain *ngIf="validateForm.get('comment')?.dirty && validateForm.get('comment')?.hasError('required')">
+            Please write something here!
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
   </div>
 </form>
