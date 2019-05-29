@@ -14,6 +14,7 @@ import en from '@angular/common/locales/en';
 import { SharedModule } from "./shared/shared.module";
 import { ContainersModule } from "./containers/containers.module";
 import { AdminCanLoadService } from "./admin-canload.service";
+import { EngineModule as EventEffectModule } from "@open-e/oe-coordinator";
 
 registerLocaleData(en);
 
@@ -30,12 +31,14 @@ registerLocaleData(en);
     HttpClientModule,
     BrowserAnimationsModule,
     ContainersModule,
-    SharedModule
+    SharedModule,
+    EventEffectModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
     AdminCanLoadService
   ],
+  exports: [EventEffectModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

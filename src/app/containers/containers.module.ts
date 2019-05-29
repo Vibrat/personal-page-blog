@@ -11,15 +11,17 @@ import { routes } from "./containers.routes";
 import { CanActivateBlog } from "./Blog.guard.service";
 import { CanActivateCard } from "./card.guard.service";
 import { ResolverCard } from "./card.resolve.service";
+import { EngineModule as EventEffectModule } from "@open-e/oe-coordinator";
 
 @NgModule({
     imports: [
         RouterModule.forChild(routes),
         NgZorroAntdModule,
-        CommonModule
+        CommonModule,
+        EventEffectModule
     ],
     providers: [CanActivateBlog, CanActivateCard, ResolverCard],
     declarations: [HeaderComponent, MainComponent, FooterComponent, ...Items],
-    exports: [HeaderComponent, MainComponent, FooterComponent, ...Items]
+    exports: [HeaderComponent, MainComponent, FooterComponent, ...Items, EventEffectModule]
 })
 export class ContainersModule {} 

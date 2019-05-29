@@ -9,8 +9,16 @@
 nz-header {
    display: flex;
    justify-content: space-between;
+   @media screen and (max-width: 768px) {
+    display: block;
+    justify-content: unset;
+    padding: 0 16px;
+   }
    ul {
-     float: right;
-     flex: 0 1 auto;
+    float: right;
+    flex: 0 1 auto;
+    @media screen and (max-width: 768px) {
+      float: none;
+    }
    }
 }
