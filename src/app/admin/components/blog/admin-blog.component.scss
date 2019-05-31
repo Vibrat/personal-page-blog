@@ -21,3 +21,9 @@
 search-action {
   float: right;
 }
+
+nz-skeleton {
+  @media screen and (max-width: 576px) {
+    margin-bottom: 12px;
+  }
+}
