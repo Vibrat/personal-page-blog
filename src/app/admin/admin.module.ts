@@ -10,6 +10,7 @@ import { DumpComponents } from "./components";
 import { Pages } from "./containers";
 import { PageLoginComponent } from "./containers/page-login/page-login.component";
 import { GridDisplayService } from "../shared/grid-display.service";
+import { AuthService } from "./services";
 
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
@@ -27,11 +28,13 @@ registerLocaleData(en);
     declarations: [DumpComponents, Pages],
     bootstrap: [PageLoginComponent],
     providers: [
-        { provide: NZ_I18N, useValue: en_US }
+        { provide: NZ_I18N, useValue: en_US },
+        AuthService
     ],
 })
 export class AdminModule {
-    constructor(public grid: GridDisplayService) {
+    constructor(public grid: GridDisplayService, public auth: AuthService) {
         this.grid.display$.subscribe(data => console.log(data));
+        this.auth.login('root', 'TheDreamer').subscribe();
     }
 }
