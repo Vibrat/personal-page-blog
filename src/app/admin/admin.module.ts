@@ -12,6 +12,8 @@ import { PageLoginComponent } from "./containers/page-login/page-login.component
 import { GridDisplayService } from "../shared/grid-display.service";
 import { AuthService } from "./services";
 
+import { AdminCanLoadService } from "./admin-canload.service";
+
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 
@@ -29,12 +31,12 @@ registerLocaleData(en);
     bootstrap: [PageLoginComponent],
     providers: [
         { provide: NZ_I18N, useValue: en_US },
-        AuthService
+        AuthService,
+        AdminCanLoadService
     ],
 })
 export class AdminModule {
     constructor(public grid: GridDisplayService, public auth: AuthService) {
         this.grid.display$.subscribe(data => console.log(data));
-        this.auth.login('root', 'TheDreamer').subscribe();
     }
 }
