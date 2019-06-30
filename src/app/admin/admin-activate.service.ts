@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 
 @Injectable()
-export class AdminCanLoadService implements CanActivate {
+export class AdminActivateService implements CanActivate {
   constructor(private _auth: AuthService, private _router: Router) {}
 
   canActivate(
@@ -19,7 +19,7 @@ export class AdminCanLoadService implements CanActivate {
     return this._auth.checkToken().pipe(tap(is_logged =>  {
       if (!is_logged) {
         this._router.navigate(['admin', 'login']);
-      }
+      }  
     }));
   }
 }

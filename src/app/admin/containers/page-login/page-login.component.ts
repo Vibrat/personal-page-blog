@@ -2,6 +2,8 @@ import { Component } from "@angular/core";
 import { Credentials } from "../../components/authentication/login/login.component";
 import { AuthService, AuthResponse } from "../../services/auth.service";
 import { Router } from "@angular/router";
+import { Observable, of } from "rxjs";
+import { tap, switchMap, filter } from "rxjs/operators";
 
 @Component({
   selector: `page-login`,
@@ -9,15 +11,23 @@ import { Router } from "@angular/router";
   styleUrls: ["page-login.component.scss"]
 })
 export class PageLoginComponent {
-  constructor(protected _auth: AuthService, private _router: Router) {}
+  public successLogin$: Observable<boolean> = of(true);
+  constructor(
+    protected _auth: AuthService, 
+    private router: Router) {
+  }
 
+  // login
   login(credentials: Credentials) {
     this._auth
       .login(credentials.username, credentials.password)
-      .subscribe((response: AuthResponse) => {
-        if (response.success) {
-          this._router.navigate(["admin", "dashboard"]);
-        }
+      .pipe(
+        switchMap((response: AuthResponse) => of(response.success)),
+        tap(success => (this.successLogin$ = of(success))),
+        filter(success => success)
+      )
+      .subscribe(_ => {
+        this.router.navigate(["admin", "dashboard"]);
       });
   }
 }

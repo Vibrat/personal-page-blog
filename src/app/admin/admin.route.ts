@@ -6,16 +6,18 @@ import { PageDashBoardComponent } from "./containers/page-dashboard/page-dashboa
 import { PageBlogComponent } from "./containers/page-blog/page-blog.component";
 import { PageNewBlogComponent } from "./containers/page-new-blog/page-new-blog.component";
  
-import { AdminCanLoadService } from "./admin-canload.service";
+import { AdminActivateService } from "./admin-activate.service";
+import { AdminLoginActivateService } from "./admin-login-activate.service";
 
 export const routes: Routes = [
     { 
         path: 'login',
-        component: PageLoginComponent
+        component: PageLoginComponent,
+        canActivate: [AdminLoginActivateService]
     },
     {
         path: '',
-        canActivate: [ AdminCanLoadService ],
+        canActivate: [ AdminActivateService ],
         children: [
             { 
                 path: 'register',

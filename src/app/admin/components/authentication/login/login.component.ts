@@ -1,5 +1,6 @@
-import { Component, Output, EventEmitter } from "@angular/core";
+import { Component, Output, EventEmitter, Input } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable, of } from "rxjs";
 
 export interface Credentials {
     username: string;
@@ -15,6 +16,7 @@ export interface Credentials {
 export class LoginComponent {
     validateForm: FormGroup;
     @Output() credentials: EventEmitter<Credentials> = new EventEmitter();
+    @Input()  success$: Observable<boolean> = of(true);
 
     submitForm(): void {
         for (const i in this.validateForm.controls) {

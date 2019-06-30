@@ -12,7 +12,8 @@ import { PageLoginComponent } from "./containers/page-login/page-login.component
 import { GridDisplayService } from "../shared/grid-display.service";
 import { AuthService } from "./services";
 
-import { AdminCanLoadService } from "./admin-canload.service";
+import { AdminActivateService } from "./admin-activate.service";
+import { AdminLoginActivateService } from "./admin-login-activate.service";
 
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
@@ -32,7 +33,8 @@ registerLocaleData(en);
     providers: [
         { provide: NZ_I18N, useValue: en_US },
         AuthService,
-        AdminCanLoadService
+        AdminActivateService,
+        AdminLoginActivateService
     ],
 })
 export class AdminModule {

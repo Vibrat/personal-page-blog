@@ -4,9 +4,10 @@
         <nz-input-group [nzPrefix]="prefixUser">
           <input type="text" nz-input formControlName="username" placeholder="Username" />
         </nz-input-group>
-        <nz-form-explain *ngIf="validateForm.get('username')?.dirty && validateForm.get('username')?.errors"
-          >Please input your username!</nz-form-explain
-        >
+        <nz-form-explain 
+          *ngIf="validateForm.get('username')?.dirty && validateForm.get('username')?.errors">
+          Please input your username!
+        </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
@@ -14,9 +15,17 @@
         <nz-input-group [nzPrefix]="prefixLock">
           <input type="password" nz-input formControlName="password" placeholder="Password" />
         </nz-input-group>
-        <nz-form-explain *ngIf="validateForm.get('password')?.dirty && validateForm.get('password')?.errors"
-          >Please input your Password!</nz-form-explain
-        >
+        <nz-form-explain 
+          *ngIf="validateForm.get('password')?.dirty && validateForm.get('password')?.errors">
+          Please input your Password!
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="!(success$ | async)">
+      <nz-form-control nzValidateStatus="error">
+        <nz-form-explain>
+          Username or password is not correct!
+        </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
@@ -24,10 +33,8 @@
         <label nz-checkbox formControlName="remember">
           <span>Remember me</span>
         </label>
-        <a class="login-form-forgot" class="login-form-forgot">Forgot password</a>
+        <a hidden="true" class="login-form-forgot" class="login-form-forgot">Forgot password</a>
         <button nz-button class="login-form-button" [nzType]="'primary'">Log in</button>
-        Or
-        <a href="">register now!</a>
       </nz-form-control>
     </nz-form-item>
   </form>

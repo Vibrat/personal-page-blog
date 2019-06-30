@@ -1,7 +1,5 @@
-<nz-breadcrumb style="margin:16px 0;">
-        <nz-breadcrumb-item>Home</nz-breadcrumb-item>
-        <nz-breadcrumb-item>List</nz-breadcrumb-item>
-        <nz-breadcrumb-item>App</nz-breadcrumb-item>
+<nz-breadcrumb *ngIf="breadscrumb" style="margin:16px 0;">
+        <nz-breadcrumb-item *ngFor="let item of breadscrumb">{{ item }}</nz-breadcrumb-item>
 </nz-breadcrumb>
 <nz-layout style="padding:24px 0; background: #fff">
 <nz-sider [hidden]="!(grid.getProperty('category') | async)" [nzWidth]="200" style="background:#fff">
