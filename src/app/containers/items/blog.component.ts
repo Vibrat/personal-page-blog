@@ -9,6 +9,10 @@ import * as marked from 'marked';
     styleUrls: ['blog.component.scss']
 })
 export class BlogComponent implements OnInit {
+    card = {
+        title: 'blog title',
+        description: 'descriptions'
+    };
     content: SafeHtml;
     constructor(private router: ActivatedRoute, private sanitizer: DomSanitizer) {}
 

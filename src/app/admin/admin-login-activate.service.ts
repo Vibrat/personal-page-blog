@@ -9,9 +9,6 @@ export class AdminLoginActivateService implements CanActivate {
   constructor(private _auth: AuthService, protected router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-      console.log ("ActivatedRouteSnapshot", route);
-      console.log ("RouterStateSnapshot", state);
-
       return this.preCheckToken();
   }
 

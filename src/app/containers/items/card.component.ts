@@ -10,9 +10,9 @@ import { Component, Input } from "@angular/core";
         ></nz-card-meta>
     </nz-card>
     <ng-template #coverTemplate>
-        <img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
+        <img alt="example" src="assets/image/blog.png" />
     </ng-template>`,
 })
 export class CardComponent {
     @Input() public card: any;
-}
+}   
