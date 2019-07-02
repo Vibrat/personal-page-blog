@@ -23,9 +23,7 @@ export class DashboardComponent implements OnInit {
   listOfData: any[] = [];
   listOfDisplayData = [...this.listOfData];
 
-  constructor(private _router: ActivatedRoute) {
-    this._router.data.subscribe(data => console.log(data));
-  }
+  constructor(private _router: ActivatedRoute) {}
 
   startEdit(id: string): void {
     this.editCache[id].edit = true; 
@@ -79,7 +77,8 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    console.log ('data', this.getDataState());
     for (let i = 0; i < 100; i++) {
       this.listOfData.push({
         id: `${i}`,
@@ -90,5 +89,12 @@ export class DashboardComponent implements OnInit {
     }
     this.listOfDisplayData = [...this.listOfData];
     this.updateEditCache();
+  }
+
+  async getDataState() {    
+    await this._router.data.subscribe(data => {
+      console.log(data);
+    });
+    return true;
   }
 }
