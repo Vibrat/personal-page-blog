@@ -9,6 +9,8 @@ import { PageNewBlogComponent } from "./containers/page-new-blog/page-new-blog.c
 import { AdminActivateService } from "./admin-activate.service";
 import { AdminLoginActivateService } from "./admin-login-activate.service";
 
+import { DashboardResolverService } from "./data/dasboard.resolver";
+
 export const routes: Routes = [
     { 
         path: 'login',
@@ -25,7 +27,10 @@ export const routes: Routes = [
             },
             {
                 path: 'dashboard',
-                component: PageDashBoardComponent
+                component: PageDashBoardComponent,
+                resolve: {
+                    dashboard: DashboardResolverService
+                }
             },
             {
                 path: 'blog',

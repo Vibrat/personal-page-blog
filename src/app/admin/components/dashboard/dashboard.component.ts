@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 
 export interface Data {
   id: number;
@@ -22,8 +23,12 @@ export class DashboardComponent implements OnInit {
   listOfData: any[] = [];
   listOfDisplayData = [...this.listOfData];
 
+  constructor(private _router: ActivatedRoute) {
+    this._router.data.subscribe(data => console.log(data));
+  }
+
   startEdit(id: string): void {
-    this.editCache[id].edit = true;
+    this.editCache[id].edit = true; 
   }
 
   cancelEdit(id: string): void {
@@ -78,9 +83,9 @@ export class DashboardComponent implements OnInit {
     for (let i = 0; i < 100; i++) {
       this.listOfData.push({
         id: `${i}`,
-        name: `Edrward ${i}`,
-        age: 32,
-        address: `London Park no. ${i}`
+        username: `Edrward ${i}`,
+        email: `London Park no. ${i}`,
+        group: 'Admin'
       });
     }
     this.listOfDisplayData = [...this.listOfData];

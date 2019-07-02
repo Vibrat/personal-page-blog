@@ -2,7 +2,7 @@
     <thead>
       <tr>
         <th nzWidth="25%" nzCustomFilter>
-          Name
+          Username
           <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
               <i
                 nz-icon
@@ -20,8 +20,8 @@
               </div>
             </nz-dropdown>
         </th>
-        <th nzWidth="15%">Age</th>
-        <th nzWidth="40%">Address</th>
+        <th nzWidth="40%">Email</th>
+        <th>Group</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -29,23 +29,23 @@
       <tr *ngFor="let data of editRowTable.data">
         <td>
           <ng-container *ngIf="!editCache[data.id].edit; else nameInputTpl">
-            {{ data.name }}
+            {{ data.username }}
           </ng-container>
           <ng-template #nameInputTpl>
             <input type="text" nz-input [(ngModel)]="editCache[data.id].data.name" />
           </ng-template>
         </td>
         <td>
-          <ng-container *ngIf="!editCache[data.id].edit; else ageInputTpl">
-            {{ data.age }}
+          <ng-container *ngIf="!editCache[data.id].edit; else addressInputTpl">
+            {{ data.email }}
           </ng-container>
-          <ng-template #ageInputTpl>
-            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.age" />
+          <ng-template #addressInputTpl>
+            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.address" />
           </ng-template>
         </td>
         <td>
           <ng-container *ngIf="!editCache[data.id].edit; else addressInputTpl">
-            {{ data.address }}
+            {{ data.group }}
           </ng-container>
           <ng-template #addressInputTpl>
             <input type="text" nz-input [(ngModel)]="editCache[data.id].data.address" />

@@ -15,6 +15,8 @@ import { AuthService } from "./services";
 import { AdminActivateService } from "./admin-activate.service";
 import { AdminLoginActivateService } from "./admin-login-activate.service";
 
+import { DashboardResolverService } from "./data/dasboard.resolver";
+
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 
@@ -34,7 +36,8 @@ registerLocaleData(en);
         { provide: NZ_I18N, useValue: en_US },
         AuthService,
         AdminActivateService,
-        AdminLoginActivateService
+        AdminLoginActivateService,
+        DashboardResolverService
     ],
 })
 export class AdminModule {
