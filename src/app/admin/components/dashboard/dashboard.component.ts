@@ -1,6 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
+import { take, filter } from "rxjs/operators";
+import {
+  AccountService,
+  AccountsResponse
+} from "../../services/account.service";
+
 export interface Data {
   id: number;
   name: string;
@@ -15,18 +21,37 @@ export interface Data {
   styleUrls: ["dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-  searchValue = '';
+  searchValue = "";
   sortName: string | null = null;
   sortValue: string | null = null;
   listOfSearchAddress: string[] = [];
-  editCache: { [key: string]: any } = {};
-  listOfData: any[] = [];
-  listOfDisplayData = [...this.listOfData];
+  editCache: { [key: string]: any } = {}; // cache data
+  listOfData: any[] = []; // Payload represents data in server
+  listOfDisplayData = [...this.listOfData]; // data being displayed
 
-  constructor(private _router: ActivatedRoute) {}
+  constructor(
+    private _router: ActivatedRoute,
+    private _account: AccountService
+  ) {}
 
   startEdit(id: string): void {
-    this.editCache[id].edit = true; 
+    this.editCache[id].edit = true;
+  }
+
+  deleteAccount(id: string) {
+    this._account
+      .deleteAccount(this.editCache[id].data.username)
+      .pipe(
+        filter((response: AccountsResponse) => response["success"]),
+        take(1)
+      )
+      .subscribe(response => {
+        const index = this.listOfData.findIndex(item => item.id === id);
+        delete this.editCache[id];
+        this.listOfDisplayData = this.listOfDisplayData.filter(
+          (item, id) => id != index
+        );
+      });
   }
 
   cancelEdit(id: string): void {
@@ -53,21 +78,29 @@ export class DashboardComponent implements OnInit {
   }
 
   reset(): void {
-    this.searchValue = '';
+    this.searchValue = "";
     this.search();
   }
 
   search(): void {
-    const filterFunc = (item: { name: string; age: number; address: string }) => {
+    const filterFunc = (item: {
+      name: string;
+      age: number;
+      address: string;
+    }) => {
       return (
         (this.listOfSearchAddress.length
-          ? this.listOfSearchAddress.some(address => item.address.indexOf(address) !== -1)
+          ? this.listOfSearchAddress.some(
+              address => item.address.indexOf(address) !== -1
+            )
           : true) && item.name.indexOf(this.searchValue) !== -1
       );
     };
-    const data = this.listOfData.filter((item: { name: string; age: number; address: string }) => filterFunc(item));
+    const data = this.listOfData.filter(
+      (item: { name: string; age: number; address: string }) => filterFunc(item)
+    );
     this.listOfDisplayData = data.sort((a, b) =>
-      this.sortValue === 'ascend'
+      this.sortValue === "ascend"
         ? a[this.sortName!] > b[this.sortName!]
           ? 1
           : -1
@@ -77,24 +110,16 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  ngOnInit() {
-    console.log ('data', this.getDataState());
-    for (let i = 0; i < 100; i++) {
-      this.listOfData.push({
-        id: `${i}`,
-        username: `Edrward ${i}`,
-        email: `London Park no. ${i}`,
-        group: 'Admin'
-      });
+  async ngOnInit() {
+    const response = await this.getDataState().then();
+    if (response.dashboard.success) {
+      this.listOfData = response.dashboard.data;
+      this.listOfDisplayData = [...this.listOfData];
+      this.updateEditCache();
     }
-    this.listOfDisplayData = [...this.listOfData];
-    this.updateEditCache();
   }
 
-  async getDataState() {    
-    await this._router.data.subscribe(data => {
-      console.log(data);
-    });
-    return true;
+  async getDataState() {
+    return await this._router.data.pipe(take(1)).toPromise();
   }
 }

@@ -10,7 +10,8 @@ import { DumpComponents } from "./components";
 import { Pages } from "./containers";
 import { PageLoginComponent } from "./containers/page-login/page-login.component";
 import { GridDisplayService } from "../shared/grid-display.service";
-import { AuthService } from "./services";
+
+import { AuthService, AccountService } from "./services";
 
 import { AdminActivateService } from "./admin-activate.service";
 import { AdminLoginActivateService } from "./admin-login-activate.service";
@@ -35,6 +36,7 @@ registerLocaleData(en);
     providers: [
         { provide: NZ_I18N, useValue: en_US },
         AuthService,
+        AccountService,
         AdminActivateService,
         AdminLoginActivateService,
         DashboardResolverService
