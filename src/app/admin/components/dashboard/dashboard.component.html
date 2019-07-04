@@ -1,8 +1,9 @@
-<nz-table #editRowTable [nzData]="listOfDisplayData">
+<admin-dashboard-new-account></admin-dashboard-new-account>
+<nz-table #editRowTable nzBordered [nzData]="listOfDisplayData">
     <thead>
       <tr>
         <th nzWidth="25%" nzCustomFilter>
-          Username
+          Id
           <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
               <i
                 nz-icon
@@ -20,7 +21,7 @@
               </div>
             </nz-dropdown>
         </th>
-        <th nzWidth="40%">Email</th>
+        <th nzWidth="40%">Username</th>
         <th>Group</th>
         <th>Action</th>
       </tr>

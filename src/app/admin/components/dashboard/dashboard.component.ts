@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit {
         filter((response: AccountsResponse) => response["success"]),
         take(1)
       )
-      .subscribe(response => {
+      .subscribe(_ => {
         const index = this.listOfData.findIndex(item => item.id === id);
         delete this.editCache[id];
         this.listOfDisplayData = this.listOfDisplayData.filter(
@@ -109,6 +109,8 @@ export class DashboardComponent implements OnInit {
         : -1
     );
   }
+
+  addAccount() {}
 
   async ngOnInit() {
     const response = await this.getDataState().then();

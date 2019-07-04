@@ -13,6 +13,11 @@ export interface AccountDeleteResponse {
   message: string;
 }
 
+export interface AccountExistResponse {
+  success: boolean;
+  message?: string;
+}
+
 @Injectable()
 export class AccountService {
   data: Observable<AccountsResponse>;
@@ -31,5 +36,10 @@ export class AccountService {
     return <Observable<AccountDeleteResponse>>(
       this._http.delete(apiDeleteAccount)
     );
+  }
+
+  public checkAccount(username: string): Observable<AccountExistResponse> {
+    const apiCheckAccount = `${domain}api=account/basic-auth/is-account-exist&username=${username}&token=${this._auth.getToken()}`;
+    return <Observable<AccountExistResponse>>this._http.get(apiCheckAccount);
   }
 }

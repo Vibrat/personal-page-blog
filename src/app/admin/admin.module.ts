@@ -31,7 +31,7 @@ registerLocaleData(en);
         RouterModule.forChild(routes),
         NgZorroAntdModule
     ],
-    declarations: [DumpComponents, Pages],
+    declarations: [...DumpComponents, Pages],
     bootstrap: [PageLoginComponent],
     providers: [
         { provide: NZ_I18N, useValue: en_US },
