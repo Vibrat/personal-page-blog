@@ -11,15 +11,16 @@ import {
   AccountService,
   AccountExistResponse
 } from "../../../../services/account.service";
-import { Observable, of } from "rxjs";
+import { Observable, of, timer } from "rxjs";
 import {
   distinctUntilChanged,
-  switchMap,
   flatMap,
-  debounceTime,
-  bufferTime,
+  takeLast,
+  delay,
   map
 } from "rxjs/operators";
+
+import { userDelayDetection } from "../../../../config";
 
 export function validateUsername(account: AccountService): AsyncValidatorFn {
   return (
@@ -28,11 +29,11 @@ export function validateUsername(account: AccountService): AsyncValidatorFn {
     return <
       Promise<ValidationErrors | null> | Observable<ValidationErrors | null>
     >of(control.value).pipe(
-      debounceTime(2000),
+      delay(userDelayDetection),
+      takeLast(1),
       distinctUntilChanged(),
       flatMap((input: string) => account.checkAccount(input)),
       map((response: AccountExistResponse) => {
-        console.log(response);
         return response["success"] ? { account: true } : null;
       })
     );
