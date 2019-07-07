@@ -1,44 +1,8 @@
 import { Component } from "@angular/core";
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  AbstractControl,
-  AsyncValidatorFn,
-  ValidationErrors
-} from "@angular/forms";
-import {
-  AccountService,
-  AccountExistResponse
-} from "../../../../services/account.service";
-import { Observable, of, timer } from "rxjs";
-import {
-  distinctUntilChanged,
-  flatMap,
-  takeLast,
-  delay,
-  map
-} from "rxjs/operators";
-
-import { userDelayDetection } from "../../../../config";
-
-export function validateUsername(account: AccountService): AsyncValidatorFn {
-  return (
-    control: AbstractControl
-  ): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-    return <
-      Promise<ValidationErrors | null> | Observable<ValidationErrors | null>
-    >of(control.value).pipe(
-      delay(userDelayDetection),
-      takeLast(1),
-      distinctUntilChanged(),
-      flatMap((input: string) => account.checkAccount(input)),
-      map((response: AccountExistResponse) => {
-        return response["success"] ? { account: true } : null;
-      })
-    );
-  };
-}
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { of } from "rxjs";
+import { AccountService } from "../../../../services/account.service";
+import { validateUsername, validatePasswordConfirm } from "./validation";
 
 @Component({
   selector: "admin-dashboard-new-account",
@@ -56,6 +20,7 @@ export class NewAccountComponent {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
+    console.log(this.validateForm.value);
   }
 
   onClick(): boolean {
@@ -78,5 +43,10 @@ export class NewAccountComponent {
       password: [null, [Validators.required]],
       passwordConfirm: [null, [Validators.required]]
     });
+    this.validateForm
+      .get("passwordConfirm")
+      .setAsyncValidators(
+        validatePasswordConfirm(of(this.validateForm.get('password')))
+      );
   }
 }
