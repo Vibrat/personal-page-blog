@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Output, EventEmitter, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { of } from "rxjs";
 import { AccountService } from "../../../../services/account.service";
@@ -10,27 +10,25 @@ import { validateUsername, validatePasswordConfirm } from "./validation";
   styleUrls: ["new-account.component.scss"]
 })
 export class NewAccountComponent {
-  display: boolean;
+  
   validateForm: FormGroup;
+  @Input() display: boolean; // display checker for form
+  @Output() onSubmit: EventEmitter<any> = new EventEmitter(); 
 
   constructor(private fb: FormBuilder, private _account: AccountService) {}
 
   submitForm(): void {
-    for (const i in this.validateForm.controls) {
-      this.validateForm.controls[i].markAsDirty();
-      this.validateForm.controls[i].updateValueAndValidity();
+    if (this.validateForm.valid) {
+      const emittedData = {
+        username: this.validateForm.value['username'],
+        password: this.validateForm.value['password']
+      }
+      this.onSubmit.emit(emittedData);
     }
-    console.log(this.validateForm.value);
   }
-
+  
   onClick(): boolean {
     return (this.display = false);
-  }
-
-  genderChange(value: string): void {
-    this.validateForm
-      .get("note")!
-      .setValue(value === "male" ? "Hi, man!" : "Hi, lady!");
   }
 
   ngOnInit(): void {

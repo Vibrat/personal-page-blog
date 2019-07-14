@@ -7,6 +7,16 @@ import { AppConfig } from "~/app/app-config.service";
 
 export interface AccountsResponse {}
 
+export interface NewAccount {
+  username: string;
+  password: string;
+}
+
+export interface NewAccountResponse {
+  success: boolean;
+  token: string;
+}
+
 export interface AccountDeleteResponse {
   success: boolean;
   message: string;
@@ -30,6 +40,16 @@ export class AccountService {
     return (this.data = <Observable<AccountsResponse>>(
       this._http.get(apiListAccounts)
     ));
+  }
+
+  public newAccount(accountInfo: NewAccount): Observable<NewAccountResponse> {
+    const apiNewAccount = `${AppConfig.get(
+      "domain"
+    )}api=account/basic-auth/new&token=${this._auth.getToken()}`;
+    let data = new FormData();
+    data.append('username', accountInfo.username);
+    data.append('password', accountInfo.password);
+    return <Observable<NewAccountResponse>>this._http.post(apiNewAccount, data);
   }
 
   public deleteAccount(username: string): Observable<AccountDeleteResponse> {

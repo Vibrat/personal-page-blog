@@ -1,58 +1,106 @@
 <div nzRow class="btn-group">
-    <button nz-button 
-            nzTrigger="click"
-            nzType="primary" 
-            nz-popover 
-            [(nzVisible)]="display"
-            [nzContent]="contentTemplate">New Account</button>
-  </div>
+  <button
+    nz-button
+    nzTrigger="click"
+    nzType="primary"
+    nz-popover
+    [(nzVisible)]="display"
+    [nzContent]="contentTemplate"
+  >
+    New Account
+  </button>
+</div>
 <ng-template #contentTemplate>
-        <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-            <nz-form-item>
-              <div class="panel">
-                <span class="panel-icon">
-                  <i nz-icon nzType="user" nzTheme="outline"></i>
-                </span> 
-                <span class="panel-text">
-                  Account Info
-                </span>
-              </div>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-control>
-                    <input formControlName="username" nz-input type="text" placeholder="Username" autocomplete="username" />
-                    <nz-form-explain *ngIf="validateForm.get('username')?.dirty && validateForm.get('username')?.errors">
-                      Username already exists
-                    </nz-form-explain>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-control>
-                  <nz-input-group [nzPrefix]="prefixLock">
-                    <input formControlName="password" nz-input type="password" placeholder="Password" autocomplete="new-password" />
-                  </nz-input-group>
-                  <nz-form-explain *ngIf="validateForm.get('password')?.dirty && validateForm.get('password')?.errors">
-                    Please input your Password!</nz-form-explain>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                  <nz-form-control>
-                    <nz-input-group [nzPrefix]="prefixLock">
-                      <input formControlName="passwordConfirm" nz-input type="password" placeholder="Confirm password" autocomplete="new-password" />
-                    </nz-input-group>
-                    <nz-form-explain *ngIf="validateForm.get('password')?.dirty && validateForm.get('password')?.errors">Please input your Password!</nz-form-explain>
-                  </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                  <div nz-row [nzGutter]="'16'">
-                      <div nz-col nzSpan="12">
-                          <button nz-button nzBlock nzType="primary">Submit</button>    
-                      </div>
-                      <div nz-col nzSpan="12">
-                          <button nz-button nzBlock nzType="default" (click)="onClick($event)">Cancel</button>
-                      </div>
-                  </div>
-              </nz-form-item>
-        </form>
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item>
+      <div class="panel">
+        <span class="panel-icon">
+          <i nz-icon nzType="user" nzTheme="outline"></i>
+        </span>
+        <span class="panel-text">
+          Account Info
+        </span>
+      </div>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <input
+          formControlName="username"
+          nz-input
+          type="text"
+          placeholder="Username"
+          autocomplete="username"
+        />
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('username')?.dirty &&
+            validateForm.get('username')?.errors
+          "
+        >
+          Username already exists
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-input-group [nzPrefix]="prefixLock">
+          <input
+            formControlName="password"
+            nz-input
+            type="password"
+            placeholder="Password"
+            autocomplete="new-password"
+          />
+        </nz-input-group>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('password')?.dirty &&
+            validateForm.get('password')?.errors
+          "
+        >
+          Please input your Password!</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-input-group [nzPrefix]="prefixLock">
+          <input
+            formControlName="passwordConfirm"
+            nz-input
+            type="password"
+            placeholder="Confirm password"
+            autocomplete="new-password"
+          />
+        </nz-input-group>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('passwordConfirm')?.dirty &&
+            validateForm.get('passwordConfirm')?.errors
+          "
+          >Your password confirm is not correct!</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <div nz-row [nzGutter]="'16'">
+        <div nz-col nzSpan="12">
+          <button
+            [disabled]="!validateForm.valid"
+            nz-button
+            nzBlock
+            nzType="primary"
+          >
+            Submit
+          </button>
+        </div>
+        <div nz-col nzSpan="12">
+          <button nz-button nzBlock nzType="default" (click)="onClick($event)">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </nz-form-item>
+  </form>
 </ng-template>
 <ng-template #prefixLock><i nz-icon type="lock"></i></ng-template>

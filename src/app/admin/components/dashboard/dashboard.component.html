@@ -1,74 +1,113 @@
-<admin-dashboard-new-account></admin-dashboard-new-account>
+<admin-dashboard-new-account (onSubmit)="newAccount($event)" [display]="newAccountDisplay"></admin-dashboard-new-account>
 <nz-table #editRowTable nzBordered [nzData]="listOfDisplayData">
-    <thead>
-      <tr>
-        <th nzWidth="25%" nzCustomFilter>
-          Id
-          <nz-dropdown nzTrigger="click" nzPlacement="bottomRight" [nzClickHide]="false" nzTableFilter #dropdown>
-              <i
-                nz-icon
-                nzType="search"
-                class="ant-table-filter-icon"
-                [class.ant-table-filter-open]="dropdown.nzVisible"
-                nz-dropdown
-              ></i>
-              <div class="search-box">
-                <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
-                <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
-                  Search
-                </button>
-                <button nz-button nzSize="small" (click)="reset()">Reset</button>
-              </div>
-            </nz-dropdown>
-        </th>
-        <th nzWidth="40%">Username</th>
-        <th>Group</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of editRowTable.data">
-        <td>
-          <ng-container *ngIf="!editCache[data.id]?.edit; else nameInputTpl">
-            {{ data.id }}
-          </ng-container>
-          <ng-template #nameInputTpl>
-            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.name" />
-          </ng-template>
-        </td>
-        <td>
-          <ng-container *ngIf="!editCache[data.id]?.edit; else addressInputTpl">
-            {{ data.username }}
-          </ng-container>
-          <ng-template #addressInputTpl>
-            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.address" />
-          </ng-template>
-        </td>
-        <td>
-          <ng-container *ngIf="!editCache[data.id]?.edit; else addressInputTpl">
-            {{ data.groupname }}
-          </ng-container>
-          <ng-template #addressInputTpl>
-            <input type="text" nz-input [(ngModel)]="editCache[data.id].data.address" />
-          </ng-template>
-        </td>
-        <td>
-          <div class="editable-row-operations">
-            <ng-container *ngIf="!editCache[data.id]?.edit; else saveTpl">
-              <div class="btn-group">
-                <a (click)="startEdit(data.id)">Edit</a> 
-                <a nz-popconfirm nzTitle="Sure to delete?" (nzOnConfirm)="deleteAccount(data.id)">Delete</a>
-              </div>
-              <div class="btn-group">
-                <admin-dashboard-password></admin-dashboard-password>
-              </div>
-            </ng-container>
-            <ng-template #saveTpl>
-              <a (click)="saveEdit(data.id)">Save</a>
-              <a nz-popconfirm nzTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.id)">Cancel</a>
-            </ng-template>
+  <thead>
+    <tr>
+      <th nzWidth="25%" nzCustomFilter>
+        Id
+        <nz-dropdown
+          nzTrigger="click"
+          nzPlacement="bottomRight"
+          [nzClickHide]="false"
+          nzTableFilter
+          #dropdown
+        >
+          <i
+            nz-icon
+            nzType="search"
+            class="ant-table-filter-icon"
+            [class.ant-table-filter-open]="dropdown.nzVisible"
+            nz-dropdown
+          ></i>
+          <div class="search-box">
+            <input
+              type="text"
+              nz-input
+              placeholder="Search name"
+              [(ngModel)]="searchValue"
+            />
+            <button
+              nz-button
+              nzSize="small"
+              nzType="primary"
+              (click)="search()"
+              class="search-button"
+            >
+              Search
+            </button>
+            <button nz-button nzSize="small" (click)="reset()">Reset</button>
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </nz-table>
+        </nz-dropdown>
+      </th>
+      <th nzWidth="40%">Username</th>
+      <th>Group</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of editRowTable.data">
+      <td>
+        <ng-container *ngIf="!editCache[data.id]?.edit; else nameInputTpl">
+          {{ data.id }}
+        </ng-container>
+        <ng-template #nameInputTpl>
+          <input
+            type="text"
+            nz-input
+            [(ngModel)]="editCache[data.id].data.name"
+          />
+        </ng-template>
+      </td>
+      <td>
+        <ng-container *ngIf="!editCache[data.id]?.edit; else addressInputTpl">
+          {{ data.username }}
+        </ng-container>
+        <ng-template #addressInputTpl>
+          <input
+            type="text"
+            nz-input
+            [(ngModel)]="editCache[data.id].data.address"
+          />
+        </ng-template>
+      </td>
+      <td>
+        <ng-container *ngIf="!editCache[data.id]?.edit; else addressInputTpl">
+          {{ data.groupname }}
+        </ng-container>
+        <ng-template #addressInputTpl>
+          <input
+            type="text"
+            nz-input
+            [(ngModel)]="editCache[data.id].data.address"
+          />
+        </ng-template>
+      </td>
+      <td>
+        <div class="editable-row-operations">
+          <ng-container *ngIf="!editCache[data.id]?.edit; else saveTpl">
+            <div class="btn-group">
+              <a (click)="startEdit(data.id)">Edit</a>
+              <a
+                nz-popconfirm
+                nzTitle="Sure to delete?"
+                (nzOnConfirm)="deleteAccount(data.id)"
+                >Delete</a
+              >
+            </div>
+            <div class="btn-group">
+              <admin-dashboard-password></admin-dashboard-password>
+            </div>
+          </ng-container>
+          <ng-template #saveTpl>
+            <a (click)="saveEdit(data.id)">Save</a>
+            <a
+              nz-popconfirm
+              nzTitle="Sure to cancel?"
+              (nzOnConfirm)="cancelEdit(data.id)"
+              >Cancel</a
+            >
+          </ng-template>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

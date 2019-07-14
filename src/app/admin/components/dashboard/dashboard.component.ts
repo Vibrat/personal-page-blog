@@ -4,6 +4,8 @@ import { ActivatedRoute } from "@angular/router";
 import { take, filter } from "rxjs/operators";
 import {
   AccountService,
+  NewAccount,
+  NewAccountResponse,
   AccountsResponse
 } from "../../services/account.service";
 
@@ -21,6 +23,7 @@ export interface Data {
   styleUrls: ["dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
+  newAccountDisplay: boolean;
   searchValue = "";
   sortName: string | null = null;
   sortValue: string | null = null;
@@ -36,6 +39,12 @@ export class DashboardComponent implements OnInit {
 
   startEdit(id: string): void {
     this.editCache[id].edit = true;
+  }
+
+  newAccount(data: NewAccount) {
+    this._account.newAccount(data).subscribe(() => {
+      this.newAccountDisplay = false;
+    });
   }
 
   deleteAccount(id: string) {
