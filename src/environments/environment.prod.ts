@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  domain:  "http://localhost:81/index.php?"
 };

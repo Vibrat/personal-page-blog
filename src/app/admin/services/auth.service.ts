@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { tap, map } from "rxjs/operators";
-import { domain } from "../config";
+import { AppConfig } from "~/app/app-config.service";
 
 export interface AuthResponse {
   success: boolean;
@@ -16,7 +16,7 @@ export interface TokenValidatorResponse {
 
 @Injectable()
 export class AuthService {
-  private _domain: string = domain;
+  private _domain: string = AppConfig.get('domain');
   private _token: string | false;
 
   constructor(protected http: HttpClient) {

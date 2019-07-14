@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +15,13 @@ import { SharedModule } from "./shared/shared.module";
 import { ContainersModule } from "./containers/containers.module";
 import { AdminCanLoadService } from "./admin-canload.service";
 import { EngineModule as EventEffectModule } from "@open-e/oe-coordinator";
+
+// AppConfig 
+import { AppConfig } from "./app-config.service";
+
+export function configReducer (appService: AppConfig) {
+  return () => appService;
+}
 
 registerLocaleData(en);
 
@@ -36,7 +43,14 @@ registerLocaleData(en);
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
-    AdminCanLoadService
+    AdminCanLoadService,
+    AppConfig,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configReducer,
+      deps: [AppConfig],
+      multi: true
+    }
   ],
   exports: [EventEffectModule],
   bootstrap: [AppComponent]

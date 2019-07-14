@@ -3,8 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { AuthService } from "./auth.service";
-
-import { domain } from "../config";
+import { AppConfig } from "~/app/app-config.service";
 
 export interface AccountsResponse {}
 
@@ -25,21 +24,27 @@ export class AccountService {
   constructor(private _auth: AuthService, private _http: HttpClient) {}
 
   public getAccounts(offset = 0, limit = 20): Observable<AccountsResponse> {
-    const apiListAccounts = `${domain}api=account/basic-auth/list&limit=${limit}&offset=${offset}&token=${this._auth.getToken()}`;
+    const apiListAccounts = `${AppConfig.get(
+      "domain"
+    )}api=account/basic-auth/list&limit=${limit}&offset=${offset}&token=${this._auth.getToken()}`;
     return (this.data = <Observable<AccountsResponse>>(
       this._http.get(apiListAccounts)
     ));
   }
 
   public deleteAccount(username: string): Observable<AccountDeleteResponse> {
-    const apiDeleteAccount = `${domain}api=account/basic-auth/delete&username=${username}&token=${this._auth.getToken()}`;
+    const apiDeleteAccount = `${AppConfig.get(
+      "domain"
+    )}api=account/basic-auth/delete&username=${username}&token=${this._auth.getToken()}`;
     return <Observable<AccountDeleteResponse>>(
       this._http.delete(apiDeleteAccount)
     );
   }
 
   public checkAccount(username: string): Observable<AccountExistResponse> {
-    const apiCheckAccount = `${domain}api=account/basic-auth/is-account-exist&username=${username}&token=${this._auth.getToken()}`;
+    const apiCheckAccount = `${AppConfig.get(
+      "domain"
+    )}api=account/basic-auth/is-account-exist&username=${username}&token=${this._auth.getToken()}`;
     return <Observable<AccountExistResponse>>this._http.get(apiCheckAccount);
   }
 }
