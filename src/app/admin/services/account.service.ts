@@ -5,7 +5,20 @@ import { Observable } from "rxjs";
 import { AuthService } from "./auth.service";
 import { AppConfig } from "~/app/app-config.service";
 
-export interface AccountsResponse {}
+export interface AccountsResponse {
+  success: boolean;
+  code: number;
+  data: Account[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export interface Account {
+  id: number;
+  username: string;
+  groupname: string | null;
+}
 
 export interface NewAccount {
   username: string;
@@ -14,7 +27,7 @@ export interface NewAccount {
 
 export interface NewAccountResponse {
   success: boolean;
-  token: string;
+  data: Account
 }
 
 export interface AccountDeleteResponse {

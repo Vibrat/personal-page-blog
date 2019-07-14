@@ -6,7 +6,7 @@ import {
   AccountService,
   NewAccount,
   NewAccountResponse,
-  AccountsResponse
+  AccountDeleteResponse
 } from "../../services/account.service";
 
 export interface Data {
@@ -42,8 +42,9 @@ export class DashboardComponent implements OnInit {
   }
 
   newAccount(data: NewAccount) {
-    this._account.newAccount(data).subscribe(() => {
+    this._account.newAccount(data).subscribe((data: NewAccountResponse) => {
       this.newAccountDisplay = false;
+      this.addLocalAccounts(data.data);
     });
   }
 
@@ -51,7 +52,7 @@ export class DashboardComponent implements OnInit {
     this._account
       .deleteAccount(this.editCache[id].data.username)
       .pipe(
-        filter((response: AccountsResponse) => response["success"]),
+        filter((response: AccountDeleteResponse) => response["success"]),
         take(1)
       )
       .subscribe(_ => {
@@ -69,6 +70,15 @@ export class DashboardComponent implements OnInit {
       data: { ...this.listOfData[index] },
       edit: false
     };
+  }
+
+  addLocalAccounts(data: NewAccountResponse['data']) {
+    this.listOfData = [
+      ...this.listOfData,
+      data
+    ];
+    this.listOfDisplayData = [...this.listOfData];
+    this.updateEditCache();
   }
 
   saveEdit(id: string): void {
@@ -118,8 +128,6 @@ export class DashboardComponent implements OnInit {
         : -1
     );
   }
-
-  addAccount() {}
 
   async ngOnInit() {
     const response = await this.getDataState().then();
