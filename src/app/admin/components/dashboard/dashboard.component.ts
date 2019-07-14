@@ -9,6 +9,9 @@ import {
   AccountDeleteResponse
 } from "../../services/account.service";
 
+import { MessageService } from "~/app/shared/message.service";
+// import { MessageService } from "~/app/shared/message.service";
+ 
 export interface Data {
   id: number;
   name: string;
@@ -34,17 +37,21 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private _router: ActivatedRoute,
-    private _account: AccountService
+    private _account: AccountService,
+    private _msgService: MessageService 
   ) {}
 
-  startEdit(id: string): void {
-    this.editCache[id].edit = true;
-  }
+  startEdit(id: string): void { this.editCache[id].edit = true; }
 
   newAccount(data: NewAccount) {
     this._account.newAccount(data).subscribe((data: NewAccountResponse) => {
-      this.newAccountDisplay = false;
-      this.addLocalAccounts(data.data);
+      if (data.success) {
+        this.newAccountDisplay = false;
+        this.addLocalAccounts(data.data);
+        this._msgService.startShowMessages();
+      } else {
+        this._msgService.startShowMessages();
+      }
     });
   }
 
