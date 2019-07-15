@@ -11,7 +11,7 @@ import {
 
 import { MessageService } from "~/app/shared/message.service";
 // import { MessageService } from "~/app/shared/message.service";
- 
+
 export interface Data {
   id: number;
   name: string;
@@ -38,19 +38,21 @@ export class DashboardComponent implements OnInit {
   constructor(
     private _router: ActivatedRoute,
     private _account: AccountService,
-    private _msgService: MessageService 
+    private _msgService: MessageService
   ) {}
 
-  startEdit(id: string): void { this.editCache[id].edit = true; }
+  startEdit(id: string): void {
+    this.editCache[id].edit = true;
+  }
 
   newAccount(data: NewAccount) {
     this._account.newAccount(data).subscribe((data: NewAccountResponse) => {
       if (data.success) {
         this.newAccountDisplay = false;
         this.addLocalAccounts(data.data);
-        this._msgService.startShowMessages();
+        this._msgService.success("hellow", 2500);
       } else {
-        this._msgService.startShowMessages();
+        this._msgService.error("error input", 2500);
       }
     });
   }
@@ -79,11 +81,8 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  addLocalAccounts(data: NewAccountResponse['data']) {
-    this.listOfData = [
-      ...this.listOfData,
-      data
-    ];
+  addLocalAccounts(data: NewAccountResponse["data"]) {
+    this.listOfData = [...this.listOfData, data];
     this.listOfDisplayData = [...this.listOfData];
     this.updateEditCache();
   }
