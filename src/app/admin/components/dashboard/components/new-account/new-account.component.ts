@@ -24,7 +24,16 @@ export class NewAccountComponent {
         password: this.validateForm.value['password']
       }
       this.onSubmit.emit(emittedData);
+      this.resetFormValue();
     }
+  }
+
+  resetFormValue() {
+    this.validateForm.reset({
+      username: null,
+      password: null,
+      passwordConfirm: null  
+    });
   }
   
   onClick(): boolean {
@@ -45,6 +54,6 @@ export class NewAccountComponent {
       .get("passwordConfirm")
       .setAsyncValidators(
         validatePasswordConfirm(of(this.validateForm.get('password')))
-      );
+    );
   }
 }

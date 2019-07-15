@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { take, filter } from "rxjs/operators";
+import { take, filter, concatMap } from "rxjs/operators";
 import {
   AccountService,
   NewAccount,
@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
       if (data.success) {
         this.newAccountDisplay = false;
         this.addLocalAccounts(data.data);
-        this._msgService.success("hellow", 2500);
+        this._msgService.loadding('Creating new account').pipe(concatMap(_ => this._msgService.success('An new account added')));
       } else {
         this._msgService.error("error input", 2500);
       }
