@@ -1,7 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { take, filter, concatMap } from "rxjs/operators";
+import {
+  take,
+  filter,
+  concatMap,
+  map,
+  retry
+} from "rxjs/operators";
 import {
   AccountService,
   NewAccount,
@@ -10,7 +16,6 @@ import {
 } from "../../services/account.service";
 
 import { MessageService } from "~/app/shared/message.service";
-// import { MessageService } from "~/app/shared/message.service";
 
 export interface Data {
   id: number;
@@ -46,15 +51,31 @@ export class DashboardComponent implements OnInit {
   }
 
   newAccount(data: NewAccount) {
-    this._account.newAccount(data).subscribe((data: NewAccountResponse) => {
-      if (data.success) {
-        this.newAccountDisplay = false;
-        this.addLocalAccounts(data.data);
-        this._msgService.loadding('Creating new account').pipe(concatMap(_ => this._msgService.success('An new account added')));
-      } else {
-        this._msgService.error("error input", 2500);
-      }
-    });
+    this._account
+      .newAccount(data)
+      .pipe(
+        map((response: NewAccountResponse) => {
+          if (response.success) {
+            return <NewAccountResponse["data"]>response.data;
+          }
+
+          throw new Error(`${response["code"]} : ${response["message"]}`);
+        }),
+        retry(1)
+      )
+      .subscribe(
+        (val: NewAccountResponse["data"]) => {
+          this.newAccountDisplay = false;
+          this.addLocalAccounts(val);
+          this._msgService
+            .loadding("Creating")
+            .pipe(concatMap(_ => this._msgService.success("Successful")))
+            .subscribe();
+        },
+        _ => {
+          this._msgService.error("Failed", 2500);
+        }
+      );
   }
 
   deleteAccount(id: string) {
