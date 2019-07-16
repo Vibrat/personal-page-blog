@@ -1,13 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import {
-  take,
-  filter,
-  concatMap,
-  map,
-  retry
-} from "rxjs/operators";
+import { take, filter, tap, concatMap, map, retry } from "rxjs/operators";
 import {
   AccountService,
   NewAccount,
@@ -82,16 +76,29 @@ export class DashboardComponent implements OnInit {
     this._account
       .deleteAccount(this.editCache[id].data.username)
       .pipe(
+        tap((response: AccountDeleteResponse) => {
+          if (!response["success"]) {
+            throw new Error(`${response["code"]} : ${response["message"]}`);
+          }
+        }),
         filter((response: AccountDeleteResponse) => response["success"]),
         take(1)
       )
-      .subscribe(_ => {
-        const index = this.listOfData.findIndex(item => item.id === id);
-        delete this.editCache[id];
-        this.listOfDisplayData = this.listOfDisplayData.filter(
-          (item, id) => id != index
-        );
-      });
+      .subscribe(
+        _ => {
+          const index = this.listOfData.findIndex(item => item.id === id);
+          delete this.editCache[id];
+          this.listOfDisplayData = this.listOfDisplayData.filter(
+            (item, id) => id != index
+          );
+
+          this._msgService
+            .loadding("Deleting")
+            .pipe(concatMap(_ => this._msgService.success("Successful")))
+            .subscribe();
+        },
+        _ => this._msgService.error("Failed to delete account")
+      );
   }
 
   cancelEdit(id: string): void {
