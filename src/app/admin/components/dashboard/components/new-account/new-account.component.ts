@@ -10,19 +10,18 @@ import { validateUsername, validatePasswordConfirm } from "./validation";
   styleUrls: ["new-account.component.scss"]
 })
 export class NewAccountComponent {
-  
   validateForm: FormGroup;
   @Input() display: boolean; // display checker for form
-  @Output() onSubmit: EventEmitter<any> = new EventEmitter(); 
+  @Output() onSubmit: EventEmitter<any> = new EventEmitter();
 
   constructor(private fb: FormBuilder, private _account: AccountService) {}
 
   submitForm(): void {
     if (this.validateForm.valid) {
       const emittedData = {
-        username: this.validateForm.value['username'],
-        password: this.validateForm.value['password']
-      }
+        username: this.validateForm.value["username"],
+        password: this.validateForm.value["password"]
+      };
       this.onSubmit.emit(emittedData);
       this.resetFormValue();
     }
@@ -32,10 +31,15 @@ export class NewAccountComponent {
     this.validateForm.reset({
       username: null,
       password: null,
-      passwordConfirm: null  
+      passwordConfirm: null
     });
   }
-  
+
+  onPasswordChange(event) {
+    console.log(this.validateForm.get('password').errors);
+    this.validateForm.get("passwordConfirm").updateValueAndValidity();
+  }
+
   onClick(): boolean {
     return (this.display = false);
   }
@@ -47,13 +51,13 @@ export class NewAccountComponent {
         [Validators.required],
         [validateUsername(this._account)]
       ],
-      password: [null, [Validators.required]],
+      password: [null, [Validators.required, Validators.minLength(8), Validators.email]],
       passwordConfirm: [null, [Validators.required]]
     });
     this.validateForm
       .get("passwordConfirm")
       .setAsyncValidators(
-        validatePasswordConfirm(of(this.validateForm.get('password')))
-    );
+        validatePasswordConfirm(of(this.validateForm.get("password")))
+      );
   }
 }
