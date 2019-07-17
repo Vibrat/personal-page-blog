@@ -1,2 +1,5 @@
-export { AuthService } from "./auth.service";
-export { AccountService } from "./account.service";
+import { AuthService } from "./auth.service";
+import { AccountService } from "./account.service";
+import { GroupService } from "./group.service";
+
+export const ApiServices: any[] = [AuthService, AccountService, GroupService];

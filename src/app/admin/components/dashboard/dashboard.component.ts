@@ -1,15 +1,31 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { take, filter, tap, concatMap, map, retry } from "rxjs/operators";
+import { of, from, Observable, BehaviorSubject } from "rxjs";
+import {
+  take,
+  filter,
+  tap,
+  takeLast,
+  concatMap,
+  map,
+  switchMap,
+  distinctUntilChanged,
+  flatMap,
+  retry,
+  delay,
+  debounceTime
+} from "rxjs/operators";
 import {
   AccountService,
   NewAccount,
   NewAccountResponse,
   AccountDeleteResponse
 } from "../../services/account.service";
-
+import { GroupService } from "../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
+
+import { userDelayDetection } from "../../config";
 
 export interface Data {
   id: number;
@@ -33,12 +49,27 @@ export class DashboardComponent implements OnInit {
   editCache: { [key: string]: any } = {}; // cache data
   listOfData: any[] = []; // Payload represents data in server
   listOfDisplayData = [...this.listOfData]; // data being displayed
+  callers$: BehaviorSubject<any> = new BehaviorSubject("");
+  options = ['hello', 'hi'];
 
   constructor(
     private _router: ActivatedRoute,
     private _account: AccountService,
+    private _group: GroupService,
     private _msgService: MessageService
-  ) {}
+  ) {
+    this.callers$.pipe(
+      debounceTime(userDelayDetection),
+      distinctUntilChanged(),
+      flatMap(value => {
+        return this._group.listGroups({
+          groupname: value,
+          limit: 5,
+          offset: 0
+        });
+      })
+    ).subscribe(data => console.log(data));
+  }
 
   startEdit(id: string): void {
     this.editCache[id].edit = true;

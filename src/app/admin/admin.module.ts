@@ -11,7 +11,7 @@ import { Pages } from "./containers";
 import { PageLoginComponent } from "./containers/page-login/page-login.component";
 import { GridDisplayService } from "../shared/services/grid-display.service";
 
-import { AuthService, AccountService } from "./services";
+import { ApiServices } from "./services";
 
 import { AdminActivateService } from "./admin-activate.service";
 import { AdminLoginActivateService } from "./admin-login-activate.service";
@@ -38,15 +38,14 @@ registerLocaleData(en);
     bootstrap: [PageLoginComponent],
     providers: [
         { provide: NZ_I18N, useValue: en_US },
-        AuthService,
-        AccountService,
+        ...ApiServices,
         AdminActivateService,
         AdminLoginActivateService,
         DashboardResolverService
     ],
 })
 export class AdminModule {
-    constructor(public grid: GridDisplayService, public auth: AuthService) {
+    constructor(public grid: GridDisplayService) {
         this.grid.display$.subscribe(data => console.log(data));
     }
 }

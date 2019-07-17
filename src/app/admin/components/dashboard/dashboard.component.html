@@ -46,39 +46,32 @@
   <tbody>
     <tr *ngFor="let data of editRowTable.data">
       <td>
-        <ng-container *ngIf="!editCache[data.id]?.edit; else nameInputTpl">
+        <ng-container>
           {{ data.id }}
         </ng-container>
-        <ng-template #nameInputTpl>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.name"
-          />
-        </ng-template>
       </td>
       <td>
-        <ng-container *ngIf="!editCache[data.id]?.edit; else addressInputTpl">
+        <ng-container>
           {{ data.username }}
         </ng-container>
-        <ng-template #addressInputTpl>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.address"
-          />
-        </ng-template>
       </td>
       <td>
-        <ng-container *ngIf="!editCache[data.id]?.edit; else addressInputTpl">
+        <ng-container *ngIf="!editCache[data.id]?.edit; else groupname">
           {{ data.groupname }}
         </ng-container>
-        <ng-template #addressInputTpl>
+        <ng-template #groupname>
           <input
             type="text"
             nz-input
-            [(ngModel)]="editCache[data.id].data.address"
+            [(ngModel)]="editCache[data.id].data.groupname"
+            (input)="callers$.next($event.target.value)"
+            [nzAutocomplete]="auto"
           />
+          <nz-autocomplete nzBackfill #auto>
+            <nz-auto-option *ngFor="let option of options" [nzValue]="option">
+              {{ option }}
+            </nz-auto-option>
+          </nz-autocomplete>
         </ng-template>
       </td>
       <td>
