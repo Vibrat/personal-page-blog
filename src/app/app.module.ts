@@ -12,7 +12,7 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 
 import { SharedPipesModule } from "./shared/pipes/shared-pipes.module";
-import { SharedModule } from "./shared/shared.module";
+import { SharedModule } from "./shared/services/shared.module";
 import { ContainersModule } from "./containers/containers.module";
 import { AdminCanLoadService } from "./admin-canload.service";
 import { EngineModule as EventEffectModule } from "@open-e/oe-coordinator";

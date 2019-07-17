@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from "@angular/core";
-import { SingletonServices } from "./services";
+import { SingletonServices } from "./";
  
 @NgModule()
 export class SharedModule {

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ViewportService } from "../../../../../shared/viewport.service";
+import { ViewportService } from "../../../../../shared/services/viewport.service";
 
 @Component({
     selector: 'search-action',
