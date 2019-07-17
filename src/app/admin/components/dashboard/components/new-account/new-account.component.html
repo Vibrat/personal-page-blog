@@ -58,10 +58,9 @@
           *ngIf="
             validateForm.get('password')?.dirty &&
             validateForm.get('password')?.errors as errors">
-          
-          <ng-container *ngIf="errors?.required">Please input your Password!</ng-container> 
-          <ng-container *ngIf="errors?.minlength">Password should have more than 8 characters</ng-container>
-          <ng-container *ngIf="errors?.email">Password should have more than 8 characters</ng-container>  
+          <ng-container *ngFor="let error of errors | keyvalue | limit: 1">
+              <ng-container>{{ errors_msg[error.key] }}</ng-container> 
+          </ng-container>
         </nz-form-explain>
         <!-- End Validation for Password -->
       </nz-form-control>

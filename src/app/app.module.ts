@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 
+import { SharedPipesModule } from "./shared/pipes/shared-pipes.module";
 import { SharedModule } from "./shared/shared.module";
 import { ContainersModule } from "./containers/containers.module";
 import { AdminCanLoadService } from "./admin-canload.service";
@@ -38,6 +39,7 @@ registerLocaleData(en);
     HttpClientModule,
     BrowserAnimationsModule,
     ContainersModule,
+    SharedPipesModule,
     SharedModule,
     EventEffectModule
   ],

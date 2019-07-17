@@ -9,7 +9,7 @@ import {
   AccountDeleteResponse
 } from "../../services/account.service";
 
-import { MessageService } from "~/app/shared/message.service";
+import { MessageService } from "~/app/shared/services/message.service";
 
 export interface Data {
   id: number;

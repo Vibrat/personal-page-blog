@@ -9,7 +9,7 @@ import { routes } from "./admin.route";
 import { DumpComponents } from "./components";
 import { Pages } from "./containers";
 import { PageLoginComponent } from "./containers/page-login/page-login.component";
-import { GridDisplayService } from "../shared/grid-display.service";
+import { GridDisplayService } from "../shared/services/grid-display.service";
 
 import { AuthService, AccountService } from "./services";
 
@@ -21,6 +21,8 @@ import { DashboardResolverService } from "./data/dasboard.resolver";
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 
+import { SharedPipesModule } from "../shared/pipes/shared-pipes.module";
+
 registerLocaleData(en);
 
 @NgModule({
@@ -29,7 +31,8 @@ registerLocaleData(en);
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forChild(routes),
-        NgZorroAntdModule
+        NgZorroAntdModule,
+        SharedPipesModule
     ],
     declarations: [...DumpComponents, Pages],
     bootstrap: [PageLoginComponent],

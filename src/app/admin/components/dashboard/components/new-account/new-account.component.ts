@@ -11,6 +11,11 @@ import { validateUsername, validatePasswordConfirm } from "./validation";
 })
 export class NewAccountComponent {
   validateForm: FormGroup;
+  errors_msg = {
+    required: "Please enter value here",
+    minlength: "Value need to have more than 9 characters",
+    email: "Email is invalid"
+  };
   @Input() display: boolean; // display checker for form
   @Output() onSubmit: EventEmitter<any> = new EventEmitter();
 
@@ -36,7 +41,6 @@ export class NewAccountComponent {
   }
 
   onPasswordChange(event) {
-    console.log(this.validateForm.get('password').errors);
     this.validateForm.get("passwordConfirm").updateValueAndValidity();
   }
 
@@ -51,7 +55,10 @@ export class NewAccountComponent {
         [Validators.required],
         [validateUsername(this._account)]
       ],
-      password: [null, [Validators.required, Validators.minLength(8), Validators.email]],
+      password: [
+        null,
+        [Validators.required, Validators.minLength(8), Validators.email]
+      ],
       passwordConfirm: [null, [Validators.required]]
     });
     this.validateForm

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { GridDisplayService } from "../../shared/grid-display.service";
-import { BreadScrumbService } from "../../shared/breadscrumb.service";
+import { GridDisplayService } from "../../shared/services/grid-display.service";
+import { BreadScrumbService } from "../../shared/services/breadscrumb.service";
 
 @Component({
     selector: 'container-main',

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { CanLoad, Route, UrlSegment } from "@angular/router";
-import { GridDisplayService } from "./shared/grid-display.service";
+import { GridDisplayService } from "./shared/services/grid-display.service";
 
 @Injectable()
 export class AdminCanLoadService implements CanLoad {
