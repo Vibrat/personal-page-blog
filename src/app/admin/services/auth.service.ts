@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { tap, map } from "rxjs/operators";
-import { AppConfig } from "~/app/app-config.service";
+import { AppConfig } from "~/app/_init/app-config.service";
 
 export interface AuthResponse {
   success: boolean;

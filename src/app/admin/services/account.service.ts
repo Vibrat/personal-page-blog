@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { AuthService } from "./auth.service";
-import { AppConfig } from "~/app/app-config.service";
+import { AppConfig } from "~/app/_init/app-config.service";
 
 export interface AccountsResponse {
   success: boolean;

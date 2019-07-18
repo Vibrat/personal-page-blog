@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { AppConfig } from "~/app/app-config.service";
+import { AppConfig } from "~/app/_init/app-config.service";
 import { AuthService } from "./auth.service";
 
 export interface ListGroupInput {

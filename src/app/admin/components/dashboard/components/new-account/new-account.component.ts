@@ -14,7 +14,6 @@ export class NewAccountComponent {
   errors_msg = {
     required: "Please enter value here",
     minlength: "Value need to have more than 9 characters",
-    email: "Email is invalid"
   };
   @Input() display: boolean; // display checker for form
   @Output() onSubmit: EventEmitter<any> = new EventEmitter();
@@ -57,7 +56,7 @@ export class NewAccountComponent {
       ],
       password: [
         null,
-        [Validators.required, Validators.minLength(8), Validators.email]
+        [Validators.required, Validators.minLength(8)]
       ],
       passwordConfirm: [null, [Validators.required]]
     });

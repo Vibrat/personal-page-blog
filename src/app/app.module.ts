@@ -18,11 +18,7 @@ import { AdminCanLoadService } from "./admin-canload.service";
 import { EngineModule as EventEffectModule } from "@open-e/oe-coordinator";
 
 // AppConfig 
-import { AppConfig } from "./app-config.service";
-
-export function configReducer (appService: AppConfig) {
-  return () => appService;
-}
+import { AppConfig, configReducer } from "./_init/app-config.service";
 
 registerLocaleData(en);
 
