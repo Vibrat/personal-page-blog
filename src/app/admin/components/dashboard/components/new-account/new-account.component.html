@@ -80,8 +80,11 @@
           *ngIf="
             validateForm.get('passwordConfirm')?.dirty &&
             validateForm.get('passwordConfirm')?.errors
-          "
-          >Your password confirm is not correct!</nz-form-explain
+          ">
+          <ng-container i18n="passwordError|Show Error When Entering Password@@passwordError">
+            Your password confirm is not correct!
+          </ng-container>
+          </nz-form-explain
         >
       </nz-form-control>
     </nz-form-item>

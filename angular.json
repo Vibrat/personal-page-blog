@@ -43,6 +43,15 @@
             ]
           },
           "configurations": {
+            "dev": {
+              "aot": true,
+              "outputPath": "dist/vn-vi/",
+              "i18nFile": "src/locale/messages.vn-vi.xlf",
+              "baseHref": "/vn-vi/",
+              "i18nFormat": "xlf",
+              "i18nLocale": "vn-vi",
+              "i18nMissingTranslation": "error"
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -58,7 +67,12 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "outputPath": "dist/vn-vi/",
+              "baseHref": "/vn-vi/",
+              "i18nFile": "src/locale/messages.vn-vi.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "vn-vi"
             }
           }
         },
@@ -68,6 +82,9 @@
             "browserTarget": "na-web:build"
           },
           "configurations": {
+            "dev": {
+              "browserTarget": "na-web:build:dev"
+            },
             "production": {
               "browserTarget": "na-web:build:production"
             }
