@@ -64,13 +64,14 @@
             type="text"
             nz-input
             [(ngModel)]="editCache[data.id].data.groupname"
-            (input)="callers$.next($event.target.value)"
+            (input)="listGroupAccountSync($event.target.value)"
             [nzAutocomplete]="auto"
           />
           <nz-autocomplete nzBackfill #auto>
-            <nz-auto-option *ngFor="let option of options" [nzValue]="option">
+            <nz-auto-option *ngFor="let option of optionsFilter" [nzValue]="option">
               {{ option }}
             </nz-auto-option>
+            <a (click)="saveEdit(data.id)">More</a>
           </nz-autocomplete>
         </ng-template>
       </td>

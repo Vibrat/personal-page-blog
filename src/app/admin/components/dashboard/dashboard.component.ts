@@ -10,6 +10,7 @@ import {
   concatMap,
   map,
   switchMap,
+  catchError,
   distinctUntilChanged,
   flatMap,
   retry,
@@ -49,8 +50,14 @@ export class DashboardComponent implements OnInit {
   editCache: { [key: string]: any } = {}; // cache data
   listOfData: any[] = []; // Payload represents data in server
   listOfDisplayData = [...this.listOfData]; // data being displayed
-  callers$: BehaviorSubject<any> = new BehaviorSubject("");
-  options = ['hello', 'hi'];
+  editAccountSync$: BehaviorSubject<any> = new BehaviorSubject({
+    value: "",
+    callback: () => {},
+    error: () => {}
+  });
+  listAccountGroup$: Observable<any>;
+  options = ["hello", "hi"];
+  optionsFilter = [];
 
   constructor(
     private _router: ActivatedRoute,
@@ -58,21 +65,46 @@ export class DashboardComponent implements OnInit {
     private _group: GroupService,
     private _msgService: MessageService
   ) {
-    this.callers$.pipe(
+    this.listAccountGroup$ = this.editAccountSync$.pipe(
       debounceTime(userDelayDetection),
       distinctUntilChanged(),
-      flatMap(value => {
-        return this._group.listGroups({
-          groupname: value,
-          limit: 5,
-          offset: 0
-        });
-      })
-    ).subscribe(data => console.log(data));
-  }
+      flatMap(({ value, callback, error }) => {
+        return this._group
+          .listGroups({
+            groupname: value,
+            limit: 10,
+            offset: 0
+          })
+          .pipe(
+            filter(response => {
+              let isSuccess = response["success"];
+              if (!isSuccess) {
+                throw new Error("API fails to get information");
+              }
 
-  startEdit(id: string): void {
-    this.editCache[id].edit = true;
+              return isSuccess;
+            }),
+            tap(_ => {
+              this.options.push(
+                ..._["data"]
+                  .map(item => item["name"])
+                  .filter(name => !this.options.includes(name))
+              );
+
+              this.optionsFilter = this.options.filter(item =>
+                item.startsWith(value)
+              );
+              callback(_);
+            }),
+            catchError(_ => {
+              error(_);
+              return of("");
+            })
+          );
+      })
+    );
+
+    this.listAccountGroup$.subscribe();
   }
 
   newAccount(data: NewAccount) {
@@ -132,6 +164,16 @@ export class DashboardComponent implements OnInit {
       );
   }
 
+  addLocalAccounts(data: NewAccountResponse["data"]) {
+    this.listOfData = [...this.listOfData, data];
+    this.listOfDisplayData = [...this.listOfData];
+    this.updateEditCache();
+  }
+
+  startEdit(id: string): void {
+    this.editCache[id].edit = true;
+  }
+
   cancelEdit(id: string): void {
     const index = this.listOfData.findIndex(item => item.id === id);
     this.editCache[id] = {
@@ -140,16 +182,28 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  addLocalAccounts(data: NewAccountResponse["data"]) {
-    this.listOfData = [...this.listOfData, data];
-    this.listOfDisplayData = [...this.listOfData];
-    this.updateEditCache();
+  saveEdit(id: string): void {
+    // Emit data and actions
+    this.editAccountSync$.next({
+      value: this.editCache[id].data.groupname,
+      callback: (data?: any) => {
+        const index = this.listOfData.findIndex(item => item.id === id);
+        Object.assign(this.listOfData[index], this.editCache[id].data);
+        this.editCache[id].edit = false;
+        this._msgService.success("Done");
+      },
+      error: _ => {
+        this._msgService.error("Failed to get group information");
+      }
+    });
   }
 
-  saveEdit(id: string): void {
-    const index = this.listOfData.findIndex(item => item.id === id);
-    Object.assign(this.listOfData[index], this.editCache[id].data);
-    this.editCache[id].edit = false;
+  listGroupAccountSync(value) {
+    this.editAccountSync$.next({
+      value: value,
+      callback: (response?: any) => {},
+      error: _ => {}
+    });
   }
 
   updateEditCache(): void {
