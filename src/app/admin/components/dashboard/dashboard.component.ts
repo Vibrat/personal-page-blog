@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit {
   optionsFilter = [];
   searchAdapter: DashboardApiAdapter;
   newAccountAdapter: DashboardApiAdapter;
+  deleteAccountAdapter: DashboardApiAdapter;
 
   constructor(
     private _router: ActivatedRoute,
@@ -51,6 +52,8 @@ export class DashboardComponent implements OnInit {
     this.searchAdapter.build("Search").subscribe();
     this.newAccountAdapter = new DashboardApiAdapter();
     this.newAccountAdapter.build("NewAccount").subscribe();
+    this.deleteAccountAdapter = new DashboardApiAdapter();
+    this.deleteAccountAdapter.build('DeleteAccount').subscribe();
   }
 
   newAccount(data: NewAccount) {
@@ -71,32 +74,24 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteAccount(id: string) {
-    this._account
+    this.deleteAccountAdapter.emit({
+      observer:  this._account
       .deleteAccount(this.editCache[id].data.username)
-      .pipe(
-        tap((response: AccountDeleteResponse) => {
-          if (!response["success"]) {
-            throw new Error(`${response["code"]} : ${response["message"]}`);
-          }
-        }),
-        filter((response: AccountDeleteResponse) => response["success"]),
-        take(1)
-      )
-      .subscribe(
-        _ => {
-          const index = this.listOfData.findIndex(item => item.id === id);
-          delete this.editCache[id];
-          this.listOfDisplayData = this.listOfDisplayData.filter(
-            (item, id) => id != index
-          );
+      .pipe(take(1)),
+      callback: () => {
+        const index = this.listOfData.findIndex(item => item.id === id);
+        delete this.editCache[id];
+        this.listOfDisplayData = this.listOfDisplayData.filter(
+          (item, id) => id != index
+        );
 
-          this._msgService
-            .loadding("Deleting")
-            .pipe(concatMap(_ => this._msgService.success("Successful")))
-            .subscribe();
-        },
-        _ => this._msgService.error("Failed to delete account")
-      );
+        this._msgService
+          .loadding("Deleting")
+          .pipe(concatMap(_ => this._msgService.success("Successful")))
+          .subscribe();
+      },
+      error: () => { this._msgService.error("Failed to delete account") }
+    })
   }
 
   addLocalAccounts(data: NewAccountResponse["data"]) {
