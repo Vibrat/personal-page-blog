@@ -1,22 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { of, from, Observable, BehaviorSubject } from "rxjs";
-import {
-  take,
-  filter,
-  tap,
-  takeLast,
-  concatMap,
-  map,
-  switchMap,
-  catchError,
-  distinctUntilChanged,
-  flatMap,
-  retry,
-  delay,
-  debounceTime
-} from "rxjs/operators";
+import { Observable } from "rxjs";
+import { take, filter, tap, concatMap, map, retry } from "rxjs/operators";
 import {
   AccountService,
   NewAccount,
@@ -25,8 +11,7 @@ import {
 } from "../../services/account.service";
 import { GroupService } from "../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
-
-import { userDelayDetection } from "../../config";
+import { DashboardApiAdapter } from "./dashboard.api.adapter";
 
 export interface Data {
   id: number;
@@ -50,14 +35,11 @@ export class DashboardComponent implements OnInit {
   editCache: { [key: string]: any } = {}; // cache data
   listOfData: any[] = []; // Payload represents data in server
   listOfDisplayData = [...this.listOfData]; // data being displayed
-  editAccountSync$: BehaviorSubject<any> = new BehaviorSubject({
-    value: "",
-    callback: () => {},
-    error: () => {}
-  });
   listAccountGroup$: Observable<any>;
   options = ["hello", "hi"];
   optionsFilter = [];
+  searchAdapter: DashboardApiAdapter;
+  newAccountAdapter: DashboardApiAdapter;
 
   constructor(
     private _router: ActivatedRoute,
@@ -65,74 +47,27 @@ export class DashboardComponent implements OnInit {
     private _group: GroupService,
     private _msgService: MessageService
   ) {
-    this.listAccountGroup$ = this.editAccountSync$.pipe(
-      debounceTime(userDelayDetection),
-      distinctUntilChanged(),
-      flatMap(({ value, callback, error }) => {
-        return this._group
-          .listGroups({
-            groupname: value,
-            limit: 10,
-            offset: 0
-          })
-          .pipe(
-            filter(response => {
-              let isSuccess = response["success"];
-              if (!isSuccess) {
-                throw new Error("API fails to get information");
-              }
-
-              return isSuccess;
-            }),
-            tap(_ => {
-              this.options.push(
-                ..._["data"]
-                  .map(item => item["name"])
-                  .filter(name => !this.options.includes(name))
-              );
-
-              this.optionsFilter = this.options.filter(item =>
-                item.startsWith(value)
-              );
-              callback(_);
-            }),
-            catchError(_ => {
-              error(_);
-              return of("");
-            })
-          );
-      })
-    );
-
-    this.listAccountGroup$.subscribe();
+    this.searchAdapter = new DashboardApiAdapter();
+    this.searchAdapter.build("Search").subscribe();
+    this.newAccountAdapter = new DashboardApiAdapter();
+    this.newAccountAdapter.build("NewAccount").subscribe();
   }
 
   newAccount(data: NewAccount) {
-    this._account
-      .newAccount(data)
-      .pipe(
-        map((response: NewAccountResponse) => {
-          if (response.success) {
-            return <NewAccountResponse["data"]>response.data;
-          }
-
-          throw new Error(`${response["code"]} : ${response["message"]}`);
-        }),
-        retry(1)
-      )
-      .subscribe(
-        (val: NewAccountResponse["data"]) => {
-          this.newAccountDisplay = false;
-          this.addLocalAccounts(val);
-          this._msgService
-            .loadding("Creating")
-            .pipe(concatMap(_ => this._msgService.success("Successful")))
-            .subscribe();
-        },
-        _ => {
-          this._msgService.error("Failed", 2500);
-        }
-      );
+    this.newAccountAdapter.emit({
+      observer: this._account.newAccount(data),
+      callback: (val: NewAccountResponse) => {
+        this.newAccountDisplay = false;
+        this.addLocalAccounts(val.data);
+        this._msgService
+          .loadding("Creating")
+          .pipe(concatMap(_ => this._msgService.success("Successful")))
+          .subscribe();
+      },
+      error: _ => {
+        this._msgService.error("Failed", 2500);
+      }
+    });
   }
 
   deleteAccount(id: string) {
@@ -183,25 +118,33 @@ export class DashboardComponent implements OnInit {
   }
 
   saveEdit(id: string): void {
-    // Emit data and actions
-    this.editAccountSync$.next({
-      value: this.editCache[id].data.groupname,
-      callback: (data?: any) => {
-        const index = this.listOfData.findIndex(item => item.id === id);
-        Object.assign(this.listOfData[index], this.editCache[id].data);
-        this.editCache[id].edit = false;
-        this._msgService.success("Done");
-      },
-      error: _ => {
-        this._msgService.error("Failed to get group information");
-      }
-    });
+    const index = this.listOfData.findIndex(item => item.id === id);
+    Object.assign(this.listOfData[index], this.editCache[id].data);
+    this.editCache[id].edit = false;
+    this._msgService.success("Done");
+
+    // When fails
+    this._msgService.error("Failed to get group information");
   }
 
   listGroupAccountSync(value) {
-    this.editAccountSync$.next({
-      value: value,
-      callback: (response?: any) => {},
+    this.searchAdapter.emit({
+      observer: this._group.listGroups({
+        groupname: value,
+        limit: 10,
+        offset: 0
+      }),
+      callback: (response?: any) => {
+        this.options.push(
+          ...response["data"]
+            .map(item => item["name"])
+            .filter(name => !this.options.includes(name))
+        );
+
+        this.optionsFilter = this.options.filter(item =>
+          item.startsWith(value)
+        );
+      },
       error: _ => {}
     });
   }
