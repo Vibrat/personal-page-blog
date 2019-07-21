@@ -4,9 +4,14 @@ import { AppConfig } from "~/app/_init/app-config.service";
 import { AuthService } from "./auth.service";
 
 export interface ListGroupInput {
-    limit?: number;
-    offset?: number;
-    groupname?: string;
+  limit?: number;
+  offset?: number;
+  groupname?: string;
+}
+
+export interface AddUserToGroup {
+  userId: string;
+  groupId: string;
 }
 
 @Injectable()
@@ -31,5 +36,20 @@ export class GroupService {
     }&groupname=${data.groupname}&token=${this._token}`;
 
     return this._http.get(api);
+  }
+
+  /**
+   * Add A User to Group Permissions
+   *
+   * @param data
+   */
+  public updateGroup(data: AddUserToGroup) {
+    const api = `${AppConfig.get(
+      "domain"
+    )}api=account/group-permission/add-user-to-group&token=${this._token}`;
+    const formData = new FormData();
+    formData.append("userId", data["userId"]);
+    formData.append("groupId", data["groupId"]);
+    return this._http.post(api, formData);
   }
 }

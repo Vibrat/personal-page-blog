@@ -2,12 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { Observable } from "rxjs";
-import { take, filter, tap, concatMap, map, retry } from "rxjs/operators";
+import { take, concatMap } from "rxjs/operators";
 import {
   AccountService,
   NewAccount,
-  NewAccountResponse,
-  AccountDeleteResponse
+  NewAccountResponse
 } from "../../services/account.service";
 import { GroupService } from "../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
@@ -15,7 +14,7 @@ import { DashboardApiAdapter } from "./dashboard.api.adapter";
 
 export interface Data {
   id: number;
-  name: string;
+  group: string;
   age: number;
   address: string;
   disabled: boolean;
@@ -36,11 +35,12 @@ export class DashboardComponent implements OnInit {
   listOfData: any[] = []; // Payload represents data in server
   listOfDisplayData = [...this.listOfData]; // data being displayed
   listAccountGroup$: Observable<any>;
-  options = ["hello", "hi"];
-  optionsFilter = [];
+  options = []; // Store data from API
+  optionsFilter = []; // Return array to display of options
   searchAdapter: DashboardApiAdapter;
   newAccountAdapter: DashboardApiAdapter;
   deleteAccountAdapter: DashboardApiAdapter;
+  saveEditAccountAdapter: DashboardApiAdapter;
 
   constructor(
     private _router: ActivatedRoute,
@@ -53,7 +53,9 @@ export class DashboardComponent implements OnInit {
     this.newAccountAdapter = new DashboardApiAdapter();
     this.newAccountAdapter.build("NewAccount").subscribe();
     this.deleteAccountAdapter = new DashboardApiAdapter();
-    this.deleteAccountAdapter.build('DeleteAccount').subscribe();
+    this.deleteAccountAdapter.build("DeleteAccount").subscribe();
+    this.saveEditAccountAdapter = new DashboardApiAdapter();
+    this.saveEditAccountAdapter.build("UpdateAccount").subscribe();
   }
 
   newAccount(data: NewAccount) {
@@ -75,9 +77,9 @@ export class DashboardComponent implements OnInit {
 
   deleteAccount(id: string) {
     this.deleteAccountAdapter.emit({
-      observer:  this._account
-      .deleteAccount(this.editCache[id].data.username)
-      .pipe(take(1)),
+      observer: this._account
+        .deleteAccount(this.editCache[id].data.username)
+        .pipe(take(1)),
       callback: () => {
         const index = this.listOfData.findIndex(item => item.id === id);
         delete this.editCache[id];
@@ -90,8 +92,10 @@ export class DashboardComponent implements OnInit {
           .pipe(concatMap(_ => this._msgService.success("Successful")))
           .subscribe();
       },
-      error: () => { this._msgService.error("Failed to delete account") }
-    })
+      error: () => {
+        this._msgService.error("Failed to delete account");
+      }
+    });
   }
 
   addLocalAccounts(data: NewAccountResponse["data"]) {
@@ -113,13 +117,25 @@ export class DashboardComponent implements OnInit {
   }
 
   saveEdit(id: string): void {
-    const index = this.listOfData.findIndex(item => item.id === id);
-    Object.assign(this.listOfData[index], this.editCache[id].data);
-    this.editCache[id].edit = false;
-    this._msgService.success("Done");
+    let index = this.optionsFilter.indexOf(this.editCache[id].data.groupname);
+    const groupId = this.options[index]["id"];
 
-    // When fails
-    this._msgService.error("Failed to get group information");
+    this.saveEditAccountAdapter.emit({
+      observer: this._group.updateGroup({
+        userId: this.editCache[id].data.id,
+        groupId: groupId
+      }),
+      callback: (response: any) => {
+        const index = this.listOfData.findIndex(item => item.id === id);
+        Object.assign(this.listOfData[index], this.editCache[id].data);
+        this.editCache[id].edit = false;
+        this._msgService.success("Done");
+      },
+      error: _ => {
+        // When fails
+        this._msgService.error("Failed to get group information");
+      }
+    });
   }
 
   listGroupAccountSync(value) {
@@ -131,14 +147,14 @@ export class DashboardComponent implements OnInit {
       }),
       callback: (response?: any) => {
         this.options.push(
-          ...response["data"]
-            .map(item => item["name"])
-            .filter(name => !this.options.includes(name))
+          ...response["data"].filter(
+            group =>
+              !this.options.map(group => group["name"]).includes(group["name"])
+          )
         );
-
-        this.optionsFilter = this.options.filter(item =>
-          item.startsWith(value)
-        );
+        this.optionsFilter = this.options
+          .map(group => group["name"])
+          .filter(item => item.startsWith(value));
       },
       error: _ => {}
     });
@@ -160,7 +176,7 @@ export class DashboardComponent implements OnInit {
 
   search(): void {
     const filterFunc = (item: {
-      name: string;
+      group: string;
       age: number;
       address: string;
     }) => {
@@ -169,11 +185,12 @@ export class DashboardComponent implements OnInit {
           ? this.listOfSearchAddress.some(
               address => item.address.indexOf(address) !== -1
             )
-          : true) && item.name.indexOf(this.searchValue) !== -1
+          : true) && item.group.indexOf(this.searchValue) !== -1
       );
     };
     const data = this.listOfData.filter(
-      (item: { name: string; age: number; address: string }) => filterFunc(item)
+      (item: { group: string; age: number; address: string }) =>
+        filterFunc(item)
     );
     this.listOfDisplayData = data.sort((a, b) =>
       this.sortValue === "ascend"
