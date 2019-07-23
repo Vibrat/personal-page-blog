@@ -1,14 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { Observable } from "rxjs";
-import { take, concatMap } from "rxjs/operators";
+import { Observable, from } from "rxjs";
+import { take, concatMap, filter, map, tap, flatMap } from "rxjs/operators";
 import {
   AccountService,
   NewAccount,
-  NewAccountResponse
+  NewAccountResponse,
 } from "../../services/account.service";
-import { GroupService } from "../../services/group.service";
+import { GroupService, AddUserToGroupResponse } from "../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
 import { DashboardApiAdapter } from "./dashboard.api.adapter";
 
@@ -116,26 +116,46 @@ export class DashboardComponent implements OnInit {
     };
   }
 
+  /**
+   * Save data when user hit `Save` 
+   * 
+   * @param String ids -  root, VIP2, ...
+   */
   saveEdit(id: string): void {
     let index = this.optionsFilter.indexOf(this.editCache[id].data.groupname);
-    const groupId = this.options[index]["id"];
+    console.log(index, this.optionsFilter);
+    if (index != -1) {
+      let groupList = this.editCache[id].data.groupname.replace(" ", "").split(",");
+      console.log(groupList);
+      let addGroupChains$ = from(groupList).pipe(
+        map(_=> { 
+          return {id: id, groupId:  this.options[index]["id"] };
+        }), 
+        flatMap(({id, groupId}) => {
+            return this._group.updateGroup({
+              userId: this.editCache[id].data.id,
+              groupId: groupId
+            });
+        })
+        );
 
-    this.saveEditAccountAdapter.emit({
-      observer: this._group.updateGroup({
-        userId: this.editCache[id].data.id,
-        groupId: groupId
-      }),
-      callback: (response: any) => {
-        const index = this.listOfData.findIndex(item => item.id === id);
-        Object.assign(this.listOfData[index], this.editCache[id].data);
-        this.editCache[id].edit = false;
-        this._msgService.success("Done");
-      },
-      error: _ => {
-        // When fails
-        this._msgService.error("Failed to get group information");
-      }
-    });
+        this.saveEditAccountAdapter.emit({
+          observer: addGroupChains$,
+          callback: (response: AddUserToGroupResponse) => {
+            const index = this.listOfData.findIndex(item => item.id === response.data.userId);
+            Object.assign(this.listOfData[index], this.editCache[response.data.userId].data);
+            this.editCache[response.data.userId].edit = false;
+            this._msgService.success("Done");
+          },
+          error: _ => {
+            // When fails
+            this._msgService.error("Failed to get group information");
+          }
+        });
+    }
+
+      // let index = this.optionsFilter.indexOf(this.editCache[id].data.groupname);
+      // const groupId = this.options[index]["id"];
   }
 
   listGroupAccountSync(value) {
@@ -208,6 +228,9 @@ export class DashboardComponent implements OnInit {
     if (response.dashboard.success) {
       this.listOfData = response.dashboard.data;
       this.listOfDisplayData = [...this.listOfData];
+
+      this.options = this.listOfData.map(account => account.groupname);
+      this.optionsFilter = [...this.options ];
       this.updateEditCache();
     }
   }

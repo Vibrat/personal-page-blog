@@ -3,6 +3,8 @@ import { HttpClient } from "@angular/common/http";
 import { AppConfig } from "~/app/_init/app-config.service";
 import { AuthService } from "./auth.service";
 
+import { Observable } from "rxjs";
+
 export interface ListGroupInput {
   limit?: number;
   offset?: number;
@@ -12,6 +14,15 @@ export interface ListGroupInput {
 export interface AddUserToGroup {
   userId: string;
   groupId: string;
+}
+
+export interface AddUserToGroupResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    userId: string;
+    groupId: string; 
+  }
 }
 
 @Injectable()
@@ -50,6 +61,6 @@ export class GroupService {
     const formData = new FormData();
     formData.append("userId", data["userId"]);
     formData.append("groupId", data["groupId"]);
-    return this._http.post(api, formData);
+    return <Observable<AddUserToGroupResponse>>this._http.post(api, formData);
   }
 }
