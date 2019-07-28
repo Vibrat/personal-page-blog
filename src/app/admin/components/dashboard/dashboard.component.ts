@@ -147,10 +147,10 @@ export class DashboardComponent implements OnInit {
             this.editCache[response.data.userId].edit = false;
             this._msgService.success("Done");
           },
-          error: _ => {
-            // When fails
-            this._msgService.error("Failed to get group information");
-          }
+          error: (_) => {
+             // When fails
+             this._msgService.error("Failed to get group information");
+          } 
         });
     }
 
@@ -166,6 +166,7 @@ export class DashboardComponent implements OnInit {
         offset: 0
       }),
       callback: (response?: any) => {
+        console.log(response);
         this.options.push(
           ...response["data"].filter(
             group =>
@@ -175,8 +176,12 @@ export class DashboardComponent implements OnInit {
         this.optionsFilter = this.options
           .map(group => group["name"])
           .filter(item => item.startsWith(value));
+
+        console.log(this.options, this.optionsFilter);
       },
-      error: _ => {}
+      error: (_) => {
+        console.log (_);
+      }
     });
   }
 
