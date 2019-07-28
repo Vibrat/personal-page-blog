@@ -17,21 +17,6 @@ A single value of row in this column will contains `nz-tag` which have `group` v
         <nz-tag nzMode="closeable" (nzOnClose)="onCloseGroupTag($event)">{{ groupItem.value }}</nz-tag>  
         </ng-container>
     </ng-container>
-    <ng-template #group>
-        <input
-        type="text"
-        nz-input
-        [(ngModel)]="editCache[data.id].data.group"
-        (input)="listGroupAccountSync($event.target.value)"
-        [nzAutocomplete]="auto"
-        />
-        <nz-autocomplete nzBackfill #auto>
-        <nz-auto-option *ngFor="let option of optionsFilter" [nzValue]="option">
-            {{ option }}
-        </nz-auto-option>
-        <a (click)="saveEdit(data.id)">More</a>
-        </nz-autocomplete>
-    </ng-template>
 </td>
 ```
 
