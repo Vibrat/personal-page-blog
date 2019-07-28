@@ -56,14 +56,16 @@
         </ng-container>
       </td>
       <td>
-        <ng-container *ngIf="!editCache[data.id]?.edit; else groupname">
-          {{ data.groupname }}
+        <ng-container *ngIf="!editCache[data.id]?.edit; else group">
+          <ng-container *ngFor="let groupItem of data.group | keyvalue">
+            <nz-tag nzMode="closeable" (nzOnClose)="onCloseGroupTag($event)">{{ groupItem.value }}</nz-tag>  
+          </ng-container>
         </ng-container>
-        <ng-template #groupname>
+        <ng-template #group>
           <input
             type="text"
             nz-input
-            [(ngModel)]="editCache[data.id].data.groupname"
+            [(ngModel)]="editCache[data.id].data.group"
             (input)="listGroupAccountSync($event.target.value)"
             [nzAutocomplete]="auto"
           />

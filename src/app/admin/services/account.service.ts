@@ -17,7 +17,7 @@ export interface AccountsResponse {
 export interface Account {
   id: number;
   username: string;
-  groupname: string | null;
+  groupname: object | null;
 }
 
 export interface NewAccount {

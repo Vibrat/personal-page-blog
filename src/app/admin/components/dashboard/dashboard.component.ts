@@ -122,10 +122,10 @@ export class DashboardComponent implements OnInit {
    * @param String ids -  root, VIP2, ...
    */
   saveEdit(id: string): void {
-    let index = this.optionsFilter.indexOf(this.editCache[id].data.groupname);
+    let index = this.optionsFilter.indexOf(this.editCache[id].data.group);
     console.log(index, this.optionsFilter);
     if (index != -1) {
-      let groupList = this.editCache[id].data.groupname.replace(" ", "").split(",");
+      let groupList = this.editCache[id].data.group.replace(" ", "").split(",");
       console.log(groupList);
       let addGroupChains$ = from(groupList).pipe(
         map(_=> { 
@@ -153,15 +153,16 @@ export class DashboardComponent implements OnInit {
           } 
         });
     }
+  }
 
-      // let index = this.optionsFilter.indexOf(this.editCache[id].data.groupname);
-      // const groupId = this.options[index]["id"];
+  onCloseGroupTag(event) {
+    console.log(event);
   }
 
   listGroupAccountSync(value) {
     this.searchAdapter.emit({
       observer: this._group.listGroups({
-        groupname: value,
+        group: value,
         limit: 10,
         offset: 0
       }),
@@ -234,7 +235,7 @@ export class DashboardComponent implements OnInit {
       this.listOfData = response.dashboard.data;
       this.listOfDisplayData = [...this.listOfData];
 
-      this.options = this.listOfData.map(account => account.groupname);
+      this.options = this.listOfData.map(account => account.group);
       this.optionsFilter = [...this.options ];
       this.updateEditCache();
     }

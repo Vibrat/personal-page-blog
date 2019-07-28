@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 export interface ListGroupInput {
   limit?: number;
   offset?: number;
-  groupname?: string;
+  group?: string;
 }
 
 export interface AddUserToGroup {
@@ -44,7 +44,7 @@ export class GroupService {
       "domain"
     )}api=account/group-permission/list-groups&limit=${data.limit}&offset=${
       data.offset
-    }&groupname=${data.groupname}&token=${this._token}`;
+    }&groupname=${data.group}&token=${this._token}`;
 
     return this._http.get(api);
   }
