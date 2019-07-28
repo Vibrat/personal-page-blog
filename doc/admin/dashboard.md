@@ -2,11 +2,11 @@
 
 This page contains details on design of page Dashboard
 
-### Features
+### I. Features
 
-#### Table Content
+#### 1. Table Content
 
-* Column `group`
+##### 1.1 Column `group`
 
 A single value of row in this column will contains `nz-tag` which have `group` value gotten from server. The Example of this will be
 
