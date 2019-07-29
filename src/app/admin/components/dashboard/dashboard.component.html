@@ -56,30 +56,35 @@
         </ng-container>
       </td>
       <td>
-        <ng-container *ngIf="!editCache[data.id]?.edit; else group">
+        <ng-container *ngIf="!editCache[data.id]?.edit">
           <ng-container *ngFor="let groupItem of data.group | keyvalue">
             <nz-tag nzMode="closeable" (nzOnClose)="onCloseGroupTag($event)">{{ groupItem.value }}</nz-tag>  
           </ng-container>
+          <nz-tag *ngIf="!tags[data.id]; else onEdit" class="editable-tag" nzNoAnimation (click)="onGroupEdit(data.id)">
+            <i nz-icon nzType="plus"></i>
+          </nz-tag>
+          <ng-template #onEdit> 
+            <input type="text"
+                   class="on-edit_more-input" 
+                   nz-input 
+                   nzSize="small" 
+                   (input)="listGroupAccountSync($event.target.value)"
+                   (blur)="handleGroupConfirm($event.target.value, data.id)" 
+                   (keydown.enter)="handleGroupConfirm($event.target.value, data.id)" 
+                   [nzAutocomplete]="auto"
+            />
+            <nz-autocomplete nzBackfill #auto>
+              <nz-auto-option *ngFor="let option of optionsFilter | keyvalue" [nzValue]="option.value">
+                  {{ option.value }}
+              </nz-auto-option>
+              <a>More</a>
+            </nz-autocomplete>
+          </ng-template>
         </ng-container>
-        <ng-template #group>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.group"
-            (input)="listGroupAccountSync($event.target.value)"
-            [nzAutocomplete]="auto"
-          />
-          <nz-autocomplete nzBackfill #auto>
-            <nz-auto-option *ngFor="let option of optionsFilter" [nzValue]="option">
-              {{ option }}
-            </nz-auto-option>
-            <a (click)="saveEdit(data.id)">More</a>
-          </nz-autocomplete>
-        </ng-template>
       </td>
       <td>
         <div class="editable-row-operations">
-          <ng-container *ngIf="!editCache[data.id]?.edit; else saveTpl">
+          <ng-container *ngIf="!editCache[data.id]?.edit">
             <div class="btn-group">
               <a (click)="startEdit(data.id)">Edit</a>
               <a
@@ -93,15 +98,6 @@
               <admin-dashboard-password></admin-dashboard-password>
             </div>
           </ng-container>
-          <ng-template #saveTpl>
-            <a (click)="saveEdit(data.id)">Save</a>
-            <a
-              nz-popconfirm
-              nzTitle="Sure to cancel?"
-              (nzOnConfirm)="cancelEdit(data.id)"
-              >Cancel</a
-            >
-          </ng-template>
         </div>
       </td>
     </tr>

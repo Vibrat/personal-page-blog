@@ -16,6 +16,11 @@ export interface AddUserToGroup {
   groupId: string;
 }
 
+export interface AddUserToGroupByName {
+  userId: string;
+  groupname: string;
+}
+
 export interface AddUserToGroupResponse {
   success: boolean;
   message: string;
@@ -61,6 +66,21 @@ export class GroupService {
     const formData = new FormData();
     formData.append("userId", data["userId"]);
     formData.append("groupId", data["groupId"]);
+    return <Observable<AddUserToGroupResponse>>this._http.post(api, formData);
+  }
+
+   /**
+   * Add A User to Group Permissions
+   *
+   * @param data
+   */
+  public updateGroupByName(data: AddUserToGroupByName) {
+    const api = `${AppConfig.get(
+      "domain"
+    )}api=account/group-permission/add-user-to-group-by-name&token=${this._token}`;
+    const formData = new FormData();
+    formData.append("userId", data["userId"]);
+    formData.append("groupname", data["groupname"]);
     return <Observable<AddUserToGroupResponse>>this._http.post(api, formData);
   }
 }
