@@ -69,9 +69,10 @@
                    nz-input 
                    nzSize="small" 
                    (input)="listGroupAccountSync($event.target.value)"
-                   (blur)="handleGroupConfirm($event.target.value, data.id)" 
-                   (keydown.enter)="handleGroupConfirm($event.target.value, data.id)" 
+                   (keydown.enter)="handleGroupConfirm($event.target.value, data.id)"
+                   (blur)="handleGroupConfirm($event.target.value, data.id)"
                    [nzAutocomplete]="auto"
+                   [disabled]="editCache[data.id]?.onGroupTyping"
             />
             <nz-autocomplete nzBackfill #auto>
               <nz-auto-option *ngFor="let option of optionsFilter | keyvalue" [nzValue]="option.value">

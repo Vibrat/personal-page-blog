@@ -81,7 +81,7 @@ export class DashboardComponent implements OnInit {
 
   /**
    * Delete An Account
-   * 
+   *
    * @param number id
    */
   deleteAccount(id: string) {
@@ -90,10 +90,9 @@ export class DashboardComponent implements OnInit {
         .deleteAccount(this.editCache[id].data.username)
         .pipe(take(1)),
       callback: () => {
-
         const index = this.listOfData.findIndex(item => item.id === id);
         delete this.editCache[id];
-        
+
         // Filter data displayed to DOM
         this.listOfDisplayData = this.listOfDisplayData.filter(
           (item, id) => id != index
@@ -143,41 +142,53 @@ export class DashboardComponent implements OnInit {
    * @param number id
    */
   handleGroupConfirm(groupName: string, id: number) {
-    // Create listener - Observable to input value
-    let addGroupChains$ = of(groupName).pipe(
-      map(name => {
-        return { id: id, groupname: name };
-      }),
-      flatMap(({ id, groupname }) => {
-        // Call API to update data in server
-        return this._group.updateGroupByName({
-          userId: this.editCache[id].data.id,
-          groupname: groupname
-        });
-      })
-    );
+    
+    if (!this.editCache[id].onGroupTyping) {
+      this.editCache[id].onGroupTyping = true;
+      // Create listener - Observable to input value
+      let addGroupChains$ = of(groupName).pipe(
+        take(1),
+        map(name => {
+          return { id: id, groupname: name };
+        }),
+        flatMap(({ id, groupname }) => {
+          // Call API to update data in server
+          return this._group.updateGroupByName({
+            userId: this.editCache[id].data.id,
+            groupname: groupname
+          });
+        })
+      );
 
-    // Emit to API Adapter
-    this.saveEditAccountAdapter.emit({
-      observer: addGroupChains$,
-      callback: (response: AddUserToGroupResponse) => {
-        let index = this.listOfData.findIndex(
-          item => item.id === response.data.userId
-        );
+      // Emit to API Adapter
+      this.saveEditAccountAdapter.emit({
+        observer: addGroupChains$,
+        callback: (response: AddUserToGroupResponse) => {
+          let index = this.listOfData.findIndex(
+            item => item.id === response.data.userId
+          );
 
-        Object.assign(
-          this.listOfData[index],
-          this.editCache[response.data.userId].data
-        );
+          console.log(this.editCache);
+          this.editCache[id].onGroupTyping = false;
+          this.editCache[response.data.userId].data.group[
+            response.data.groupId
+          ] = response.data.groupname;
 
-        // Show message
-        this._msgService.success("Done");
-        this.tags[id] = !this.tags[id];
-      },
-      error: (errorMsg: string) => {
-        this._msgService.error("Failed to get group information");
-      }
-    });
+          Object.assign(
+            this.listOfData[index],
+            this.editCache[response.data.userId].data
+          );
+
+          // Show message
+          this._msgService.success("Done");
+          this.tags[id] = !this.tags[id];
+        },
+        error: (errorMsg: string) => {
+          this.editCache[id].onGroupTyping = false;
+          this._msgService.error( "Failed to get group information");
+        }
+      });
+    }
   }
 
   /**
@@ -187,7 +198,6 @@ export class DashboardComponent implements OnInit {
    * @param string value - text to be searched
    */
   listGroupAccountSync(value: string) {
-    
     // Emit value to Adapter to API Server
     this.searchAdapter.emit({
       observer: this._group.listGroups({
@@ -213,8 +223,16 @@ export class DashboardComponent implements OnInit {
 
   updateEditCache(): void {
     this.listOfData.forEach(item => {
+      
+      // Re-render Group
+      if (item['group'] == null) {
+        item['group'] = {};
+      }
+
+      // Setting cache
       this.editCache[item.id] = {
         edit: false,
+        onGroupTyping: false,
         data: { ...item }
       };
     });
@@ -262,7 +280,6 @@ export class DashboardComponent implements OnInit {
 
       this.options = this.listOfData.map(account => account.group);
       this.optionsFilter = Object.assign({}, ...this.options);
-      console.log("optionFilter", this.optionsFilter);
       this.updateEditCache();
     }
   }

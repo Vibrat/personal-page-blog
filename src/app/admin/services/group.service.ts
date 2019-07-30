@@ -26,6 +26,7 @@ export interface AddUserToGroupResponse {
   message: string;
   data?: {
     userId: string;
+    groupname: string;
     groupId: string; 
   }
 }
