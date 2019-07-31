@@ -87,12 +87,10 @@
         <div class="editable-row-operations">
           <ng-container *ngIf="!editCache[data.id]?.edit">
             <div class="btn-group">
-              <a (click)="startEdit(data.id)">Edit</a>
               <a
                 nz-popconfirm
                 nzTitle="Sure to delete?"
-                (nzOnConfirm)="deleteAccount(data.id)"
-                >Delete</a
+                (nzOnConfirm)="deleteAccount(data.id)">Delete</a
               >
             </div>
             <div class="btn-group">
