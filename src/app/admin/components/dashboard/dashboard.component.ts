@@ -142,13 +142,18 @@ export class DashboardComponent implements OnInit {
    * @param number id
    */
   handleGroupConfirm(groupName: string, id: number) {
-    
     if (!this.editCache[id].onGroupTyping) {
       this.editCache[id].onGroupTyping = true;
       // Create listener - Observable to input value
       let addGroupChains$ = of(groupName).pipe(
         take(1),
         map(name => {
+          if (
+            Object.values(this.editCache[id].data.group).indexOf(name) != -1
+          ) {
+            throw new Error("group already exist in this user");
+          }
+
           return { id: id, groupname: name };
         }),
         flatMap(({ id, groupname }) => {
@@ -168,11 +173,9 @@ export class DashboardComponent implements OnInit {
             item => item.id === response.data.userId
           );
 
-          console.log(this.editCache);
           this.editCache[id].onGroupTyping = false;
-          this.editCache[response.data.userId].data.group[
-            response.data.groupId
-          ] = response.data.groupname;
+          this.editCache[id].data.group[response.data.groupId] =
+            response.data.groupname;
 
           Object.assign(
             this.listOfData[index],
@@ -185,7 +188,7 @@ export class DashboardComponent implements OnInit {
         },
         error: (errorMsg: string) => {
           this.editCache[id].onGroupTyping = false;
-          this._msgService.error( "Failed to get group information");
+          this._msgService.error(errorMsg);
         }
       });
     }
@@ -223,10 +226,9 @@ export class DashboardComponent implements OnInit {
 
   updateEditCache(): void {
     this.listOfData.forEach(item => {
-      
       // Re-render Group
-      if (item['group'] == null) {
-        item['group'] = {};
+      if (item["group"] == null) {
+        item["group"] = {};
       }
 
       // Setting cache
