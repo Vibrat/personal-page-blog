@@ -5,6 +5,9 @@
     "previous": "Previous",
     "tagline": "Documentation for personal blog",
     "docs": {
+      "spec-admin-dashboard": {
+        "title": "Specification- Dashboard Admin"
+      },
       "doc1": {
         "title": "Latin-ish",
         "sidebar_label": "Example Page"
@@ -32,6 +35,7 @@
       "Blog": "Blog"
     },
     "categories": {
+      "Specification": "Specification",
       "Docusaurus": "Docusaurus",
       "First Category": "First Category",
       "Second Category": "Second Category",

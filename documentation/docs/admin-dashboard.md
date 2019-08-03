@@ -1,3 +1,8 @@
+---
+id: spec-admin-dashboard
+title: Specification- Dashboard Admin
+---
+
 # Admin - Dashboard Specification
 
 This page contains details on design of page Dashboard
