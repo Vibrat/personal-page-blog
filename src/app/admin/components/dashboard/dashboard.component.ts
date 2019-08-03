@@ -38,8 +38,8 @@ export class DashboardComponent implements OnInit {
   listOfData: any[] = []; // Payload represents data in server
   listOfDisplayData = [...this.listOfData]; // data being displayed
   listAccountGroup$: Observable<any>;
-  options = []; // Store data from API
-  optionsFilter = []; // Return array to display of options
+  options = []; // options expose to html
+  optionsStore = []; // Store data for options
   tags = {}; // Groups' Tags
   searchAdapter: DashboardApiAdapter;
   newAccountAdapter: DashboardApiAdapter;
@@ -138,60 +138,75 @@ export class DashboardComponent implements OnInit {
   /**
    * Handle Confirmation on group changes.
    *
+   * @todo Fixed clickOut not hide input tags
    * @param string groupName
    * @param number id
    */
   handleGroupConfirm(groupName: string, id: number) {
-    if (!this.editCache[id].onGroupTyping) {
-      this.editCache[id].onGroupTyping = true;
-      // Create listener - Observable to input value
-      let addGroupChains$ = of(groupName).pipe(
-        take(1),
-        map(name => {
-          if (
-            Object.values(this.editCache[id].data.group).indexOf(name) != -1
-          ) {
-            throw new Error("group already exist in this user");
-          }
-
-          return { id: id, groupname: name };
-        }),
-        flatMap(({ id, groupname }) => {
-          // Call API to update data in server
-          return this._group.updateGroupByName({
-            userId: this.editCache[id].data.id,
-            groupname: groupname
-          });
-        })
-      );
-
-      // Emit to API Adapter
-      this.saveEditAccountAdapter.emit({
-        observer: addGroupChains$,
-        callback: (response: AddUserToGroupResponse) => {
-          let index = this.listOfData.findIndex(
-            item => item.id === response.data.userId
-          );
-
-          this.editCache[id].onGroupTyping = false;
-          this.editCache[id].data.group[response.data.groupId] =
-            response.data.groupname;
-
-          Object.assign(
-            this.listOfData[index],
-            this.editCache[response.data.userId].data
-          );
-
-          // Show message
-          this._msgService.success("Done");
-          this.tags[id] = !this.tags[id];
-        },
-        error: (errorMsg: string) => {
-          this.editCache[id].onGroupTyping = false;
-          this._msgService.error(errorMsg);
-        }
-      });
+    // Hide input tags
+    if (groupName == "") {
+      this.tags[id] = false;
+      return;
     }
+
+    // Check if another same behavior is trigering
+    if (this.editCache[id].onGroupTyping) {
+      return;
+    }
+
+    this.editCache[id].onGroupTyping = true;
+
+    // Create listener - Observable to input value
+    let addGroupChains$ = of(groupName).pipe(
+      take(1),
+      map(name => {
+        
+        // Pre-check if group is already added
+        let groups = Object.values(this.editCache[id].data.group);
+        if (groups.indexOf(name) != -1) {
+          throw new Error("group already exist in this user");
+        }
+
+        return { id: id, groupname: name };
+      }),
+      flatMap(({ id, groupname }) => {
+        
+        // Call API to update data in server
+        return this._group.updateGroupByName({
+          userId: this.editCache[id].data.id,
+          groupname: groupname
+        });
+      })
+    );
+
+    // Emit to API Adapter
+    this.saveEditAccountAdapter.emit({
+      observer: addGroupChains$,
+      callback: (response: AddUserToGroupResponse) => {
+        
+        let index = this.listOfData.findIndex(
+          item => item.id === response.data.userId
+        );
+
+        this.editCache[id].onGroupTyping = false;
+        this.editCache[id].data.group[response.data.groupId] =
+          response.data.groupname;
+
+        Object.assign(
+          this.listOfData[index],
+          this.editCache[response.data.userId].data
+        );
+
+        // Show message
+        this._msgService.success("Done");
+        this.tags[id] = !this.tags[id];
+      },
+      error: (errorMsg: string) => {
+        
+        this.editCache[id].onGroupTyping = false;
+        this._msgService.error(errorMsg);
+      }
+    });
   }
 
   /**
@@ -201,6 +216,14 @@ export class DashboardComponent implements OnInit {
    * @param string value - text to be searched
    */
   listGroupAccountSync(value: string) {
+    // Pre-check if value exist
+    if (this.options.indexOf(value) != -1) {
+      this.options = Object.values(this.optionsStore).filter(item =>
+        item.startsWith(value)
+      );
+      return;
+    }
+
     // Emit value to Adapter to API Server
     this.searchAdapter.emit({
       observer: this._group.listGroups({
@@ -209,13 +232,17 @@ export class DashboardComponent implements OnInit {
         offset: 0
       }),
       callback: (response?: any) => {
-        this.optionsFilter = Object.assign(
-          this.optionsFilter,
+        this.optionsStore = Object.assign(
+          this.optionsStore,
           ...response["data"].map(group => {
             let item = {};
             item[group["id"]] = group["name"];
             return item;
           })
+        );
+
+        this.options = Object.values(this.optionsStore).filter(item =>
+          item.startsWith(value)
         );
       },
       error: (errorMsg: string) => {
@@ -280,8 +307,11 @@ export class DashboardComponent implements OnInit {
       this.listOfData = response.dashboard.data;
       this.listOfDisplayData = [...this.listOfData];
 
-      this.options = this.listOfData.map(account => account.group);
-      this.optionsFilter = Object.assign({}, ...this.options);
+      this.optionsStore = Object.assign(
+        {},
+        ...this.listOfData.map(account => account.group)
+      );
+      this.options = Object.values(this.optionsStore);
       this.updateEditCache();
     }
   }

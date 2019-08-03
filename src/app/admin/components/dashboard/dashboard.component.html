@@ -75,10 +75,11 @@
                    [disabled]="editCache[data.id]?.onGroupTyping"
             />
             <nz-autocomplete nzBackfill #auto>
-              <nz-auto-option *ngFor="let option of optionsFilter | keyvalue" [nzValue]="option.value">
-                  {{ option.value }}
-              </nz-auto-option>
-              <a>More</a>
+              <ng-container *ngFor="let option of options | limit: 1000">
+                <nz-auto-option [nzValue]="option">
+                    {{ option }}
+                </nz-auto-option>
+            </ng-container>
             </nz-autocomplete>
           </ng-template>
         </ng-container>
