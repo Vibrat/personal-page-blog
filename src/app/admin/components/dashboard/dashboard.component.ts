@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, HostListener } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { Observable, from, of } from "rxjs";
-import { take, concatMap, filter, map, tap, flatMap } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { take, concatMap, map, flatMap } from "rxjs/operators";
 import {
   AccountService,
   NewAccount,
@@ -133,6 +133,10 @@ export class DashboardComponent implements OnInit {
 
   onCloseGroupTag(event) {
     console.log(event);
+  }
+
+  onCloseGroupTagWhenClick(success: boolean, id: string | number) {
+    this.tags[id] = !success;
   }
 
   /**

@@ -60,14 +60,22 @@
           <ng-container *ngFor="let groupItem of data.group | keyvalue">
             <nz-tag nzMode="closeable" (nzOnClose)="onCloseGroupTag($event)">{{ groupItem.value }}</nz-tag>  
           </ng-container>
-          <nz-tag *ngIf="!tags[data.id]; else onEdit" class="editable-tag" nzNoAnimation (click)="onGroupEdit(data.id)">
+          <nz-tag 
+              *ngIf="!tags[data.id]; else onEdit" 
+              class="editable-tag" 
+              nzNoAnimation 
+              (click)="onGroupEdit(data.id)">
             <i nz-icon nzType="plus"></i>
           </nz-tag>
-          <ng-template #onEdit> 
-            <input type="text"
+          <ng-template 
+            [tag-id]="data.id" 
+            (onClickOutSide)="onCloseGroupTagWhenClick($event, data.id)" 
+            #onEdit> 
+            <input 
+                   type="text"
                    class="on-edit_more-input" 
                    nz-input 
-                   nzSize="small" 
+                   nzSize="small"
                    (input)="listGroupAccountSync($event.target.value)"
                    (keydown.enter)="handleGroupConfirm($event.target.value, data.id)"
                    (blur)="handleGroupConfirm($event.target.value, data.id)"
