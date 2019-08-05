@@ -55,6 +55,8 @@ export class GroupTagComponent {
   onCloseGroupTag(event) {
     console.log(event);
   }
+
+  /* Switch between `edit` mode */
   onGroupEdit(id: string) {
     this.tags[id] = !this.tags[id];
   }
@@ -79,6 +81,14 @@ export class GroupTagComponent {
     this.typing.emit({ success: true, value: value });
   }
 
+  /**
+   * @Output when user
+   *  - Hit enter
+   *  - or click out side components 
+   * 
+   * @param groupName 
+   * @param id 
+   */
   handleGroupConfirm(groupName, id) {
     // Hide input tags
     if (groupName == "") {
