@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChildren,
+  ElementRef
+} from "@angular/core";
+import { ClickOutsideOutput } from "./group-tag.directive";
+import { NzAutocompleteOptionComponent } from "ng-zorro-antd/auto-complete";
 
 export interface GroupTag {
   id: number;
@@ -12,9 +21,9 @@ export interface Tags {
 }
 
 export interface onConfirmState {
-    success: boolean;
-    data: any;
-    callback?: Function;
+  success: boolean;
+  data: any;
+  callback?: Function;
 }
 
 /**
@@ -22,16 +31,22 @@ export interface onConfirmState {
  */
 @Component({
   selector: "dashboard-admin-tag",
-  templateUrl: `group-tag.component.html`
+  templateUrl: `group-tag.component.html`,
+  styleUrls: [`group-tag.component.scss`]
 })
 export class GroupTagComponent {
+  @ViewChildren(NzAutocompleteOptionComponent, { read: ElementRef })
+  autoSelection: ElementRef[];
   @Input() data: GroupTag;
   @Input() options: string[] = [];
+  @Output() typing: EventEmitter<{
+    success: boolean;
+    value: any;
+  }> = new EventEmitter();
+  @Output() onConfirm: EventEmitter<onConfirmState> = new EventEmitter();
   onGroupTyping: boolean; // disabled when submission
   tags: Tags = {};
   optionsStore = [];
-  @Output() typing: EventEmitter<{ success: boolean; value: any }> = new EventEmitter();
-  @Output() onConfirm: EventEmitter<onConfirmState> = new EventEmitter();
 
   isTag(id: string) {
     return this.tags.hasOwnProperty(id) && this.tags[id];
@@ -51,7 +66,6 @@ export class GroupTagComponent {
    * @param string value - text to be searched
    */
   listGroupAccountSync(value: string) {
-    
     // Pre-check if value exist
     if (this.options.indexOf(value) != -1) {
       this.options = Object.values(this.optionsStore).filter(item =>
@@ -65,31 +79,43 @@ export class GroupTagComponent {
     this.typing.emit({ success: true, value: value });
   }
 
-
   handleGroupConfirm(groupName, id) {
-       // Hide input tags
+    // Hide input tags
     if (groupName == "") {
+      this.tags[id] = false;
+      return;
+    }
+
+    // Check if another same behavior is trigering
+    if (this.onGroupTyping) {
+      return;
+    }
+
+    this.onGroupTyping = true;
+    this.onConfirm.emit({
+      success: true,
+      data: { group: groupName, id: id },
+      callback: () => {
+        this.onGroupTyping = false;
         this.tags[id] = false;
-        return;
       }
-  
-      // Check if another same behavior is trigering
-      if (this.onGroupTyping) {
-        return;
-      }
-  
-      this.onGroupTyping = true;
-      this.onConfirm.emit({
-          success: true,
-          data: { group: groupName, id: id },
-          callback: () => {
-              this.onGroupTyping = false;
-              this.tags[id] = false;
-            }
-      });
+    });
   }
-  
-  onCloseGroupTagWhenClick(success: boolean, id) {
-    this.tags[id] = !success;
+
+  /* @Output [tag-id] */
+  onCloseGroupTagWhenClick(clickState: ClickOutsideOutput, id: number) {
+    // Case: user click on autoSelection
+    if (this.autoSelection) {
+      let clickMap = this.autoSelection.map(
+        e1 => clickState.path.indexOf(e1.nativeElement) != -1
+      );
+      if (clickMap.indexOf(true) != -1) {
+        this.tags[id] = clickState.isOutSide;
+        return;
+      }
+    }
+
+    // Case default
+    this.tags[id] = !clickState.isOutSide;
   }
 }

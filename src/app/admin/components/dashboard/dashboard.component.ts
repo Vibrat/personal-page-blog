@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
   options = []; // options expose to html
   optionsStore = []; // Store data for options
   tags = {}; // Groups' Tags
+
   searchAdapter: DashboardApiAdapter;
   newAccountAdapter: DashboardApiAdapter;
   deleteAccountAdapter: DashboardApiAdapter;
@@ -124,66 +125,61 @@ export class DashboardComponent implements OnInit {
   onGroupConfirmation(state: {
     success: boolean;
     data: any;
-    callback?: Function
+    callback?: Function;
   }) {
     if (state.success) {
       // Create listener - Observable to input value
-    let addGroupChains$ = of(state.data.group).pipe(
-      take(1),
-      map(name => {
-        
-        // Pre-check if group is already added
-        let groups = Object.values(this.editCache[state.data.id].data.group);
-        if (groups.indexOf(name) != -1) {
-          throw new Error("group already exist in this user");
+      let addGroupChains$ = of(state.data.group).pipe(
+        take(1),
+        map(name => {
+          // Pre-check if group is already added
+          let groups = Object.values(this.editCache[state.data.id].data.group);
+          if (groups.indexOf(name) != -1) {
+            throw new Error("group already exist in this user");
+          }
+
+          return { id: state.data.id, groupname: name };
+        }),
+        flatMap(({ id, groupname }) => {
+          // Call API to update data in server
+          return this._group.updateGroupByName({
+            userId: this.editCache[id].data.id,
+            groupname: groupname
+          });
+        })
+      );
+
+      // Emit to API Adapter
+      this.saveEditAccountAdapter.emit({
+        observer: addGroupChains$,
+        callback: (response: AddUserToGroupResponse) => {
+          let index = this.listOfData.findIndex(
+            item => item.id === response.data.userId
+          );
+
+          this.editCache[state.data.id].onGroupTyping = false;
+          this.editCache[state.data.id].data.group[response.data.groupId] =
+            response.data.groupname;
+
+          Object.assign(
+            this.listOfData[index],
+            this.editCache[response.data.userId].data
+          );
+
+          // Show message
+          this._msgService.success("Done");
+          state.callback();
+        },
+        error: (errorMsg: string) => {
+          this.editCache[state.data.id].onGroupTyping = false;
+          this._msgService.error(errorMsg);
+          state.callback();
         }
-
-        return { id: state.data.id, groupname: name };
-      }),
-      flatMap(({ id, groupname }) => {
-        
-        // Call API to update data in server
-        return this._group.updateGroupByName({
-          userId: this.editCache[id].data.id,
-          groupname: groupname
-        });
-      })
-    );
-
-    // Emit to API Adapter
-    this.saveEditAccountAdapter.emit({
-      observer: addGroupChains$,
-      callback: (response: AddUserToGroupResponse) => {
-        
-        let index = this.listOfData.findIndex(
-          item => item.id === response.data.userId
-        );
-
-        this.editCache[state.data.id].onGroupTyping = false;
-        this.editCache[state.data.id].data.group[response.data.groupId] =
-          response.data.groupname;
-
-        Object.assign(
-          this.listOfData[index],
-          this.editCache[response.data.userId].data
-        );
-
-        // Show message
-        this._msgService.success("Done");
-        state.callback();
-      },
-      error: (errorMsg: string) => {
-        
-        this.editCache[state.data.id].onGroupTyping = false;
-        this._msgService.error(errorMsg);
-        state.callback();
-      }
-    });
+      });
     }
-
   }
 
-   /**
+  /**
    * @Output from sub-components
    * Call API Server to get values
    * when user's typing
@@ -219,7 +215,7 @@ export class DashboardComponent implements OnInit {
       });
     }
   }
-  
+
   // Internal Usage only
   private updateEditCache(): void {
     this.listOfData.forEach(item => {

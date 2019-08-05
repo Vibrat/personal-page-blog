@@ -5,15 +5,20 @@ import {
   Renderer2,
   HostListener,
   EventEmitter,
-  Output, AfterViewInit
+  Output
 } from "@angular/core";
+
+export interface ClickOutsideOutput {
+  isOutSide: boolean;
+  path: HTMLElement[];
+}
 
 @Directive({
   selector: "[tag-id]"
 })
 export class GroupTagDirective {
   @Input("tag-id") tagId: string;
-  @Output() onClickOutSide: EventEmitter<boolean> = new EventEmitter();
+  @Output() onClickOutSide: EventEmitter<ClickOutsideOutput> = new EventEmitter();
   init: boolean = true;
 
   constructor(private _ref: ElementRef, private _render: Renderer2) {}
@@ -22,14 +27,20 @@ export class GroupTagDirective {
   onCLick(path: HTMLElement[]) {
 
     if (this.init) {
-      this.onClickOutSide.emit(false);
+      this.onClickOutSide.emit({ 
+        isOutSide: false,
+        path: path
+      });
       this.init = false;  
       return;
     }
 
     if (path.indexOf(this._ref.nativeElement) == -1) {
       
-      this.onClickOutSide.emit(true);
+      this.onClickOutSide.emit({
+        isOutSide: true,
+        path: path
+      });
       return;
     } 
   }
