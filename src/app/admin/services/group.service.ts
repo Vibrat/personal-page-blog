@@ -31,6 +31,17 @@ export interface AddUserToGroupResponse {
   }
 }
 
+export interface RemoveGroupFromUser {
+  userId: number;
+  groupname: string;
+}
+
+export interface RemoveGroupFromUserResponse {
+  success: boolean;
+  message?: string;
+  code: number
+}
+
 @Injectable()
 export class GroupService {
   private _domain: string = AppConfig.get("domain");
@@ -83,5 +94,21 @@ export class GroupService {
     formData.append("userId", data["userId"]);
     formData.append("groupname", data["groupname"]);
     return <Observable<AddUserToGroupResponse>>this._http.post(api, formData);
+  }
+
+  /**
+   * Remove a group from user
+   * @param data
+   *  - userId : number ID represents user
+   *  - groupname : string value represents group to be removed
+   */
+  public removeGroupFromUser(data: RemoveGroupFromUser) {
+    
+    let api = `${AppConfig.get("domain")}api=group/group-permission/remove-user-from-group-by-name`;
+    api += `&userId=${data.userId}`;
+    api += `&groupname=${data.groupname}`;
+    api += `&token=${this._token}`;
+
+    return <Observable<RemoveGroupFromUserResponse>>this._http.delete(api);
   }
 }
