@@ -1,6 +1,6 @@
 <ng-container>
     <ng-container *ngFor="let groupItem of data.group | keyvalue">
-      <nz-tag nzMode="closeable" (nzOnClose)="onCloseGroupTag($event)">{{ groupItem.value }}</nz-tag>  
+      <nz-tag nzMode="closeable" (nzOnClose)="onCloseGroupTag(data.id)">{{ groupItem.value }}</nz-tag>  
     </ng-container>
     <nz-tag 
         *ngIf="!isTag(data.id); else onEdit" 

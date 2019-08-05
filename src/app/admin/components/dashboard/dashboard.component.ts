@@ -23,6 +23,8 @@ export interface Data {
   disabled: boolean;
 }
 
+import { OnClostTagState } from "./components/group-tag/group-tag.component";
+
 @Component({
   selector: "admin-dashboard",
   templateUrl: `dashboard.component.html`,
@@ -116,9 +118,8 @@ export class DashboardComponent implements OnInit {
     this.updateEditCache();
   }
 
-  /* @Output from sub-component */
-  onCloseGroupTagWhenClick(success: boolean, id: string | number) {
-    this.tags[id] = !success;
+  onCloseGroupTag(state: OnClostTagState) {
+    console.log(state);
   }
 
   /* @Output from sub-component */

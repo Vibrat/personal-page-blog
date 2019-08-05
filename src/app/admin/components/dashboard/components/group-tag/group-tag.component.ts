@@ -11,19 +11,27 @@ import { NzAutocompleteOptionComponent } from "ng-zorro-antd/auto-complete";
 
 export interface GroupTag {
   id: number;
-  group: {
-    [key: string]: string;
-  };
+  group: Tags;
 }
 
 export interface Tags {
   [key: string]: boolean;
 }
 
-export interface onConfirmState {
+export interface OnConfirmState {
   success: boolean;
   data: any;
   callback?: Function;
+}
+
+export interface OnTypingState {
+  success: boolean;
+  value: any;
+}
+
+export interface OnClostTagState {
+  success: boolean;
+  data: Tags | null
 }
 
 /**
@@ -35,25 +43,42 @@ export interface onConfirmState {
   styleUrls: [`group-tag.component.scss`]
 })
 export class GroupTagComponent {
-  @ViewChildren(NzAutocompleteOptionComponent, { read: ElementRef })
-  autoSelection: ElementRef[];
+  @ViewChildren(NzAutocompleteOptionComponent, { read: ElementRef }) autoSelection: ElementRef[];
   @Input() data: GroupTag;
   @Input() options: string[] = [];
-  @Output() typing: EventEmitter<{
-    success: boolean;
-    value: any;
-  }> = new EventEmitter();
-  @Output() onConfirm: EventEmitter<onConfirmState> = new EventEmitter();
+  @Output() typing: EventEmitter<OnTypingState> = new EventEmitter();
+  @Output() onConfirm: EventEmitter<OnConfirmState> = new EventEmitter();
+  @Output() onCloseTag: EventEmitter<OnClostTagState> = new EventEmitter();
   onGroupTyping: boolean; // disabled when submission
   tags: Tags = {};
-  optionsStore = [];
+  optionsStore = []; // cache for options
 
   isTag(id: string) {
     return this.tags.hasOwnProperty(id) && this.tags[id];
   }
 
-  onCloseGroupTag(event) {
-    console.log(event);
+  /**
+   * Delete tags
+   * 
+   * @param number id represent a tag
+   */
+  onCloseGroupTag(id: number) {
+    if (this.data.group.hasOwnProperty(id)) {
+      
+      let tag: Tags = { [id]: this.tags[id] };
+      delete this.tags[id];
+
+      this.onCloseTag.emit({
+        success: true,
+        data: tag
+      });
+      return;
+    } 
+
+    this.onCloseTag.emit({
+      success: false,
+      data: null
+    });
   }
 
   /* Switch between `edit` mode */
