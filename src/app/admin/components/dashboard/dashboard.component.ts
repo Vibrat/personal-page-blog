@@ -115,63 +115,30 @@ export class DashboardComponent implements OnInit {
     this.updateEditCache();
   }
 
-  startEdit(id: string): void {
-    this.editCache[id].edit = true;
-  }
-
-  cancelEdit(id: string): void {
-    const index = this.listOfData.findIndex(item => item.id === id);
-    this.editCache[id] = {
-      data: { ...this.listOfData[index] },
-      edit: false
-    };
-  }
-
-  onGroupEdit(id: string) {
-    this.tags[id] = !this.tags[id];
-  }
-
-  onCloseGroupTag(event) {
-    console.log(event);
-  }
-
+  /* @Output from sub-component */
   onCloseGroupTagWhenClick(success: boolean, id: string | number) {
     this.tags[id] = !success;
   }
 
-  /**
-   * Handle Confirmation on group changes.
-   *
-   * @todo Fixed clickOut not hide input tags
-   * @param string groupName
-   * @param number id
-   */
-  handleGroupConfirm(groupName: string, id: number) {
-    // Hide input tags
-    if (groupName == "") {
-      this.tags[id] = false;
-      return;
-    }
-
-    // Check if another same behavior is trigering
-    if (this.editCache[id].onGroupTyping) {
-      return;
-    }
-
-    this.editCache[id].onGroupTyping = true;
-
-    // Create listener - Observable to input value
-    let addGroupChains$ = of(groupName).pipe(
+  /* @Output from sub-component */
+  onGroupConfirmation(state: {
+    success: boolean;
+    data: any;
+    callback?: Function
+  }) {
+    if (state.success) {
+      // Create listener - Observable to input value
+    let addGroupChains$ = of(state.data.group).pipe(
       take(1),
       map(name => {
         
         // Pre-check if group is already added
-        let groups = Object.values(this.editCache[id].data.group);
+        let groups = Object.values(this.editCache[state.data.id].data.group);
         if (groups.indexOf(name) != -1) {
           throw new Error("group already exist in this user");
         }
 
-        return { id: id, groupname: name };
+        return { id: state.data.id, groupname: name };
       }),
       flatMap(({ id, groupname }) => {
         
@@ -192,8 +159,8 @@ export class DashboardComponent implements OnInit {
           item => item.id === response.data.userId
         );
 
-        this.editCache[id].onGroupTyping = false;
-        this.editCache[id].data.group[response.data.groupId] =
+        this.editCache[state.data.id].onGroupTyping = false;
+        this.editCache[state.data.id].data.group[response.data.groupId] =
           response.data.groupname;
 
         Object.assign(
@@ -203,59 +170,58 @@ export class DashboardComponent implements OnInit {
 
         // Show message
         this._msgService.success("Done");
-        this.tags[id] = !this.tags[id];
+        state.callback();
       },
       error: (errorMsg: string) => {
         
-        this.editCache[id].onGroupTyping = false;
+        this.editCache[state.data.id].onGroupTyping = false;
         this._msgService.error(errorMsg);
+        state.callback();
       }
     });
+    }
+
   }
 
-  /**
+   /**
+   * @Output from sub-components
    * Call API Server to get values
    * when user's typing
    *
    * @param string value - text to be searched
    */
-  listGroupAccountSync(value: string) {
-    // Pre-check if value exist
-    if (this.options.indexOf(value) != -1) {
-      this.options = Object.values(this.optionsStore).filter(item =>
-        item.startsWith(value)
-      );
-      return;
+  onGroupTyping(inputState: { success: boolean; value: any }) {
+    if (inputState.success) {
+      // Emit value to Adapter to API Server
+      this.searchAdapter.emit({
+        observer: this._group.listGroups({
+          group: inputState.value,
+          limit: 10,
+          offset: 0
+        }),
+        callback: (response?: any) => {
+          this.optionsStore = Object.assign(
+            this.optionsStore,
+            ...response["data"].map(group => {
+              let item = {};
+              item[group["id"]] = group["name"];
+              return item;
+            })
+          );
+
+          this.options = Object.values(this.optionsStore).filter(item =>
+            item.startsWith(inputState.value)
+          );
+        },
+        error: (errorMsg: string) => {
+          this._msgService.error("Failed to query search API");
+        }
+      });
     }
-
-    // Emit value to Adapter to API Server
-    this.searchAdapter.emit({
-      observer: this._group.listGroups({
-        group: value,
-        limit: 10,
-        offset: 0
-      }),
-      callback: (response?: any) => {
-        this.optionsStore = Object.assign(
-          this.optionsStore,
-          ...response["data"].map(group => {
-            let item = {};
-            item[group["id"]] = group["name"];
-            return item;
-          })
-        );
-
-        this.options = Object.values(this.optionsStore).filter(item =>
-          item.startsWith(value)
-        );
-      },
-      error: (errorMsg: string) => {
-        this._msgService.error("Failed to query search API");
-      }
-    });
   }
-
-  updateEditCache(): void {
+  
+  // Internal Usage only
+  private updateEditCache(): void {
     this.listOfData.forEach(item => {
       // Re-render Group
       if (item["group"] == null) {
@@ -271,11 +237,13 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // Reset Search
   reset(): void {
     this.searchValue = "";
     this.search();
   }
 
+  // Search Value based on current state
   search(): void {
     const filterFunc = (item: {
       group: string;
@@ -320,6 +288,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // Get Router State
   async getDataState() {
     return await this._router.data.pipe(take(1)).toPromise();
   }

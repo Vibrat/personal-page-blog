@@ -56,41 +56,12 @@
         </ng-container>
       </td>
       <td>
-        <ng-container *ngIf="!editCache[data.id]?.edit">
-          <ng-container *ngFor="let groupItem of data.group | keyvalue">
-            <nz-tag nzMode="closeable" (nzOnClose)="onCloseGroupTag($event)">{{ groupItem.value }}</nz-tag>  
-          </ng-container>
-          <nz-tag 
-              *ngIf="!tags[data.id]; else onEdit" 
-              class="editable-tag" 
-              nzNoAnimation 
-              (click)="onGroupEdit(data.id)">
-            <i nz-icon nzType="plus"></i>
-          </nz-tag>
-          <ng-template 
-            [tag-id]="data.id" 
-            (onClickOutSide)="onCloseGroupTagWhenClick($event, data.id)" 
-            #onEdit> 
-            <input 
-                   type="text"
-                   class="on-edit_more-input" 
-                   nz-input 
-                   nzSize="small"
-                   (input)="listGroupAccountSync($event.target.value)"
-                   (keydown.enter)="handleGroupConfirm($event.target.value, data.id)"
-                   (blur)="handleGroupConfirm($event.target.value, data.id)"
-                   [nzAutocomplete]="auto"
-                   [disabled]="editCache[data.id]?.onGroupTyping"
-            />
-            <nz-autocomplete nzBackfill #auto>
-              <ng-container *ngFor="let option of options | limit: 1000">
-                <nz-auto-option [nzValue]="option">
-                    {{ option }}
-                </nz-auto-option>
-            </ng-container>
-            </nz-autocomplete>
-          </ng-template>
-        </ng-container>
+        <dashboard-admin-tag 
+          [data]="data"
+          [options]="options"
+          (onConfirm)="onGroupConfirmation($event)"
+          (typing)="onGroupTyping($event)">
+        </dashboard-admin-tag>
       </td>
       <td>
         <div class="editable-row-operations">
