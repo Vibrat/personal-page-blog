@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { Observable, of } from "rxjs";
+import { Observable, of, forkJoin } from "rxjs";
 import { take, concatMap, map, flatMap } from "rxjs/operators";
 import {
   AccountService,
@@ -13,7 +13,7 @@ import {
   AddUserToGroupResponse
 } from "../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
-import { DashboardApiAdapter } from "./dashboard.api.adapter";
+import { DashboardApiAdapter, AdapterResponse } from "./dashboard.api.adapter";
 
 export interface Data {
   id: number;
@@ -48,6 +48,7 @@ export class DashboardComponent implements OnInit {
   newAccountAdapter: DashboardApiAdapter;
   deleteAccountAdapter: DashboardApiAdapter;
   saveEditAccountAdapter: DashboardApiAdapter;
+  removeGroupTagFromUser: DashboardApiAdapter;
 
   constructor(
     private _router: ActivatedRoute,
@@ -56,13 +57,10 @@ export class DashboardComponent implements OnInit {
     private _msgService: MessageService
   ) {
     this.searchAdapter = new DashboardApiAdapter();
-    this.searchAdapter.build("Search").subscribe();
     this.newAccountAdapter = new DashboardApiAdapter();
-    this.newAccountAdapter.build("NewAccount").subscribe();
     this.deleteAccountAdapter = new DashboardApiAdapter();
-    this.deleteAccountAdapter.build("DeleteAccount").subscribe();
     this.saveEditAccountAdapter = new DashboardApiAdapter();
-    this.saveEditAccountAdapter.build("UpdateAccount").subscribe();
+    this.removeGroupTagFromUser = new DashboardApiAdapter();
   }
 
   newAccount(data: NewAccount) {
@@ -119,7 +117,44 @@ export class DashboardComponent implements OnInit {
   }
 
   onCloseGroupTag(state: OnClostTagState) {
-    console.log(state);
+    
+    // Vaidate @Output
+    if (!state.success) {
+      this._msgService.warn("No data is updated");
+      return;
+    }
+
+    // Create list concurrent apis
+    const deleteGroup$ = this._group.removeGroupFromUser({
+      userId: state.data.id,
+      groupname: state.data.groupname
+    });
+
+    // Emit to Event Submitter
+    this.removeGroupTagFromUser.emit({
+      observer: deleteGroup$,
+      callback: stateData => {
+        // Case: success
+        if (stateData.success) {
+          this._msgService.success("Done");
+          return;
+        }
+
+        // Case: Error
+        let message: string;
+        if ((<AdapterResponse>stateData).hasOwnProperty("message")) {
+          message = (<AdapterResponse>stateData).message;
+        } else {
+          message = "Action has not effect";
+        }
+
+        this._msgService.warn(message);
+      },
+      error: _ => {
+        // Case failed which includes HTTP does not response
+        this._msgService.error("There is some tags that's not deleted");
+      }
+    });
   }
 
   /* @Output from sub-component */
@@ -271,6 +306,13 @@ export class DashboardComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // Start Listening to all Listeners
+    this.searchAdapter.build("Search").subscribe();
+    this.newAccountAdapter.build("NewAccount").subscribe();
+    this.deleteAccountAdapter.build("DeleteAccount").subscribe();
+    this.saveEditAccountAdapter.build("UpdateAccount").subscribe();
+    this.removeGroupTagFromUser.build("removeGroupTag").subscribe();
+
     const response = await this.getDataState().then();
     if (response.dashboard.success) {
       this.listOfData = response.dashboard.data;

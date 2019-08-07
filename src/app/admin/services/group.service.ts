@@ -100,11 +100,11 @@ export class GroupService {
    * Remove a group from user
    * @param data
    *  - userId : number ID represents user
-   *  - groupname : string value represents group to be removed
+   *  - groupnames : string value represents group to be removed
    */
   public removeGroupFromUser(data: RemoveGroupFromUser) {
     
-    let api = `${AppConfig.get("domain")}api=group/group-permission/remove-user-from-group-by-name`;
+    let api = `${AppConfig.get("domain")}api=account/group-permission/remove-user-from-group-by-name`;
     api += `&userId=${data.userId}`;
     api += `&groupname=${data.groupname}`;
     api += `&token=${this._token}`;

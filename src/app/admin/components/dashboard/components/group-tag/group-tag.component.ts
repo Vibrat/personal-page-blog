@@ -10,11 +10,15 @@ import { ClickOutsideOutput } from "./group-tag.directive";
 import { NzAutocompleteOptionComponent } from "ng-zorro-antd/auto-complete";
 
 export interface GroupTag {
-  id: number;
+  id: number; // userId
   group: Tags;
 }
 
 export interface Tags {
+  [key: string]: string;
+}
+
+export interface TagsMap {
   [key: string]: boolean;
 }
 
@@ -31,7 +35,10 @@ export interface OnTypingState {
 
 export interface OnClostTagState {
   success: boolean;
-  data: Tags | null
+  data: {
+    id: number;
+    groupname: string; 
+  } | null;
 }
 
 /**
@@ -50,7 +57,7 @@ export class GroupTagComponent {
   @Output() onConfirm: EventEmitter<OnConfirmState> = new EventEmitter();
   @Output() onCloseTag: EventEmitter<OnClostTagState> = new EventEmitter();
   onGroupTyping: boolean; // disabled when submission
-  tags: Tags = {};
+  tags: TagsMap = {};
   optionsStore = []; // cache for options
 
   isTag(id: string) {
@@ -58,16 +65,24 @@ export class GroupTagComponent {
   }
 
   /**
+   * @Output Decorator
    * Delete tags
    * 
    * @param number id represent a tag
    */
-  onCloseGroupTag(id: number) {
+  onCloseGroupTag(event, id: number, deletedValue: string) {
+    
     if (this.data.group.hasOwnProperty(id)) {
-      
-      let tag: Tags = { [id]: this.tags[id] };
-      delete this.tags[id];
 
+        // Targeted snapshot
+      let tag: OnClostTagState["data"] = {
+        id: this.data.id, 
+        groupname: this.data.group[id]
+      };
+      
+      delete this.tags[id];
+      delete this.data.group[id];
+      
       this.onCloseTag.emit({
         success: true,
         data: tag
@@ -75,6 +90,9 @@ export class GroupTagComponent {
       return;
     } 
 
+    // Prevent data to be disappeared
+    event.preventDefault();
+    event.stopPropagation();
     this.onCloseTag.emit({
       success: false,
       data: null
