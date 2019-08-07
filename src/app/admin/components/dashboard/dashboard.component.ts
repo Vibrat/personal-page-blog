@@ -1,7 +1,6 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-
-import { Observable, of, forkJoin } from "rxjs";
+import { Observable, of } from "rxjs";
 import { take, concatMap, map, flatMap } from "rxjs/operators";
 import {
   AccountService,
@@ -13,7 +12,9 @@ import {
   AddUserToGroupResponse
 } from "../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
-import { DashboardApiAdapter, AdapterResponse } from "./dashboard.api.adapter";
+import { ApiAdapter, AdapterResponse } from "~/app/_core/api/api.adapter";
+import { OnClostTagState } from "./components/group-tag/group-tag.component";
+import { userDelayDetection } from "../../config";
 
 export interface Data {
   id: number;
@@ -22,8 +23,6 @@ export interface Data {
   address: string;
   disabled: boolean;
 }
-
-import { OnClostTagState } from "./components/group-tag/group-tag.component";
 
 @Component({
   selector: "admin-dashboard",
@@ -44,11 +43,11 @@ export class DashboardComponent implements OnInit {
   optionsStore = []; // Store data for options
   tags = {}; // Groups' Tags
 
-  searchAdapter: DashboardApiAdapter;
-  newAccountAdapter: DashboardApiAdapter;
-  deleteAccountAdapter: DashboardApiAdapter;
-  saveEditAccountAdapter: DashboardApiAdapter;
-  removeGroupTagFromUser: DashboardApiAdapter;
+  searchAdapter: ApiAdapter;
+  newAccountAdapter: ApiAdapter;
+  deleteAccountAdapter: ApiAdapter;
+  saveEditAccountAdapter: ApiAdapter;
+  removeGroupTagFromUser: ApiAdapter;
 
   constructor(
     private _router: ActivatedRoute,
@@ -56,11 +55,11 @@ export class DashboardComponent implements OnInit {
     private _group: GroupService,
     private _msgService: MessageService
   ) {
-    this.searchAdapter = new DashboardApiAdapter();
-    this.newAccountAdapter = new DashboardApiAdapter();
-    this.deleteAccountAdapter = new DashboardApiAdapter();
-    this.saveEditAccountAdapter = new DashboardApiAdapter();
-    this.removeGroupTagFromUser = new DashboardApiAdapter();
+    this.searchAdapter = new ApiAdapter();
+    this.newAccountAdapter = new ApiAdapter();
+    this.deleteAccountAdapter = new ApiAdapter();
+    this.saveEditAccountAdapter = new ApiAdapter();
+    this.removeGroupTagFromUser = new ApiAdapter();
   }
 
   newAccount(data: NewAccount) {
@@ -101,11 +100,11 @@ export class DashboardComponent implements OnInit {
 
         this._msgService
           .loadding("Deleting")
-          .pipe(concatMap(_ => this._msgService.success("Successful")))
+          .pipe(concatMap(_ => this._msgService.success("Done")))
           .subscribe();
       },
       error: (ErrorMsg: string) => {
-        this._msgService.error("Failed to delete account");
+        this._msgService.error("Action has no effect");
       }
     });
   }
@@ -117,10 +116,9 @@ export class DashboardComponent implements OnInit {
   }
 
   onCloseGroupTag(state: OnClostTagState) {
-    
     // Vaidate @Output
     if (!state.success) {
-      this._msgService.warn("No data is updated");
+      this._msgService.warn("Action has not effect");
       return;
     }
 
@@ -152,7 +150,7 @@ export class DashboardComponent implements OnInit {
       },
       error: _ => {
         // Case failed which includes HTTP does not response
-        this._msgService.error("There is some tags that's not deleted");
+        this._msgService.error("Action has no effect");
       }
     });
   }
@@ -171,7 +169,7 @@ export class DashboardComponent implements OnInit {
           // Pre-check if group is already added
           let groups = Object.values(this.editCache[state.data.id].data.group);
           if (groups.indexOf(name) != -1) {
-            throw new Error("group already exist in this user");
+            throw new Error("Group exists");
           }
 
           return { id: state.data.id, groupname: name };
@@ -246,7 +244,7 @@ export class DashboardComponent implements OnInit {
           );
         },
         error: (errorMsg: string) => {
-          this._msgService.error("Failed to query search API");
+          this._msgService.error("No effect on search");
         }
       });
     }
@@ -307,11 +305,19 @@ export class DashboardComponent implements OnInit {
 
   async ngOnInit() {
     // Start Listening to all Listeners
-    this.searchAdapter.build("Search").subscribe();
+    this.searchAdapter
+      .build("Search", false, {
+        userDelayDetection: userDelayDetection
+      })
+      .subscribe();
     this.newAccountAdapter.build("NewAccount").subscribe();
     this.deleteAccountAdapter.build("DeleteAccount").subscribe();
     this.saveEditAccountAdapter.build("UpdateAccount").subscribe();
-    this.removeGroupTagFromUser.build("removeGroupTag").subscribe();
+    this.removeGroupTagFromUser
+      .build("removeGroupTag", false, {
+        userDelayDetection: userDelayDetection
+      })
+      .subscribe();
 
     const response = await this.getDataState().then();
     if (response.dashboard.success) {

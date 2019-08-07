@@ -1,6 +1,5 @@
 import { BehaviorSubject, of, Observable } from "rxjs";
 import {
-  filter,
   tap,
   map,
   catchError,
@@ -8,8 +7,6 @@ import {
   flatMap,
   debounceTime
 } from "rxjs/operators";
-
-import { userDelayDetection } from "../../config";
 
 export interface AdapterSubject {
   observer: Observable<any>;
@@ -28,7 +25,7 @@ export interface AdapterResponse {
   [key: string]: any;
 }
 
-export class DashboardApiAdapter {
+export class ApiAdapter {
   parentSubject$: BehaviorSubject<AdapterSubject> = new BehaviorSubject({
     observer: of(undefined),
     callback: () => {},
@@ -38,6 +35,7 @@ export class DashboardApiAdapter {
 
   constructor() {}
 
+
   /**
    * Build a Engine for processing events
    *
@@ -46,9 +44,15 @@ export class DashboardApiAdapter {
    *  - true => will never throw errors, instead push in into response
    *  - false => throw errors and stop current chains
    */
-  public build(key: string, neverThrowError: boolean = false) {
+  public build(
+    key: string,
+    neverThrowError: boolean = false,
+    options = {
+      userDelayDetection: 0
+    }
+  ) {
     this.observerStore[key] = this.parentSubject$.pipe(
-      debounceTime(userDelayDetection),
+      debounceTime(options.userDelayDetection),
       distinctUntilChanged(),
       flatMap(({ observer, callback, error }) => {
         return observer.pipe(
