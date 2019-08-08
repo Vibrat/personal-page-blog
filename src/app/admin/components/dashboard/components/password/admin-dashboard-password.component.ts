@@ -1,5 +1,15 @@
 import { Component, OnInit } from "@angular/core";
+import { KeyValue } from "@angular/common";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { PasswordValidator } from "./validation";
+
+
+export interface Input {
+  username: string;
+  display: boolean;
+}
+
+export type Output = boolean;
 
 @Component({
   selector: `admin-dashboard-password`,
@@ -17,14 +27,12 @@ export class AdminDashboardPasswordComponent implements OnInit {
     }
   }
 
-  onClick(): boolean {
-    return this.display = false; 
+  validatorFilter(item: KeyValue<string, any>) {
+    return item.value !== true
   }
 
-  genderChange(value: string): void {
-    this.validateForm
-      .get("note")!
-      .setValue(value === "male" ? "Hi, man!" : "Hi, lady!");
+  onCancel(event): boolean {
+    return this.display = false; 
   }
 
   constructor(private fb: FormBuilder) {}
@@ -32,8 +40,8 @@ export class AdminDashboardPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.validateForm = this.fb.group({
       username: [null],
-      password: [null, [Validators.required]],
-      passwordConfirm: [null, [Validators.required]]
+      password: [null, [Validators.required, PasswordValidator]],
+      passwordConfirm: [null, [Validators.required, PasswordValidator]]
     });
   }
 }
