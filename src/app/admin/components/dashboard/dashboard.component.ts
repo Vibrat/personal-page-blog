@@ -34,7 +34,6 @@ export interface Data {
 })
 export class DashboardComponent implements OnInit {
   model: Model;
-  newAccountDisplay: boolean;
   searchValue = "";
   sortName: string | null = null;
   sortValue: string | null = null;
@@ -45,7 +44,6 @@ export class DashboardComponent implements OnInit {
   listAccountGroup$: Observable<any>;
   options = []; // options expose to html
   optionsStore = []; // Store data for options
-  tags = {}; // Groups' Tags
 
   searchAdapter: ApiAdapter;
   newAccountAdapter: ApiAdapter;
@@ -79,7 +77,6 @@ export class DashboardComponent implements OnInit {
       observer: this.model.call("account", "ceateAccount", data),
       callback: (val: NewAccountResponse) => {
         
-        this.newAccountDisplay = false;
         this.addLocalAccounts(val.data);
         this._msgService
           .loadding("Creating")

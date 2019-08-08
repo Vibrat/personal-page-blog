@@ -1,4 +1,4 @@
-<admin-dashboard-new-account (onSubmit)="newAccount($event)" [display]="newAccountDisplay"></admin-dashboard-new-account>
+<admin-dashboard-new-account (onSubmit)="newAccount($event)"></admin-dashboard-new-account>
 <nz-table #editRowTable nzBordered [nzData]="listOfDisplayData">
   <thead>
     <tr>
@@ -9,29 +9,25 @@
           nzPlacement="bottomRight"
           [nzClickHide]="false"
           nzTableFilter
-          #dropdown
-        >
+          #dropdown>
           <i
             nz-icon
             nzType="search"
             class="ant-table-filter-icon"
             [class.ant-table-filter-open]="dropdown.nzVisible"
-            nz-dropdown
-          ></i>
+            nz-dropdown></i>
           <div class="search-box">
             <input
               type="text"
               nz-input
               placeholder="Search name"
-              [(ngModel)]="searchValue"
-            />
+              [(ngModel)]="searchValue" />
             <button
               nz-button
               nzSize="small"
               nzType="primary"
               (click)="search()"
-              class="search-button"
-            >
+              class="search-button">
               Search
             </button>
             <button nz-button nzSize="small" (click)="reset()">Reset</button>
