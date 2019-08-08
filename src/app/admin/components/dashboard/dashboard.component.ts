@@ -15,6 +15,9 @@ import { MessageService } from "~/app/shared/services/message.service";
 import { ApiAdapter, AdapterResponse } from "~/app/_core/api/api.adapter";
 import { OnClostTagState } from "./components/group-tag/group-tag.component";
 import { userDelayDetection } from "../../config";
+import { Model } from "~/app/_core/model/model";
+import { AccountModel } from "./models/account.model";
+import { GroupTagModel } from "./models/group-tag.model";
 
 export interface Data {
   id: number;
@@ -30,6 +33,7 @@ export interface Data {
   styleUrls: ["dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
+  model: Model;
   newAccountDisplay: boolean;
   searchValue = "";
   sortName: string | null = null;
@@ -55,6 +59,14 @@ export class DashboardComponent implements OnInit {
     private _group: GroupService,
     private _msgService: MessageService
   ) {
+
+    // Build models
+    this.model = new Model(
+      { name: "account", operator: new AccountModel(this._account) },
+      { name: "group", operator: new GroupTagModel(this._group) }
+    );
+
+    // Build Streaming events
     this.searchAdapter = new ApiAdapter();
     this.newAccountAdapter = new ApiAdapter();
     this.deleteAccountAdapter = new ApiAdapter();
@@ -64,8 +76,9 @@ export class DashboardComponent implements OnInit {
 
   newAccount(data: NewAccount) {
     this.newAccountAdapter.emit({
-      observer: this._account.newAccount(data),
+      observer: this.model.call("account", "ceateAccount", data),
       callback: (val: NewAccountResponse) => {
+        
         this.newAccountDisplay = false;
         this.addLocalAccounts(val.data);
         this._msgService
@@ -86,8 +99,8 @@ export class DashboardComponent implements OnInit {
    */
   deleteAccount(id: string) {
     this.deleteAccountAdapter.emit({
-      observer: this._account
-        .deleteAccount(this.editCache[id].data.username)
+      observer: this.model
+        .call("account", "deleteAccount", this.editCache[id].data.username)
         .pipe(take(1)),
       callback: () => {
         const index = this.listOfData.findIndex(item => item.id === id);
@@ -123,7 +136,7 @@ export class DashboardComponent implements OnInit {
     }
 
     // Create list concurrent apis
-    const deleteGroup$ = this._group.removeGroupFromUser({
+    const deleteGroup$ = this.model.call("group", "removeGroupFromUser", {
       userId: state.data.id,
       groupname: state.data.groupname
     });
@@ -137,7 +150,6 @@ export class DashboardComponent implements OnInit {
           this._msgService.success("Done");
           return;
         }
-
         // Case: Error
         let message: string;
         if ((<AdapterResponse>stateData).hasOwnProperty("message")) {
@@ -176,7 +188,7 @@ export class DashboardComponent implements OnInit {
         }),
         flatMap(({ id, groupname }) => {
           // Call API to update data in server
-          return this._group.updateGroupByName({
+          return this.model.call("group", "updateGroupByName", {
             userId: this.editCache[id].data.id,
             groupname: groupname
           });
@@ -224,7 +236,7 @@ export class DashboardComponent implements OnInit {
     if (inputState.success) {
       // Emit value to Adapter to API Server
       this.searchAdapter.emit({
-        observer: this._group.listGroups({
+        observer: this.model.call("group", "listGroups", {
           group: inputState.value,
           limit: 10,
           offset: 0
@@ -243,7 +255,7 @@ export class DashboardComponent implements OnInit {
             item.startsWith(inputState.value)
           );
         },
-        error: (errorMsg: string) => {
+        error: (_: string) => {
           this._msgService.error("No effect on search");
         }
       });
@@ -305,19 +317,11 @@ export class DashboardComponent implements OnInit {
 
   async ngOnInit() {
     // Start Listening to all Listeners
-    this.searchAdapter
-      .build("Search", false, {
-        userDelayDetection: userDelayDetection
-      })
-      .subscribe();
+    this.searchAdapter.build("Search", false, { userDelayDetection: userDelayDetection }).subscribe();
     this.newAccountAdapter.build("NewAccount").subscribe();
     this.deleteAccountAdapter.build("DeleteAccount").subscribe();
     this.saveEditAccountAdapter.build("UpdateAccount").subscribe();
-    this.removeGroupTagFromUser
-      .build("removeGroupTag", false, {
-        userDelayDetection: userDelayDetection
-      })
-      .subscribe();
+    this.removeGroupTagFromUser.build("removeGroupTag", false, { userDelayDetection: userDelayDetection }).subscribe();
 
     const response = await this.getDataState().then();
     if (response.dashboard.success) {

@@ -46,6 +46,10 @@ export class AccountService {
 
   constructor(private _auth: AuthService, private _http: HttpClient) {}
 
+  public say() {
+    console.log('hello');
+  }
+
   public getAccounts(offset = 0, limit = 20): Observable<AccountsResponse> {
     const apiListAccounts = `${AppConfig.get(
       "domain"
