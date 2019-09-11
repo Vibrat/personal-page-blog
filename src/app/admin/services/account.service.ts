@@ -40,15 +40,22 @@ export interface AccountExistResponse {
   message?: string;
 }
 
+export interface ChangePassword {
+  username: string;
+  'new-password': string;
+}
+
+export interface ChangPasswordReponse {
+  success: boolean;
+  code?: number;
+  message: string;
+}
+
 @Injectable()
 export class AccountService {
   data: Observable<AccountsResponse>;
 
   constructor(private _auth: AuthService, private _http: HttpClient) {}
-
-  public say() {
-    console.log('hello');
-  }
 
   public getAccounts(offset = 0, limit = 20): Observable<AccountsResponse> {
     const apiListAccounts = `${AppConfig.get(
@@ -83,5 +90,20 @@ export class AccountService {
       "domain"
     )}api=account/basic-auth/is-account-exist&username=${username}&token=${this._auth.getToken()}`;
     return <Observable<AccountExistResponse>>this._http.get(apiCheckAccount);
+  }
+
+  /**
+   * Change password by admin
+   * 
+   * @param ChangePassword data 
+   */
+  public changePassword(data: ChangePassword): Observable<ChangPasswordReponse> {
+    
+    const api = `${AppConfig.get('domain')}api=account/basic-auth/change-password-by-admin&token=${this._auth.getToken()}`;
+    const payload = new FormData();
+    payload.append('username', data.username);
+    payload.append('new-password', data["new-password"]);
+
+    return <Observable<ChangPasswordReponse>>this._http.put(api, payload);
   }
 }

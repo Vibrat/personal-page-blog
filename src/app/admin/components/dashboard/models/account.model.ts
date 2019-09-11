@@ -2,7 +2,7 @@
 import {
     AccountService,
     NewAccount,
-    NewAccountResponse
+    ChangePassword
 } from "../../../services/account.service";
 
 export class AccountModel {
@@ -18,5 +18,9 @@ export class AccountModel {
 
     public deleteAccount(data: string) {
         return this._account.deleteAccount(data);
+    }
+
+    public changePasswordByAdmin(data: ChangePassword) {
+        return this._account.changePassword(data);
     }
 }

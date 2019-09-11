@@ -71,7 +71,11 @@
               >
             </div>
             <div class="btn-group">
-              <admin-dashboard-password></admin-dashboard-password>
+              <admin-dashboard-password 
+                [display]="displayAdminPasswordInput"
+                [username]="data.username"
+                (credentials)="changePassword($event)">
+              </admin-dashboard-password>
             </div>
           </ng-container>
         </div>

@@ -33,6 +33,8 @@ export interface Data {
   styleUrls: ["dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
+  displayAdminPasswordInput = false;
+  
   model: Model;
   searchValue = "";
   sortName: string | null = null;
@@ -50,6 +52,7 @@ export class DashboardComponent implements OnInit {
   deleteAccountAdapter: ApiAdapter;
   saveEditAccountAdapter: ApiAdapter;
   removeGroupTagFromUser: ApiAdapter;
+  changePasswordAdapter: ApiAdapter;
 
   constructor(
     private _router: ActivatedRoute,
@@ -70,11 +73,13 @@ export class DashboardComponent implements OnInit {
     this.deleteAccountAdapter = new ApiAdapter();
     this.saveEditAccountAdapter = new ApiAdapter();
     this.removeGroupTagFromUser = new ApiAdapter();
+    this.changePasswordAdapter = new ApiAdapter();
+
   }
 
   newAccount(data: NewAccount) {
     this.newAccountAdapter.emit({
-      observer: this.model.call("account", "ceateAccount", data),
+      observer: this.model.call("account", "createAccount", data),
       callback: (val: NewAccountResponse) => {
         
         this.addLocalAccounts(val.data);
@@ -115,6 +120,24 @@ export class DashboardComponent implements OnInit {
       },
       error: (ErrorMsg: string) => {
         this._msgService.error("Action has no effect");
+      }
+    });
+  }
+
+  changePassword(event) {
+    this.changePasswordAdapter.emit({
+      observer: this.model.call('account', 'changePasswordByAdmin', event),
+      callback: (response) => {
+        if (response.success) {
+          this._msgService.success('Done');
+          this.displayAdminPasswordInput = false;
+        } else {
+          this._msgService.error('Cannot change password account');
+          this.displayAdminPasswordInput = false;
+        }
+      },
+      error: (errorMsg: string) => {
+        console.log(errorMsg);
       }
     });
   }
@@ -319,6 +342,7 @@ export class DashboardComponent implements OnInit {
     this.deleteAccountAdapter.build("DeleteAccount").subscribe();
     this.saveEditAccountAdapter.build("UpdateAccount").subscribe();
     this.removeGroupTagFromUser.build("removeGroupTag", false, { userDelayDetection: userDelayDetection }).subscribe();
+    this.changePasswordAdapter.build('changePassword').subscribe();
 
     const response = await this.getDataState().then();
     if (response.dashboard.success) {

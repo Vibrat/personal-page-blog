@@ -1,15 +1,13 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { KeyValue } from "@angular/common";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { PasswordValidator } from "./validation";
+import { PasswordValidator, validatePasswordConfirm } from "./validation";
+import { of } from "rxjs";
 
-
-export interface Input {
+export interface Credentials {
   username: string;
-  display: boolean;
+  "new-password": string;
 }
-
-export type Output = boolean;
 
 @Component({
   selector: `admin-dashboard-password`,
@@ -17,31 +15,43 @@ export type Output = boolean;
   styleUrls: ["admin-dashboard-password.component.scss"]
 })
 export class AdminDashboardPasswordComponent implements OnInit {
-  display: boolean;
   validateForm: FormGroup;
 
+  @Input() display: boolean;
+  @Input() username: string;
+  @Output() credentials: EventEmitter<Credentials> = new EventEmitter();
+
   submitForm(): void {
-    for (const i in this.validateForm.controls) {
-      this.validateForm.controls[i].markAsDirty();
-      this.validateForm.controls[i].updateValueAndValidity();
+    if (this.validateForm.valid) {
+      let output: Credentials = {
+        username: this.validateForm.value["username"],
+        "new-password": this.validateForm.value["password"]
+      };
+
+      this.credentials.emit(output);
     }
   }
 
   validatorFilter(item: KeyValue<string, any>) {
-    return item.value !== true
+    return item.value !== true;
   }
 
   onCancel(event): boolean {
-    return this.display = false; 
+    return (this.display = false);
   }
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
-      username: [null],
+      username: [this.username],
       password: [null, [Validators.required, PasswordValidator]],
       passwordConfirm: [null, [Validators.required, PasswordValidator]]
     });
+    this.validateForm
+      .get("passwordConfirm")
+      .setAsyncValidators(
+        validatePasswordConfirm(of(this.validateForm.get("password")))
+      );
   }
 }
