@@ -30,6 +30,13 @@ export interface NewAccountResponse {
   data: Account
 }
 
+export interface GetAccounts {
+  offset: number;
+  limit: number;
+  group: string;
+  name: string;
+}
+
 export interface AccountDeleteResponse {
   success: boolean;
   message: string;
@@ -57,10 +64,10 @@ export class AccountService {
 
   constructor(private _auth: AuthService, private _http: HttpClient) {}
 
-  public getAccounts(offset = 0, limit = 20): Observable<AccountsResponse> {
+  public getAccounts(offset = 0, limit = 20, group = '', name = ''): Observable<AccountsResponse> {
     const apiListAccounts = `${AppConfig.get(
       "domain"
-    )}api=account/basic-auth/list&limit=${limit}&offset=${offset}&token=${this._auth.getToken()}`;
+    )}api=account/basic-auth/list&limit=${limit}&offset=${offset}&token=${this._auth.getToken()}&name=${name}&group=${group}`;
     return (this.data = <Observable<AccountsResponse>>(
       this._http.get(apiListAccounts)
     ));

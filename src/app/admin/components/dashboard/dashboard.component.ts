@@ -33,10 +33,9 @@ export interface Data {
   styleUrls: ["dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-  displayAdminPasswordInput = [];
-  
+  displayAdminPasswordInput = []; // display password input object
+
   model: Model;
-  searchValue = "";
   sortName: string | null = null;
   sortValue: string | null = null;
   listOfSearchAddress: string[] = [];
@@ -46,6 +45,11 @@ export class DashboardComponent implements OnInit {
   listAccountGroup$: Observable<any>;
   options = []; // options expose to html
   optionsStore = []; // Store data for options
+
+  searchObject = {
+    name: "",
+    group: ""
+  };
 
   searchAdapter: ApiAdapter;
   newAccountAdapter: ApiAdapter;
@@ -60,7 +64,6 @@ export class DashboardComponent implements OnInit {
     private _group: GroupService,
     private _msgService: MessageService
   ) {
-
     // Build models
     this.model = new Model(
       { name: "account", operator: new AccountModel(this._account) },
@@ -74,14 +77,12 @@ export class DashboardComponent implements OnInit {
     this.saveEditAccountAdapter = new ApiAdapter();
     this.removeGroupTagFromUser = new ApiAdapter();
     this.changePasswordAdapter = new ApiAdapter();
-
   }
 
   newAccount(data: NewAccount) {
     this.newAccountAdapter.emit({
       observer: this.model.call("account", "createAccount", data),
       callback: (val: NewAccountResponse) => {
-        
         this.addLocalAccounts(val.data);
         this._msgService
           .loadding("Creating")
@@ -126,13 +127,13 @@ export class DashboardComponent implements OnInit {
 
   changePassword(event, dataId) {
     this.changePasswordAdapter.emit({
-      observer: this.model.call('account', 'changePasswordByAdmin', event),
-      callback: (response) => {
+      observer: this.model.call("account", "changePasswordByAdmin", event),
+      callback: response => {
         if (response.success) {
-          this._msgService.success('Done');
+          this._msgService.success("Done");
           this.displayAdminPasswordInput[dataId] = false;
         } else {
-          this._msgService.error('Cannot change password account');
+          this._msgService.error("Cannot change password account");
           this.displayAdminPasswordInput[dataId] = false;
         }
       },
@@ -144,6 +145,12 @@ export class DashboardComponent implements OnInit {
 
   addLocalAccounts(data: NewAccountResponse["data"]) {
     this.listOfData = [...this.listOfData, data];
+    this.listOfDisplayData = [...this.listOfData];
+    this.updateEditCache();
+  }
+
+  resetLocalAccounts(data: NewAccountResponse["data"][]) {
+    this.listOfData = data;
     this.listOfDisplayData = [...this.listOfData];
     this.updateEditCache();
   }
@@ -299,27 +306,47 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Reset Search
-  reset(): void {
-    this.searchValue = "";
-  }
-
   onSearchUsername(value) {
-    console.log(value);
+    this.searchObject.name = value;
+    this.callSearchApi();
   }
 
   onSearchGroup(value) {
-    console.log(value);
+    this.searchObject.group = value;
+    this.callSearchApi();
+  }
+
+  callSearchApi() {
+    this.searchAdapter.emit({
+      observer: this.model.call("account", "listAccounts", {
+        offset: 0,
+        limit: 100,
+        ...this.searchObject
+      }),
+      callback: response => {
+        let accounts = response["data"];
+        this.resetLocalAccounts(accounts);
+      },
+      error: errMsg => {
+        console.error(errMsg);
+      }
+    });
   }
 
   async ngOnInit() {
     // Start Listening to all Listeners
-    this.searchAdapter.build("Search", false, { userDelayDetection: userDelayDetection }).subscribe();
+    this.searchAdapter
+      .build("Search", false, { userDelayDetection: userDelayDetection })
+      .subscribe();
     this.newAccountAdapter.build("NewAccount").subscribe();
     this.deleteAccountAdapter.build("DeleteAccount").subscribe();
     this.saveEditAccountAdapter.build("UpdateAccount").subscribe();
-    this.removeGroupTagFromUser.build("removeGroupTag", false, { userDelayDetection: userDelayDetection }).subscribe();
-    this.changePasswordAdapter.build('changePassword').subscribe();
+    this.removeGroupTagFromUser
+      .build("removeGroupTag", false, {
+        userDelayDetection: userDelayDetection
+      })
+      .subscribe();
+    this.changePasswordAdapter.build("changePassword").subscribe();
 
     const response = await this.getDataState().then();
     if (response.dashboard.success) {
