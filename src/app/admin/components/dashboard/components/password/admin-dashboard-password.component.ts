@@ -17,8 +17,8 @@ export interface Credentials {
 export class AdminDashboardPasswordComponent implements OnInit {
   validateForm: FormGroup;
 
-  @Input() display: boolean;
-  @Input() username: string;
+  @Input()  display: boolean;
+  @Input()  username: string;
   @Output() credentials: EventEmitter<Credentials> = new EventEmitter();
 
   submitForm(): void {

@@ -72,9 +72,9 @@
             </div>
             <div class="btn-group">
               <admin-dashboard-password 
-                [display]="displayAdminPasswordInput"
+                [display]="displayAdminPasswordInput[data.id]"
                 [username]="data.username"
-                (credentials)="changePassword($event)">
+                (credentials)="changePassword($event, data.id)">
               </admin-dashboard-password>
             </div>
           </ng-container>

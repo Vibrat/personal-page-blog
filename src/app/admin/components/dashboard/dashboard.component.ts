@@ -33,7 +33,7 @@ export interface Data {
   styleUrls: ["dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-  displayAdminPasswordInput = false;
+  displayAdminPasswordInput = [];
   
   model: Model;
   searchValue = "";
@@ -124,20 +124,20 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  changePassword(event) {
+  changePassword(event, dataId) {
     this.changePasswordAdapter.emit({
       observer: this.model.call('account', 'changePasswordByAdmin', event),
       callback: (response) => {
         if (response.success) {
           this._msgService.success('Done');
-          this.displayAdminPasswordInput = false;
+          this.displayAdminPasswordInput[dataId] = false;
         } else {
           this._msgService.error('Cannot change password account');
-          this.displayAdminPasswordInput = false;
+          this.displayAdminPasswordInput[dataId] = false;
         }
       },
       error: (errorMsg: string) => {
-        console.log(errorMsg);
+        console.error(errorMsg);
       }
     });
   }
