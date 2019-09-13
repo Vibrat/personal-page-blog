@@ -11,8 +11,8 @@ export interface Credentials {
 
 @Component({
   selector: `admin-dashboard-password`,
-  templateUrl: "admin-dashboard-password.component.html",
-  styleUrls: ["admin-dashboard-password.component.scss"]
+  templateUrl: "dashboard-password.component.html",
+  styleUrls: ["dashboard-password.component.scss"]
 })
 export class AdminDashboardPasswordComponent implements OnInit {
   validateForm: FormGroup;
