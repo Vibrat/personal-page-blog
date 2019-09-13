@@ -302,37 +302,14 @@ export class DashboardComponent implements OnInit {
   // Reset Search
   reset(): void {
     this.searchValue = "";
-    this.search();
   }
 
-  // Search Value based on current state
-  search(): void {
-    const filterFunc = (item: {
-      group: string;
-      age: number;
-      address: string;
-    }) => {
-      return (
-        (this.listOfSearchAddress.length
-          ? this.listOfSearchAddress.some(
-              address => item.address.indexOf(address) !== -1
-            )
-          : true) && item.group.indexOf(this.searchValue) !== -1
-      );
-    };
-    const data = this.listOfData.filter(
-      (item: { group: string; age: number; address: string }) =>
-        filterFunc(item)
-    );
-    this.listOfDisplayData = data.sort((a, b) =>
-      this.sortValue === "ascend"
-        ? a[this.sortName!] > b[this.sortName!]
-          ? 1
-          : -1
-        : b[this.sortName!] > a[this.sortName!]
-        ? 1
-        : -1
-    );
+  onSearchUsername(value) {
+    console.log(value);
+  }
+
+  onSearchGroup(value) {
+    console.log(value);
   }
 
   async ngOnInit() {

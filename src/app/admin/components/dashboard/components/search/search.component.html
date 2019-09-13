@@ -1,0 +1,48 @@
+<!-- Dropdown Icon Search-->
+<nz-dropdown
+  nzTrigger="click"
+  nzPlacement="bottomRight"
+  [nzClickHide]="false"
+  nzTableFilter
+  #dropdown
+>
+  <!-- Search Icon-->
+  <i
+    nz-icon
+    nzType="search"
+    class="table-filter-icon"
+    [class.ant-table-filter-open]="dropdown.nzVisible"
+    nz-dropdown
+  ></i>
+  <!-- End Search Icon-->
+  <div class="search-box">
+    <!-- Input typing-->
+    <input
+      type="text"
+      nz-input
+      placeholder="Type a name"
+      [(ngModel)]="searchValue"
+    />
+    <!-- End Input Typing-->
+    <!-- Search Button-->
+    <button
+      nz-button
+      nzSize="small"
+      nzType="primary"
+      (click)="search()"
+      class="search-button"
+    >
+      Search
+    </button>
+    <!-- End Search Button -->
+    <!-- Reset Button-->
+    <button nz-button nzSize="small" (click)="reset()">Reset</button>
+    <!-- End Reset Button-->
+  </div>
+</nz-dropdown>
+<!-- End Dropdown Icon Search -->
+<!-- Value Shower -->
+<span class="search-value">
+  {{ searchValue?.slice(0, 15) }} {{ searchValue?.length > 20 ? "..." : "" }}
+</span>
+<!-- end Value Shower -->

@@ -2,40 +2,17 @@
 <nz-table #editRowTable nzBordered [nzData]="listOfDisplayData">
   <thead>
     <tr>
-      <th nzWidth="25%" nzCustomFilter>
+      <th nzWidth="25%">
         Id
-        <nz-dropdown
-          nzTrigger="click"
-          nzPlacement="bottomRight"
-          [nzClickHide]="false"
-          nzTableFilter
-          #dropdown>
-          <i
-            nz-icon
-            nzType="search"
-            class="ant-table-filter-icon"
-            [class.ant-table-filter-open]="dropdown.nzVisible"
-            nz-dropdown></i>
-          <div class="search-box">
-            <input
-              type="text"
-              nz-input
-              placeholder="Search name"
-              [(ngModel)]="searchValue" />
-            <button
-              nz-button
-              nzSize="small"
-              nzType="primary"
-              (click)="search()"
-              class="search-button">
-              Search
-            </button>
-            <button nz-button nzSize="small" (click)="reset()">Reset</button>
-          </div>
-        </nz-dropdown>
       </th>
-      <th nzWidth="40%">Username</th>
-      <th>Group</th>
+      <th nzWidth="40%" nzCustomFilter>
+        Username
+        <search-comp (onCommit)="onSearchUsername($event)" ></search-comp>
+      </th>
+      <th nzCustomFilter>
+        Group 
+        <search-comp (onCommit)="onSearchGroup($event)" ></search-comp>
+      </th>
       <th>Action</th>
     </tr>
   </thead>
