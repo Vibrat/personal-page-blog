@@ -14,8 +14,9 @@ export class NewGroupComponent {
 
     constructor() {
         this.formData = new FormGroup({
-            group: new FormControl('', [])
-        })
+            group: new FormControl('', []),
+            permissions: new FormControl('', [])
+        });
     }
 
     submitForm() {}

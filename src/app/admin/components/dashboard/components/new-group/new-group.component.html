@@ -41,7 +41,23 @@
               </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <button class="btn-permissions" nz-button nzSize='default' nzBlock nzType="dashed">Add Permissions</button>
+            <button 
+              class="btn-permissions" 
+              nz-button 
+              nzSize='default' 
+              nzBlock
+              nz-popover
+              nzTrigger="click"
+              [nzContent]="permissionsTemplate"
+              nzPopoverPlacement="topRight" 
+              nzType="dashed">Add Permissions</button>
+            <nz-form-control>
+                <input
+                  [hidden]="true"
+                  formControlName="permissions"
+                  nz-input
+                  type="text"/>
+              </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <div nz-row [nzGutter]="'16'">
@@ -60,9 +76,9 @@
                   </button>
                 </div>
               </div>
-          <ng-template #permissionsTemplate>
-            Something here
-          </ng-template>
         </nz-form-item>
     </form>
+</ng-template>
+<ng-template #permissionsTemplate>
+    Something here
 </ng-template>
