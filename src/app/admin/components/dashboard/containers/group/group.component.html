@@ -1,0 +1,50 @@
+<admin-dashboard-new-account (onSubmit)="newGroup($event)"></admin-dashboard-new-account>
+<nz-table #editRowTable nzBordered [nzData]="data">
+  <thead>
+    <tr>
+      <th nzWidth="25%">
+        Id
+      </th>
+      <th nzWidth="40%" nzCustomFilter>
+        Username
+      </th>
+      <th nzCustomFilter>
+        Group 
+      </th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of editRowTable.data">
+      <td>
+        <ng-container>
+          {{ data.id }}
+        </ng-container>
+      </td>
+      <td>
+        <ng-container>
+          {{ data.username }}
+        </ng-container>
+      </td>
+      <td>
+          Some data
+      </td>
+      <td>
+        <div class="editable-row-operations">
+          <ng-container *ngIf="!editCache[data.id]?.edit">
+            <div class="btn-group">
+              <a
+                nz-popconfirm
+                nzTitle="Sure to delete?"
+                (nzOnConfirm)="deleteGroup(data.id)">Delete</a
+              >
+            </div>
+            <div class="btn-group">
+                button here
+            </div>
+          </ng-container>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

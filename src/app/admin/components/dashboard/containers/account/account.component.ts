@@ -6,18 +6,18 @@ import {
   AccountService,
   NewAccount,
   NewAccountResponse
-} from "../../services/account.service";
+} from "../../../../services/account.service";
 import {
   GroupService,
   AddUserToGroupResponse
-} from "../../services/group.service";
+} from "../../../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
 import { ApiAdapter, AdapterResponse } from "~/app/_core/api/api.adapter";
-import { OnClostTagState } from "./components/group-tag/group-tag.component";
-import { userDelayDetection } from "../../config";
+import { OnClostTagState } from "../../components/group-tag/group-tag.component";
+import { userDelayDetection } from "../../../../config";
 import { Model } from "~/app/_core/model/model";
-import { AccountModel } from "./models/account.model";
-import { GroupTagModel } from "./models/group-tag.model";
+import { AccountModel } from "../../models/account.model";
+import { GroupTagModel } from "../../models/group-tag.model";
 
 export interface Data {
   id: number;
@@ -28,11 +28,11 @@ export interface Data {
 }
 
 @Component({
-  selector: "admin-dashboard",
-  templateUrl: `dashboard.component.html`,
-  styleUrls: ["dashboard.component.scss"]
+  selector: "dashboard-account",
+  templateUrl: `account.component.html`,
+  styleUrls: ["account.component.scss"]
 })
-export class DashboardComponent implements OnInit {
+export class AccountComponent implements OnInit {
   displayAdminPasswordInput = []; // display password input object
 
   model: Model;

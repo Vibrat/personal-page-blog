@@ -2,7 +2,6 @@ import { Routes } from "@angular/router";
 
 import { PageLoginComponent } from "./containers/page-login/page-login.component";
 import { PageRegisterComponent } from "./containers/page-register/page-register.component";
-import { PageDashBoardComponent } from "./containers/page-dashboard/page-dashboard.component";
 import { PageBlogComponent } from "./containers/page-blog/page-blog.component";
 import { PageNewBlogComponent } from "./containers/page-new-blog/page-new-blog.component";
  
@@ -27,7 +26,7 @@ export const routes: Routes = [
             },
             {
                 path: 'dashboard',
-                component: PageDashBoardComponent,
+                loadChildren: './components/dashboard/dashboard.module#DashboardModule',
                 resolve: {
                     dashboard: DashboardResolverService
                 }
