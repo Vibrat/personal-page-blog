@@ -1,19 +1,25 @@
-<admin-dashboard-new-account (onSubmit)="newGroup($event)"></admin-dashboard-new-account>
+<!-- New Group Button-->
+<dashboard-new-group></dashboard-new-group>
+<!-- End New Group Button -->
+<!-- Table Content-->
 <nz-table #editRowTable nzBordered [nzData]="data">
+  <!-- Table header-->
   <thead>
     <tr>
-      <th nzWidth="25%">
+      <th nzWidth="10%">
         Id
       </th>
-      <th nzWidth="40%" nzCustomFilter>
-        Username
+      <th nzWidth="15%" nzCustomFilter>
+        Group
       </th>
       <th nzCustomFilter>
-        Group 
+        Permissions 
       </th>
       <th>Action</th>
     </tr>
   </thead>
+  <!-- End Table header-->
+  <!-- Table Body -->
   <tbody>
     <tr *ngFor="let data of editRowTable.data">
       <td>
@@ -47,4 +53,6 @@
       </td>
     </tr>
   </tbody>
+  <!-- End Table Body -->
 </nz-table>
+<!-- End Table Content-->

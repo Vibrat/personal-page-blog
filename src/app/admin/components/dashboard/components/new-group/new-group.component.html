@@ -1,0 +1,68 @@
+<div nzRow class="btn-group">
+  <button
+    nz-button
+    nzTrigger="click"
+    nzType="primary"
+    nz-popover
+    [(nzVisible)]="display"
+    [nzContent]="contentTemplate"
+  >
+    New Group
+  </button>
+</div>
+<ng-template #contentTemplate>
+    <form nz-form [formGroup]="formData" (ngSubmit)="submitForm()">
+        <nz-form-item>
+          <div class="panel">
+            <span class="panel-icon">
+              <i nz-icon nzType="user" nzTheme="outline"></i>
+            </span>
+            <span class="panel-text">
+              Group
+            </span>
+          </div>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <input
+                  formControlName="group"
+                  nz-input
+                  type="text"
+                  placeholder="Group Name"
+                  autocomplete="Group Name"
+                />
+                <nz-form-explain
+                  *ngIf="
+                    formData.get('username')?.dirty &&
+                    formData.get('username')?.errors
+                  ">
+                 Group name already exists
+                </nz-form-explain>
+              </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <button class="btn-permissions" nz-button nzSize='default' nzBlock nzType="dashed">Add Permissions</button>
+        </nz-form-item>
+        <nz-form-item>
+            <div nz-row [nzGutter]="'16'">
+                <div nz-col nzSpan="12">
+                  <button
+                    [disabled]="!formData.valid"
+                    nz-button
+                    nzBlock
+                    nzType="primary">
+                    Submit
+                  </button>
+                </div>
+                <div nz-col nzSpan="12">
+                  <button nz-button nzBlock nzType="default" (click)="onCancel($event)">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+          <ng-template #permissionsTemplate>
+            Something here
+          </ng-template>
+        </nz-form-item>
+    </form>
+</ng-template>
