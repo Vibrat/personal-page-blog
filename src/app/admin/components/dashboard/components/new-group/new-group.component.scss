@@ -1,38 +1,63 @@
 .btn-blank {
-    border: none;
+  border: none;
+  background: none;
+  &:hover {
     background: none;
-    &:hover {
-        background: none;
-    }
+  }
 }
 
-
 .btn-group {
-    padding-bottom: 12px;
-    .btn-permissions {
-        font-size: 85%;
-    }
+  padding-bottom: 12px;
+  .btn-permissions {
+    font-size: 85%;
+  }
 }
 
 .panel {
-    display: block;
-    .panel-icon:first-child {
-        margin-right: 6px;
-    }
-    .panel-text {
-        font-weight: 500;
-        letter-spacing: 1px;
-    }
+  display: block;
+  .panel-icon:first-child {
+    margin-right: 6px;
+  }
+  .panel-text {
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
 }
 
 [nz-form] {
-    max-width: 600px;  
-    > nz-form-item {
-        margin-bottom: 12px;
-        &:last-child {
-            margin-bottom: 0;
-        }
+  max-width: 600px;
+  > nz-form-item {
+    margin-bottom: 12px;
+    &:last-child {
+      margin-bottom: 0;
     }
   }
+}
 
-  
+.steps-content {
+  margin-top: 16px;
+  border: 1px dashed #e9e9e9;
+  border-radius: 6px;
+  background-color: #fafafa;
+  text-align: center;
+  padding: 12px;
+}
+
+.steps-action {
+  margin-top: 24px;
+}
+
+button {
+  margin-right: 8px;
+}
+
+nz-checkbox-wrapper {
+  width: 100%;
+}
+
+[nz-row].data-row {
+  text-align: left;
+  padding-left: 12px;
+  max-height: 208px;
+  overflow-y: scroll;
+}
