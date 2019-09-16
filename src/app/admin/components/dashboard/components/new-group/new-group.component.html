@@ -3,15 +3,15 @@
     New Group
   </button>
 </div>
+
 <nz-modal
   [nzFooter]="null"
   nzTitle="Add Group"
   [(nzVisible)]="display"
-  (nzOnCancel)="handleCancelModal()"
-  (nzOnOk)="handleSubmitModal()"
+  (nzOnCancel)="closeModal()"
 >
   <!-- Step Panel -->
-  <nz-steps [nzCurrent]="current">
+  <nz-steps [nzCurrent]="currentStep">
     <nz-step nzTitle="Add Group Name"></nz-step>
     <nz-step nzTitle="Add Permissions"></nz-step>
   </nz-steps>
@@ -19,7 +19,7 @@
   <div class="steps-content">
     <!-- Form Data -->
     <form nz-form [formGroup]="formData" (ngSubmit)="submitForm()">
-      <nz-form-item *ngIf="current == 0">
+      <nz-form-item *ngIf="currentStep == 0">
         <nz-form-control>
           <input
             formControlName="group"
@@ -30,68 +30,47 @@
           />
           <nz-form-explain
             *ngIf="
-              formData.get('username')?.dirty &&
-              formData.get('username')?.errors
+              formData.get('group')?.dirty &&
+              formData.get('group')?.errors
             ">
-            Group name already exists
+            Group already exists
           </nz-form-explain>
         </nz-form-control>
       </nz-form-item>
-      <nz-form-item *ngIf="current == 1">
-        <nz-form-control>
-          <input
-            formControlName="permissions"
-            nz-input
-            placeholder="Add Permissions"
-            type="text"
-          />
-        </nz-form-control>
-      </nz-form-item>
-      <nz-checkbox-wrapper *ngIf="current == 1" (nzOnChange)="log($event)">
-          <div nz-row class="data-row">
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="A">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="B">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="C">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="D">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="E">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="A">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="B">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="C">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="D">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="E">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="A">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="B">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="C">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="D">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="E">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="A">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="B">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="C">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="D">account/basic-auth/auth-permissions</label></div>
-            <div nz-col nzSpan="24"><label nz-checkbox nzValue="E">account/basic-auth/auth-permissions</label></div>
+      <nz-checkbox-wrapper
+        *ngIf="currentStep == 1"
+        (nzOnChange)="outputPermissions($event)"
+      >
+        <div nz-row class="data-row">
+          <div nz-col nzSpan="24" *ngFor="let permission of permissions">
+            <label nz-checkbox [nzValue]="permission">{{permission}}</label>
           </div>
+        </div>
       </nz-checkbox-wrapper>
     </form>
 
-    <div nz-row class="data-row" *ngIf="current == 2">
-      <div> <b>Group Name:</b> {{ data?.name }}</div>
-      <div *ngFor="let item of data?.permissions" nz-col nzSpan="24">{{item}}</div>
+    <div nz-row class="data-row" *ngIf="currentStep == 2">
+      <div><b>Group Name:</b> {{ data?.name }}</div>
+      <div *ngFor="let item of data?.permissions" nz-col nzSpan="24">
+        {{ item }}
+      </div>
     </div>
     <!-- End Form Data-->
   </div>
   <div class="steps-action">
-    <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
+    <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep > 0">
       <span>Previous</span>
     </button>
-    <button nz-button nzType="default" (click)="next()" *ngIf="current < 2">
+    <button nz-button nzType="default" (click)="next()" *ngIf="currentStep < 2">
       <span>Next</span>
     </button>
     <button
       [disabled]="!formData.valid"
       nz-button
       nzType="primary"
-      (click)="done()"
-      *ngIf="current === 2">
+      (click)="submitForm()"
+      *ngIf="currentStep === 2"
+    >
       <span>Done</span>
     </button>
   </div>

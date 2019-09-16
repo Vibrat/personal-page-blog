@@ -1,5 +1,8 @@
 <!-- New Group Button-->
-<dashboard-new-group></dashboard-new-group>
+<dashboard-new-group 
+    [permissions]="groupPermissions"
+    (onSubmit)="onGroupSubmit($event)"> 
+</dashboard-new-group>
 <!-- End New Group Button -->
 <!-- Table Content-->
 <nz-table #editRowTable nzBordered [nzData]="data">

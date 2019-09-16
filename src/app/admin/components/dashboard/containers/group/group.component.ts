@@ -7,8 +7,8 @@ import { Component } from "@angular/core";
 })
 export class GroupComponent {   
 
+    groupPermissions = ["account/basic-auth/login"];
     data = [];
-
 
     deleteGroup(id) {
         console.log('a group is deleted');
@@ -16,6 +16,10 @@ export class GroupComponent {
 
     newGroup(event) {
         console.log('on creating new group');
+    }
+
+    onGroupSubmit(data) {
+        console.log(data);
     }
     
 }

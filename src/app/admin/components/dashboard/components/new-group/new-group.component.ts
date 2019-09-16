@@ -1,5 +1,7 @@
-import { Component, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
+import { validateDuplicateGroup } from "./validation";
+import { Observable, of } from "rxjs";
 
 export interface GroupData {
   name: string;
@@ -11,68 +13,65 @@ export interface GroupData {
   templateUrl: "new-group.component.html",
   styleUrls: ["new-group.component.scss"]
 })
-export class NewGroupComponent {
+export class NewGroupComponent implements OnInit {
   data: GroupData;
   formData: FormGroup;
-  current = 0;
-  index = "";
+  currentStep = 0;
+  currentStepName = "";
 
   @Input() display: boolean = false;
+  @Input() permissions: string[] = [];
+  @Input() groupValidation: Observable<any> = of(false);
+  @Output() onSubmit: EventEmitter<GroupData> = new EventEmitter();
 
-  constructor() {
+  ngOnInit() {
     this.formData = new FormGroup({
-      group: new FormControl("", []),
-      permissions: new FormControl("", [])
+      group: new FormControl("", [], [validateDuplicateGroup(this.groupValidation)])
     });
   }
 
-  log(value: string[]): void {
+  outputPermissions(permissions: string[]): void {
     this.data = {
       name: this.formData.get("group").value,
-      permissions: value
+      permissions: permissions
     };
   }
 
-  submitForm() {}
+  submitForm() {
+    this.closeModal();
+    this.onSubmit.emit(this.data);
+  }
 
   showModal() {
     this.display = true;
   }
 
-  handleCancelModal() {
+  closeModal() {
     this.display = false;
   }
 
-  handleSubmitModal() {
-    this.display = false;
-  }
-
-  pre(): void {
-    this.current -= 1;
+  pre() {
+    this.currentStep -= 1;
     this.changeContent();
   }
 
-  next(): void {
-    this.current += 1;
+  next() {
+    this.currentStep += 1;
     this.changeContent();
-  }
-
-  done(): void {
-    console.log("done");
   }
 
   changeContent(): void {
-    switch (this.current) {
+    switch (this.currentStep) {
       case 0: {
-        this.index = "Add Group Name";
+        this.currentStepName = "Add Group Name";
         break;
       }
       case 1: {
-        this.index = "Add Permissions";
+        this.currentStepName = "Add Permissions";
         break;
       }
       default: {
-        this.index = "Error";
+        this.currentStepName = "Error";
       }
     }
   }
