@@ -1,3 +1,4 @@
+import { Injectable } from "@angular/core";
 import {
   AccountService,
   NewAccount,
@@ -5,6 +6,7 @@ import {
   GetAccounts
 } from "../../../services/account.service";
 
+@Injectable()
 export class AccountModel {
   private service: AccountService;
 

@@ -10,6 +10,8 @@ export class GroupComponent {
     groupPermissions = ["account/basic-auth/login"];
     data = [];
 
+    constructor() {}
+
     deleteGroup(id) {
         console.log('a group is deleted');
     }

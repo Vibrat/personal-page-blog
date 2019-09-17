@@ -27,8 +27,8 @@ export interface AddUserToGroupResponse {
   data?: {
     userId: string;
     groupname: string;
-    groupId: string; 
-  }
+    groupId: string;
+  };
 }
 
 export interface RemoveGroupFromUser {
@@ -39,7 +39,17 @@ export interface RemoveGroupFromUser {
 export interface RemoveGroupFromUserResponse {
   success: boolean;
   message?: string;
-  code: number
+  code: number;
+}
+
+export interface IsGroupExist {
+  group: string;
+}
+
+export interface IsGroupExistReponse {
+  success: boolean;
+  code?: number;
+  total?: string;
 }
 
 @Injectable()
@@ -81,7 +91,7 @@ export class GroupService {
     return <Observable<AddUserToGroupResponse>>this._http.post(api, formData);
   }
 
-   /**
+  /**
    * Add A User to Group Permissions
    *
    * @param data
@@ -89,7 +99,9 @@ export class GroupService {
   public updateGroupByName(data: AddUserToGroupByName) {
     const api = `${AppConfig.get(
       "domain"
-    )}api=account/group-permission/add-user-to-group-by-name&token=${this._token}`;
+    )}api=account/group-permission/add-user-to-group-by-name&token=${
+      this._token
+    }`;
     const formData = new FormData();
     formData.append("userId", data["userId"]);
     formData.append("groupname", data["groupname"]);
@@ -103,12 +115,25 @@ export class GroupService {
    *  - groupnames : string value represents group to be removed
    */
   public removeGroupFromUser(data: RemoveGroupFromUser) {
-    
-    let api = `${AppConfig.get("domain")}api=account/group-permission/remove-user-from-group-by-name`;
+    let api = `${AppConfig.get(
+      "domain"
+    )}api=account/group-permission/remove-user-from-group-by-name`;
     api += `&userId=${data.userId}`;
     api += `&groupname=${data.groupname}`;
     api += `&token=${this._token}`;
 
     return <Observable<RemoveGroupFromUserResponse>>this._http.delete(api);
+  }
+
+  /**
+   * Check if a group exist by name
+   *
+   * @param IsGroupExist data
+   */
+  public isGroupExist(data: IsGroupExist) {
+    let api = `${AppConfig.get(
+      "domain"
+    )}api=account/group-permission/is-group-exist&group=${data.group}`;
+    return <Observable<IsGroupExistReponse>>this._http.get(api);
   }
 }

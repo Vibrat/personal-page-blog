@@ -1,11 +1,10 @@
-import { GroupService, RemoveGroupFromUser, AddUserToGroupByName, ListGroupInput } from "../../../services/group.service";
+import { Injectable } from "@angular/core";
+import { GroupService, RemoveGroupFromUser, AddUserToGroupByName, ListGroupInput, IsGroupExist } from "../../../services/group.service";
 
+@Injectable()
 export class GroupTagModel {
-    private _service: GroupService;
 
-    constructor(private _group: GroupService) {
-        this._service = _group;
-    }
+    constructor(private _group: GroupService) {}
 
     public removeGroupFromUser(data: RemoveGroupFromUser) {
         return this._group.removeGroupFromUser(data);
@@ -17,5 +16,9 @@ export class GroupTagModel {
 
     public listGroups(data: ListGroupInput) {
         return this._group.listGroups(data);
+    }
+
+    public checkGroupExist(data: IsGroupExist) {
+        return this._group.isGroupExist(data);
     }
 }

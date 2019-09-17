@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { RouterModule, Router } from "@angular/router";
+import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { AdminDashboardComponents } from "./components";
@@ -8,6 +8,8 @@ import { SharedPipesModule } from "~/app/shared/pipes/shared-pipes.module";
 import { dashboardRoutes } from "./dashboard.route";
 import { AccountComponent } from "./containers/account/account.component";
 import { GroupComponent } from "./containers/group/group.component";
+import { AccountModel } from "./models/account.model";
+import { GroupTagModel } from "./models/group-tag.model";
 
 @NgModule({
   imports: [
@@ -19,6 +21,7 @@ import { GroupComponent } from "./containers/group/group.component";
     RouterModule.forChild(dashboardRoutes)
   ],
   declarations: [AccountComponent, GroupComponent, AdminDashboardComponents],
-  exports: [AccountComponent, GroupComponent]
+  exports: [AccountComponent, GroupComponent],
+  providers: [AccountModel, GroupTagModel]
 })
 export class DashboardModule {}

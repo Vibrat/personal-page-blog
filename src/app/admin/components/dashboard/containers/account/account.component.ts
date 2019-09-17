@@ -1,21 +1,16 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable, of } from "rxjs";
 import { take, concatMap, map, flatMap } from "rxjs/operators";
 import {
-  AccountService,
   NewAccount,
   NewAccountResponse
 } from "../../../../services/account.service";
-import {
-  GroupService,
-  AddUserToGroupResponse
-} from "../../../../services/group.service";
+import { AddUserToGroupResponse } from "../../../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
 import { ApiAdapter, AdapterResponse } from "~/app/_core/api/api.adapter";
 import { OnClostTagState } from "../../components/group-tag/group-tag.component";
 import { userDelayDetection } from "../../../../config";
-import { Model } from "~/app/_core/model/model";
 import { AccountModel } from "../../models/account.model";
 import { GroupTagModel } from "../../models/group-tag.model";
 
@@ -35,7 +30,6 @@ export interface Data {
 export class AccountComponent implements OnInit {
   displayAdminPasswordInput = []; // display password input object
 
-  model: Model;
   sortName: string | null = null;
   sortValue: string | null = null;
   listOfSearchAddress: string[] = [];
@@ -60,16 +54,10 @@ export class AccountComponent implements OnInit {
 
   constructor(
     private _router: ActivatedRoute,
-    private _account: AccountService,
-    private _group: GroupService,
+    private _account: AccountModel,
+    private _group: GroupTagModel,
     private _msgService: MessageService
   ) {
-    // Build models
-    this.model = new Model(
-      { name: "account", operator: new AccountModel(this._account) },
-      { name: "group", operator: new GroupTagModel(this._group) }
-    );
-
     // Build Streaming events
     this.searchAdapter = new ApiAdapter();
     this.newAccountAdapter = new ApiAdapter();
@@ -81,7 +69,7 @@ export class AccountComponent implements OnInit {
 
   newAccount(data: NewAccount) {
     this.newAccountAdapter.emit({
-      observer: this.model.call("account", "createAccount", data),
+      observer: this._account.createAccount(data),
       callback: (val: NewAccountResponse) => {
         this.addLocalAccounts(val.data);
         this._msgService
@@ -102,8 +90,8 @@ export class AccountComponent implements OnInit {
    */
   deleteAccount(id: string) {
     this.deleteAccountAdapter.emit({
-      observer: this.model
-        .call("account", "deleteAccount", this.editCache[id].data.username)
+      observer: this._account
+        .deleteAccount(this.editCache[id].data.username)
         .pipe(take(1)),
       callback: () => {
         const index = this.listOfData.findIndex(item => item.id === id);
@@ -127,7 +115,7 @@ export class AccountComponent implements OnInit {
 
   changePassword(event, dataId) {
     this.changePasswordAdapter.emit({
-      observer: this.model.call("account", "changePasswordByAdmin", event),
+      observer: this._account.changePasswordByAdmin(event),
       callback: response => {
         if (response.success) {
           this._msgService.success("Done");
@@ -163,7 +151,7 @@ export class AccountComponent implements OnInit {
     }
 
     // Create list concurrent apis
-    const deleteGroup$ = this.model.call("group", "removeGroupFromUser", {
+    const deleteGroup$ = this._group.removeGroupFromUser({
       userId: state.data.id,
       groupname: state.data.groupname
     });
@@ -215,7 +203,7 @@ export class AccountComponent implements OnInit {
         }),
         flatMap(({ id, groupname }) => {
           // Call API to update data in server
-          return this.model.call("group", "updateGroupByName", {
+          return this._group.updateGroupByName({
             userId: this.editCache[id].data.id,
             groupname: groupname
           });
@@ -263,7 +251,7 @@ export class AccountComponent implements OnInit {
     if (inputState.success) {
       // Emit value to Adapter to API Server
       this.searchAdapter.emit({
-        observer: this.model.call("group", "listGroups", {
+        observer: this._group.listGroups({
           group: inputState.value,
           limit: 10,
           offset: 0
@@ -318,7 +306,7 @@ export class AccountComponent implements OnInit {
 
   callSearchApi() {
     this.searchAdapter.emit({
-      observer: this.model.call("account", "listAccounts", {
+      observer: this._account.listAccounts({
         offset: 0,
         limit: 100,
         ...this.searchObject
