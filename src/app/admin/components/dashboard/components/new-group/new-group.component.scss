@@ -27,11 +27,20 @@
 [nz-form] {
   max-width: 600px;
   > nz-form-item {
-    margin-bottom: 12px;
-    &:last-child {
-      margin-bottom: 0;
-    }
+      margin-bottom: 12px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      nz-form-control  nz-form-explain {
+        text-align: left;
+        font-size: 12px;
+        padding-left: 4px;
+        padding-right: 4px;
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
   }
+  
 }
 
 .steps-content {
@@ -60,4 +69,7 @@ nz-checkbox-wrapper {
   padding-left: 12px;
   max-height: 208px;
   overflow-y: scroll;
+  &.select-all {
+    overflow: hidden;
+  }
 }
