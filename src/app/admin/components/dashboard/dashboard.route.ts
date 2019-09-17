@@ -15,4 +15,4 @@ export const dashboardRoutes: Routes = [
         path: 'group',
         component: GroupComponent
     }
-]
+];

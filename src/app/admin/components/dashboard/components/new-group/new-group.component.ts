@@ -21,12 +21,13 @@ export class NewGroupComponent implements OnInit {
 
   @Input() display: boolean = false;
   @Input() permissions: string[] = [];
-  @Input() groupValidation: Observable<any> = of(false);
+  @Input() groupValidation: Function = () => of();
+  @Input() delayDetection: number = 200;
   @Output() onSubmit: EventEmitter<GroupData> = new EventEmitter();
 
   ngOnInit() {
     this.formData = new FormGroup({
-      group: new FormControl("", [], [validateDuplicateGroup(this.groupValidation)])
+      group: new FormControl("", [], [validateDuplicateGroup(this.groupValidation, this.delayDetection)])
     });
   }
 

@@ -16,7 +16,7 @@ import {
   map
 } from "rxjs/operators";
 
-import { userDelayDetection } from "../../../../config";
+import { AppConfig } from "~/app/_init/app-config.service";
 
 /**
  * Validation for username
@@ -30,7 +30,7 @@ export function validateUsername(account: AccountService): AsyncValidatorFn {
       return <
         Promise<ValidationErrors | null> | Observable<ValidationErrors | null>
       >of(control.value).pipe(
-        delay(userDelayDetection),
+        delay(AppConfig.get('userDelayDetection')),
         takeLast(1),
         distinctUntilChanged(),
         flatMap((input: string) => account.checkAccount(input)),
@@ -50,7 +50,7 @@ export function validatePasswordConfirm(password$: Observable<AbstractControl>):
         return  <
         Promise<ValidationErrors | null> | Observable<ValidationErrors | null>
       >password$.pipe(
-            delay(userDelayDetection),
+            delay(AppConfig.get('userDelayDetection')),
             takeLast(1),
             distinctUntilChanged(),
             map((password: AbstractControl) => {

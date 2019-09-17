@@ -1,11 +1,13 @@
 <!-- New Group Button-->
 <dashboard-new-group 
-    [permissions]="groupPermissions"
+    [permissions]="groupPermissions$ | async"
+    [groupValidation]="checkGroupExist()"
+    [delayDetection]="userDelayDetection"
     (onSubmit)="onGroupSubmit($event)"> 
 </dashboard-new-group>
 <!-- End New Group Button -->
 <!-- Table Content-->
-<nz-table #editRowTable nzBordered [nzData]="data">
+<nz-table #editRowTable nzBordered [nzData]="groupData">
   <!-- Table header-->
   <thead>
     <tr>

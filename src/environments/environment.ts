@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  domain:  "http://localhost:81/index.php?"
+  domain:  "http://localhost:81/index.php?",
+  userDelayDetection: 500,
 };
 
 /*

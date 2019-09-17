@@ -10,7 +10,7 @@ import { AddUserToGroupResponse } from "../../../../services/group.service";
 import { MessageService } from "~/app/shared/services/message.service";
 import { ApiAdapter, AdapterResponse } from "~/app/_core/api/api.adapter";
 import { OnClostTagState } from "../../components/group-tag/group-tag.component";
-import { userDelayDetection } from "../../../../config";
+import { AppConfig } from "~/app/_init/app-config.service";
 import { AccountModel } from "../../models/account.model";
 import { GroupTagModel } from "../../models/group-tag.model";
 
@@ -324,14 +324,14 @@ export class AccountComponent implements OnInit {
   async ngOnInit() {
     // Start Listening to all Listeners
     this.searchAdapter
-      .build("Search", false, { userDelayDetection: userDelayDetection })
+      .build("Search", false, { userDelayDetection: AppConfig.get('userDelayDetection') })
       .subscribe();
     this.newAccountAdapter.build("NewAccount").subscribe();
     this.deleteAccountAdapter.build("DeleteAccount").subscribe();
     this.saveEditAccountAdapter.build("UpdateAccount").subscribe();
     this.removeGroupTagFromUser
       .build("removeGroupTag", false, {
-        userDelayDetection: userDelayDetection
+        userDelayDetection: AppConfig.get('userDelayDetection')
       })
       .subscribe();
     this.changePasswordAdapter.build("changePassword").subscribe();

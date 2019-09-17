@@ -61,6 +61,13 @@ export interface DeleteGroupResponse {
   message: string;
 }
 
+export interface ListAllPermissionsResponse {
+  success: boolean;
+  data:  {
+    api: string[];
+  };
+}
+
 @Injectable()
 export class GroupService {
   private _token: string | false;
@@ -122,7 +129,12 @@ export class GroupService {
   public isGroupExist(data: IsGroupExist) {
     let api = `${AppConfig.get(
       "domain"
-    )}api=account/group-permission/is-group-exist&group=${data.group}`;
+    )}api=account/group-permission/is-group-exist&group=${data.group}&token=${this._token}`;
     return <Observable<IsGroupExistReponse>>this._http.get(api);
+  }
+
+  public listAllGroupPermissions() {
+    const api = `${AppConfig.get('domain')}api=account/group-permission/list-all-permissions&token=${this._token}`;
+    return <Observable<ListAllPermissionsResponse>>this._http.get(api);
   }
 }
