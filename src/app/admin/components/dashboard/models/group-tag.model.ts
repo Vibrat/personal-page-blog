@@ -1,6 +1,9 @@
 import { Injectable } from "@angular/core";
-import { GroupService, RemoveGroupFromUser, AddUserToGroupByName, ListGroupInput, IsGroupExist } from "../../../services/group.service";
+import { GroupService, RemoveGroupFromUser, AddUserToGroupByName, ListGroupInput, IsGroupExist, DeleteGroup } from "../../../services/group.service";
 
+/**
+ * Business API Layer - Group API
+ */
 @Injectable()
 export class GroupTagModel {
 
@@ -20,5 +23,9 @@ export class GroupTagModel {
 
     public checkGroupExist(data: IsGroupExist) {
         return this._group.isGroupExist(data);
+    }
+
+    public deleteGroup(data: DeleteGroup) {
+        return this._group.deleteGroup(data);
     }
 }

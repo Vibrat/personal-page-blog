@@ -52,20 +52,23 @@ export interface IsGroupExistReponse {
   total?: string;
 }
 
+export interface DeleteGroup {
+  name: string;
+}
+
+export interface DeleteGroupResponse {
+  success: boolean;
+  message: string;
+}
+
 @Injectable()
 export class GroupService {
-  private _domain: string = AppConfig.get("domain");
   private _token: string | false;
 
   constructor(private _http: HttpClient, private _auth: AuthService) {
     this._token = this._auth.getToken();
   }
 
-  /**
-   * List group based on value input
-   *
-   * @param name (Optional)
-   */
   public listGroups(data: ListGroupInput) {
     const api = `${AppConfig.get(
       "domain"
@@ -76,11 +79,6 @@ export class GroupService {
     return this._http.get(api);
   }
 
-  /**
-   * Add A User to Group Permissions
-   *
-   * @param data
-   */
   public updateGroup(data: AddUserToGroup) {
     const api = `${AppConfig.get(
       "domain"
@@ -91,11 +89,6 @@ export class GroupService {
     return <Observable<AddUserToGroupResponse>>this._http.post(api, formData);
   }
 
-  /**
-   * Add A User to Group Permissions
-   *
-   * @param data
-   */
   public updateGroupByName(data: AddUserToGroupByName) {
     const api = `${AppConfig.get(
       "domain"
@@ -108,12 +101,13 @@ export class GroupService {
     return <Observable<AddUserToGroupResponse>>this._http.post(api, formData);
   }
 
-  /**
-   * Remove a group from user
-   * @param data
-   *  - userId : number ID represents user
-   *  - groupnames : string value represents group to be removed
-   */
+  public deleteGroup(data: DeleteGroup) {
+    const api = `${AppConfig.get(
+      "domain"
+    )}api=account/group-permission/delete&name=${data.name}`;
+    return <Observable<DeleteGroupResponse>>this._http.delete(api);
+  }
+
   public removeGroupFromUser(data: RemoveGroupFromUser) {
     let api = `${AppConfig.get(
       "domain"
@@ -125,11 +119,6 @@ export class GroupService {
     return <Observable<RemoveGroupFromUserResponse>>this._http.delete(api);
   }
 
-  /**
-   * Check if a group exist by name
-   *
-   * @param IsGroupExist data
-   */
   public isGroupExist(data: IsGroupExist) {
     let api = `${AppConfig.get(
       "domain"

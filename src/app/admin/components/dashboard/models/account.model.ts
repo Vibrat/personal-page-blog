@@ -6,6 +6,9 @@ import {
   GetAccounts
 } from "../../../services/account.service";
 
+/**
+ * Business API Layer - Account
+ */
 @Injectable()
 export class AccountModel {
   private service: AccountService;
