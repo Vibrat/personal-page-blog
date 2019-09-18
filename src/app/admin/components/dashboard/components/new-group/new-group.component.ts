@@ -23,19 +23,28 @@ export interface GroupData {
   selector: "[nz-checkbox][option]"
 })
 export class SelectOption {
+
+  
+
   isClicked: boolean = false;
+  @Input() nzValue: string;
+
   constructor(public ref: ElementRef) {}
   click(alwaysChecked = false, state) {
     console.log('click', this.isClicked, 'state', state);
     if (alwaysChecked && this.isClicked != state) {
       return;
     }
-    this.isClicked = !this.isClicked;
-    this.ref.nativeElement.click(); 
+
+    if (this.isClicked != state) {
+      this.isClicked = state || !this.isClicked;
+    } else {
+      this.isClicked = !this.isClicked;
+      this.ref.nativeElement.click();
+    }
   }
 
-  @HostListener('click', []) onClick() {
-    console.log('found click');
+  @HostListener('click') onClick() {
     this.isClicked = !this.isClicked;
   }
 }
@@ -46,6 +55,7 @@ export class SelectOption {
   styleUrls: ["new-group.component.scss"]
 })
 export class NewGroupComponent implements OnInit {
+  
   @ViewChildren(SelectOption) checkBoxes: QueryList<SelectOption>;
 
   data: GroupData;

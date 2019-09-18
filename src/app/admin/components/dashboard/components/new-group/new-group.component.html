@@ -20,7 +20,7 @@
     <!-- Form Data -->
     <form nz-form [formGroup]="formData" (ngSubmit)="submitForm()">
       <nz-form-item *ngIf="currentStep == 0">
-        <nz-form-control>
+        <nz-form-control nzHasFeedback [nzErrorTip]="groupValidator">
           <input
             formControlName="group"
             nz-input
@@ -28,7 +28,7 @@
             placeholder="Group Name"
             autocomplete="Group Name"
           />
-          <nz-form-explain>
+          <ng-template #groupValidator let-control>
             <div *ngIf="formData.get('group')?.dirty &&formData.get('group')?.errors as errors">
               <ng-container *ngIf="errors?.required">
                   <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i> Group is required
@@ -40,7 +40,7 @@
                   <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i> Group already exists
               </ng-container>
             </div>
-          </nz-form-explain>
+          </ng-template>
         </nz-form-control>
       </nz-form-item>
       <div nz-row class="data-row select-all" *ngIf="currentStep == 1">

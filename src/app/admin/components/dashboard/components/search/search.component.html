@@ -1,19 +1,17 @@
 <!-- Dropdown Icon Search-->
-<nz-dropdown
+<!-- Search Icon-->
+<i
+  nz-icon
+  nzType="search"
+  class="table-filter-icon"
+  [class.ant-table-filter-open]="dropdown.nzVisible"
+  nz-dropdown
+  [nzDropdownMenu]="dropdown"
+></i>
+<nz-dropdown-menu
   nzTrigger="click"
-  nzPlacement="bottomRight"
-  [nzClickHide]="false"
   nzTableFilter
-  #dropdown
->
-  <!-- Search Icon-->
-  <i
-    nz-icon
-    nzType="search"
-    class="table-filter-icon"
-    [class.ant-table-filter-open]="dropdown.nzVisible"
-    nz-dropdown
-  ></i>
+  #dropdown>
   <!-- End Search Icon-->
   <div class="search-box">
     <!-- Input typing-->
@@ -39,7 +37,7 @@
     <button nz-button nzSize="small" (click)="reset()">Reset</button>
     <!-- End Reset Button-->
   </div>
-</nz-dropdown>
+</nz-dropdown-menu>
 <!-- End Dropdown Icon Search -->
 <!-- Value Shower -->
 <span class="search-value">
