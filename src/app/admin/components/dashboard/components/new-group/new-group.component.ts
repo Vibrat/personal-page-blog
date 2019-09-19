@@ -51,10 +51,10 @@ export class NewGroupComponent implements OnInit {
   @ViewChildren(SelectOption) checkBoxes: QueryList<SelectOption>;
 
   // Default for data
-  data: GroupData  = {
+  data: GroupData = {
     name: '',
     permissions: []
-  };
+  };;
 
   formData: FormGroup;
   currentStep = 0;
@@ -89,6 +89,10 @@ export class NewGroupComponent implements OnInit {
   submitForm() {
     this.closeModal();
     this.onSubmit.emit(this.data);
+    this.formData.reset();
+    this.isSelectedAll = false;
+    this.checked = {};
+    this.currentStep = 0;
   }
 
   showModal() {
