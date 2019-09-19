@@ -5,6 +5,20 @@ import { AuthService } from "./auth.service";
 
 import { Observable } from "rxjs";
 
+export interface Permission {
+  [key: string]: string[];
+}
+
+export interface CreateGroup {
+  name: string;
+  permission: Permission;
+}
+
+export interface CreateGroupResponse {
+  success: boolean;
+  affected_rows: number;
+}
+
 export interface ListGroupInput {
   limit?: number;
   offset?: number;
@@ -63,7 +77,7 @@ export interface DeleteGroupResponse {
 
 export interface ListAllPermissionsResponse {
   success: boolean;
-  data:  {
+  data: {
     api: string[];
   };
 }
@@ -74,6 +88,17 @@ export class GroupService {
 
   constructor(private _http: HttpClient, private _auth: AuthService) {
     this._token = this._auth.getToken();
+  }
+
+  public createGroup(data: CreateGroup) {
+    const api = `${AppConfig.get(
+      "domain"
+    )}api=account/group-permission/create&token=${this._token}`;
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("permission", JSON.stringify(data.permission));
+
+    return <Observable<CreateGroupResponse>>this._http.post(api, formData);
   }
 
   public listGroups(data: ListGroupInput) {
@@ -129,12 +154,16 @@ export class GroupService {
   public isGroupExist(data: IsGroupExist) {
     let api = `${AppConfig.get(
       "domain"
-    )}api=account/group-permission/is-group-exist&group=${data.group}&token=${this._token}`;
+    )}api=account/group-permission/is-group-exist&group=${data.group}&token=${
+      this._token
+    }`;
     return <Observable<IsGroupExistReponse>>this._http.get(api);
   }
 
   public listAllGroupPermissions() {
-    const api = `${AppConfig.get('domain')}api=account/group-permission/list-all-permissions&token=${this._token}`;
+    const api = `${AppConfig.get(
+      "domain"
+    )}api=account/group-permission/list-all-permissions&token=${this._token}`;
     return <Observable<ListAllPermissionsResponse>>this._http.get(api);
   }
 }

@@ -7,8 +7,7 @@ import {
   ViewChildren,
   QueryList,
   ElementRef,
-  Directive,
-  HostListener
+  Directive
 } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { validateDuplicateGroup } from "./validation";
@@ -51,7 +50,12 @@ export class NewGroupComponent implements OnInit {
   
   @ViewChildren(SelectOption) checkBoxes: QueryList<SelectOption>;
 
-  data: GroupData;
+  // Default for data
+  data: GroupData  = {
+    name: '',
+    permissions: []
+  };
+
   formData: FormGroup;
   currentStep = 0;
   currentStepName = "";
@@ -79,10 +83,7 @@ export class NewGroupComponent implements OnInit {
   }
 
   outputPermissions(permissions: string[]): void {
-    this.data = {
-      name: this.formData.get("group").value,
-      permissions: permissions
-    };
+    this.data.permissions = permissions;
   }
 
   submitForm() {
@@ -114,6 +115,7 @@ export class NewGroupComponent implements OnInit {
   }
 
   changeContent(): void {
+    this.data.name = this.formData.get("group").value;
     switch (this.currentStep) {
       case 0: {
         this.currentStepName = "Add Group Name";

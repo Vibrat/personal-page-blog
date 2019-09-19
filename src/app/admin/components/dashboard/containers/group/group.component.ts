@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
-import { GroupTagModel } from "../../models/group-tag.model";
+import { GroupTagModel, CreateGroup } from "../../models/group-tag.model";
 import { AppConfig } from "~/app/_init/app-config.service";
+import { GroupData } from "../../components/new-group/new-group.component";
+import { MessageService } from "~/app/shared/services/message.service";
 
 @Component({
     selector: 'dashboard-group',
@@ -14,7 +16,7 @@ export class GroupComponent {
     groupData = [];
     userDelayDetection = AppConfig.get('userDelayDetection');
 
-    constructor(private _group: GroupTagModel) {
+    constructor(private _group: GroupTagModel, private _msg: MessageService) {
         this.groupPermissions$ = this._group.listAllPermissions();
     }
 
@@ -30,8 +32,20 @@ export class GroupComponent {
         console.log('on creating new group');
     }
 
-    onGroupSubmit(data) {
-        console.log(data);
+    onGroupSubmit(data: GroupData) {
+        
+        // Re-format data
+        let groupData: CreateGroup = {
+            name: data.name,
+            permission: {
+                api: data.permissions
+            }
+        };
+        
+        this._group.createGroup(groupData).subscribe(
+            response => this._msg[response.success ? 'success' : 'error'](response.success ? 'Done' : 'Failed'),
+            error => console.error(`Error while create group - ${error}`)
+        );
     }
     
 }

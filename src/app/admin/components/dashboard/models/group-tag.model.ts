@@ -6,9 +6,11 @@ import {
   ListGroupInput,
   IsGroupExist,
   DeleteGroup,
+  CreateGroup
 } from "../../../services/group.service";
-
 import { map } from "rxjs/operators";
+
+export { CreateGroup } from "../../../services/group.service";
 
 /**
  * Business API Layer - Group API
@@ -16,6 +18,10 @@ import { map } from "rxjs/operators";
 @Injectable()
 export class GroupTagModel {
   constructor(private _group: GroupService) {}
+
+  public createGroup(data: CreateGroup) {
+    return this._group.createGroup(data);
+  }
 
   public removeGroupFromUser(data: RemoveGroupFromUser) {
     return this._group.removeGroupFromUser(data);
