@@ -24,28 +24,21 @@ export interface GroupData {
 })
 export class SelectOption {
 
-  
-
-  isClicked: boolean = false;
+  @Input() isChecked: boolean = false;
   @Input() nzValue: string;
 
   constructor(public ref: ElementRef) {}
-  click(alwaysChecked = false, state) {
-    console.log('click', this.isClicked, 'state', state);
-    if (alwaysChecked && this.isClicked != state) {
+  click(alwaysChecked = false, state: boolean) {
+    if (alwaysChecked && this.isChecked != state) {
       return;
     }
 
-    if (this.isClicked != state) {
-      this.isClicked = state || !this.isClicked;
+    if (this.isChecked != state) {
+      this.isChecked = state;
     } else {
-      this.isClicked = !this.isClicked;
+      this.isChecked = !this.isChecked;
       this.ref.nativeElement.click();
     }
-  }
-
-  @HostListener('click') onClick() {
-    this.isClicked = !this.isClicked;
   }
 }
 
@@ -62,7 +55,8 @@ export class NewGroupComponent implements OnInit {
   formData: FormGroup;
   currentStep = 0;
   currentStepName = "";
-  stateSelection: boolean = false;
+  isSelectedAll: boolean = false;
+  checked = {};
 
   @Input() display: boolean = false;
   @Input() permissions: string[] = [];
@@ -78,6 +72,10 @@ export class NewGroupComponent implements OnInit {
         [validateDuplicateGroup(this.groupValidation, this.delayDetection)]
       )
     });
+  }
+
+  onChangeCheckBox(event, permission) {
+    this.checked[permission] = event;
   }
 
   outputPermissions(permissions: string[]): void {
@@ -101,8 +99,8 @@ export class NewGroupComponent implements OnInit {
   }
 
   selectAll() {
-    this.checkBoxes.forEach((item: SelectOption) => item.click(true, this.stateSelection));
-    this.stateSelection = !this.stateSelection;
+    this.checkBoxes.forEach((item: SelectOption) => item.click(true, this.isSelectedAll));
+    this.isSelectedAll = !this.isSelectedAll;
   }
 
   pre() {

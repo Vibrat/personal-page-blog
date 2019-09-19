@@ -29,15 +29,23 @@
             autocomplete="Group Name"
           />
           <ng-template #groupValidator let-control>
-            <div *ngIf="formData.get('group')?.dirty &&formData.get('group')?.errors as errors">
+            <div
+              *ngIf="
+                formData.get('group')?.dirty &&
+                formData.get('group')?.errors as errors
+              "
+            >
               <ng-container *ngIf="errors?.required">
-                  <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i> Group is required
+                <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
+                Group is required
               </ng-container>
               <ng-container *ngIf="errors?.pattern">
-                  <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i> Group should contains number and letter only
+                <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
+                Group should contains number and letter only
               </ng-container>
               <ng-container *ngIf="errors?.group">
-                  <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i> Group already exists
+                <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
+                Group already exists
               </ng-container>
             </div>
           </ng-template>
@@ -45,17 +53,32 @@
       </nz-form-item>
       <div nz-row class="data-row select-all" *ngIf="currentStep == 1">
         <nz-checkbox-wrapper (nzOnChange)="selectAll()">
-          <div nz-col nzSpan=24 *ngIf="permissions?.length">
-              <label nz-checkbox>select all</label>
+          <div nz-col nzSpan="24" *ngIf="permissions?.length">
+            <label
+              nz-checkbox
+              [ngModel]="isSelectedAll"
+              [ngModelOptions]="{ standalone: true }"
+              >select all</label
+            >
           </div>
         </nz-checkbox-wrapper>
       </div>
       <nz-checkbox-wrapper
         *ngIf="currentStep == 1"
-        (nzOnChange)="outputPermissions($event)">
+        (nzOnChange)="outputPermissions($event)"
+      >
         <div nz-row class="data-row">
           <div nz-col nzSpan="24" *ngFor="let permission of permissions">
-            <label nz-checkbox option [nzValue]="permission">{{permission}}</label>
+            <label
+              nz-checkbox
+              option
+              [ngModel]="checked[permission] ? checked[permission] : false"
+              [isChecked]="checked[permission] ? checked[permission] : false"
+              (ngModelChange)="onChangeCheckBox($event, permission)"
+              [ngModelOptions]="{ standalone: true }"
+              [nzValue]="permission"
+              >{{ permission }}</label
+            >
           </div>
         </div>
       </nz-checkbox-wrapper>
@@ -65,7 +88,7 @@
       <div><b>Group Name:</b> {{ data?.name }}</div>
       <div><b>Permissions:</b></div>
       <div *ngFor="let item of data?.permissions" nz-col nzSpan="24">
-       - {{ item }}
+        - {{ item }}
       </div>
     </div>
     <!-- End Form Data-->
@@ -74,7 +97,13 @@
     <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep > 0">
       <span>Previous</span>
     </button>
-    <button [disabled]="!formData.valid" nz-button nzType="default" (click)="next()" *ngIf="currentStep < 2">
+    <button
+      [disabled]="!formData.valid"
+      nz-button
+      nzType="default"
+      (click)="next()"
+      *ngIf="currentStep < 2"
+    >
       <span>Next</span>
     </button>
     <button
@@ -82,7 +111,8 @@
       nz-button
       nzType="primary"
       (click)="submitForm()"
-      *ngIf="currentStep === 2">
+      *ngIf="currentStep === 2"
+    >
       <span>Done</span>
     </button>
   </div>
