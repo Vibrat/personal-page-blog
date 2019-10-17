@@ -5,7 +5,7 @@ import { CanActivateCard } from "./card.guard.service";
 import { ResolverCard } from "./card.resolve.service";
 
 import { BlogComponent } from "./items/blog.component";
-import { CanActivateBlog } from "./Blog.guard.service";
+import { CanActivateBlog } from "./blog.guard.service";
 
 export const routes: Routes = [
     {
