@@ -10,7 +10,7 @@ import {
 } from "../../../services/group.service";
 import { map } from "rxjs/operators";
 
-export { CreateGroup } from "../../../services/group.service";
+export { CreateGroup, GroupDataItem, ListGroupResponse } from "../../../services/group.service";
 
 /**
  * Business API Layer - Group API
@@ -31,7 +31,7 @@ export class GroupTagModel {
     return this._group.updateGroupByName(data);
   }
 
-  public listGroups(data: ListGroupInput) {
+  public listGroups(data?: ListGroupInput) {
     return this._group.listGroups(data);
   }
 

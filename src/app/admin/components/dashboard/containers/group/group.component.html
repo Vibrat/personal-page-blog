@@ -1,13 +1,13 @@
 <!-- New Group Button-->
-<dashboard-new-group 
+<dashboard-new-group
     [permissions]="groupPermissions$ | async"
     [groupValidation]="checkGroupExist()"
     [delayDetection]="userDelayDetection"
-    (onSubmit)="onGroupSubmit($event)"> 
+    (onSubmit)="onGroupSubmit($event)">
 </dashboard-new-group>
 <!-- End New Group Button -->
 <!-- Table Content-->
-<nz-table #editRowTable nzBordered [nzData]="groupData">
+<nz-table #groupRows nzBordered [nzData]="(groups$ | async)?.data">
   <!-- Table header-->
   <thead>
     <tr>
@@ -18,7 +18,7 @@
         Group
       </th>
       <th nzCustomFilter>
-        Permissions 
+        Permissions
       </th>
       <th>Action</th>
     </tr>
@@ -26,7 +26,7 @@
   <!-- End Table header-->
   <!-- Table Body -->
   <tbody>
-    <tr *ngFor="let data of editRowTable.data">
+    <tr *ngFor="let data of groupRows.data">
       <td>
         <ng-container>
           {{ data.id }}
@@ -34,15 +34,17 @@
       </td>
       <td>
         <ng-container>
-          {{ data.username }}
+          {{ data.name }}
         </ng-container>
       </td>
       <td>
-          Some data
+         <ng-container *ngFor="let per of jsonParse(data.permission).api">
+           {{ per }}
+         </ng-container>
       </td>
       <td>
         <div class="editable-row-operations">
-          <ng-container *ngIf="!editCache[data.id]?.edit">
+          <ng-container>
             <div class="btn-group">
               <a
                 nz-popconfirm

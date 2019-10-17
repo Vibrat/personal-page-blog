@@ -47,7 +47,7 @@ export class SelectOption {
   styleUrls: ["new-group.component.scss"]
 })
 export class NewGroupComponent implements OnInit {
-  
+
   @ViewChildren(SelectOption) checkBoxes: QueryList<SelectOption>;
 
   // Default for data

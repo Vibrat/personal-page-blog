@@ -25,6 +25,24 @@ export interface ListGroupInput {
   group?: string;
 }
 
+export interface ListGroupResponse {
+  success: boolean;
+  data: GroupDataItem[];
+  _statictics: GroupListStatistics;
+}
+
+export interface GroupDataItem {
+  id: string;
+  name: string;
+  permission: string[];
+}
+
+export interface GroupListStatistics {
+  total: number;
+  offset: number;
+  limit: number;
+}
+
 export interface AddUserToGroup {
   userId: string;
   groupId: string;
@@ -101,14 +119,18 @@ export class GroupService {
     return <Observable<CreateGroupResponse>>this._http.post(api, formData);
   }
 
-  public listGroups(data: ListGroupInput) {
+  public listGroups(data?: ListGroupInput) {
+
+    const defaultParams: ListGroupInput = { limit: 100, offset: 0,  group: ''};
+    data  = { ...defaultParams, ...data };
+
     const api = `${AppConfig.get(
       "domain"
     )}api=account/group-permission/list-groups&limit=${data.limit}&offset=${
       data.offset
     }&groupname=${data.group}&token=${this._token}`;
 
-    return this._http.get(api);
+    return <Observable<ListGroupResponse>>this._http.get(api);
   }
 
   public updateGroup(data: AddUserToGroup) {
