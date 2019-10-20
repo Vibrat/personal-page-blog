@@ -59,7 +59,7 @@
             validateForm.get('password')?.dirty &&
             validateForm.get('password')?.errors as errors">
           <ng-container *ngFor="let error of errors | keyvalue | limit: 1">
-              <ng-container>{{ errors_msg[error.key] }}</ng-container> 
+              <ng-container>{{ errors_msg[error.key] }}</ng-container>
           </ng-container>
         </nz-form-explain>
         <!-- End Validation for Password -->

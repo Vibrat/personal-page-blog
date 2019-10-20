@@ -6,60 +6,6 @@
     (onSubmit)="onGroupSubmit($event)">
 </dashboard-new-group>
 <!-- End New Group Button -->
-<!-- Table Content-->
-<nz-table #groupRows nzBordered [nzData]="(groups$ | async)?.data">
-  <!-- Table header-->
-  <thead>
-    <tr>
-      <th nzWidth="10%">
-        Id
-      </th>
-      <th nzWidth="15%" nzCustomFilter>
-        Group
-      </th>
-      <th nzCustomFilter>
-        Permissions
-      </th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <!-- End Table header-->
-  <!-- Table Body -->
-  <tbody>
-    <tr *ngFor="let data of groupRows.data">
-      <td>
-        <ng-container>
-          {{ data.id }}
-        </ng-container>
-      </td>
-      <td>
-        <ng-container>
-          {{ data.name }}
-        </ng-container>
-      </td>
-      <td>
-         <ng-container *ngFor="let per of jsonParse(data.permission).api">
-           {{ per }}
-         </ng-container>
-      </td>
-      <td>
-        <div class="editable-row-operations">
-          <ng-container>
-            <div class="btn-group">
-              <a
-                nz-popconfirm
-                nzTitle="Sure to delete?"
-                (nzOnConfirm)="deleteGroup(data.id)">Delete</a
-              >
-            </div>
-            <div class="btn-group">
-                button here
-            </div>
-          </ng-container>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-  <!-- End Table Body -->
-</nz-table>
-<!-- End Table Content-->
+<dashboard-group-list
+  [groups]="(groups$ | async)?.data">
+</dashboard-group-list>

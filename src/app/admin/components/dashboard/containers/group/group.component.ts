@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
-import { GroupTagModel, CreateGroup, GroupDataItem, ListGroupResponse } from "../../models/group-tag.model";
+import { GroupTagModel, CreateGroup, ListGroupResponse } from "../../models/group-tag.model";
 import { AppConfig } from "~/app/_init/app-config.service";
 import { GroupData } from "../../components/new-group/new-group.component";
 import { MessageService } from "~/app/shared/services/message.service";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 @Component({
     selector: 'dashboard-group',
@@ -26,14 +26,6 @@ export class GroupComponent {
         return (input: string) => this._group.checkGroupExist({ group: input });
     }
 
-    deleteGroup(id) {
-        console.log('a group is deleted');
-    }
-
-    newGroup(event) {
-        console.log('on creating new group');
-    }
-
     onGroupSubmit(data: GroupData) {
 
         // Re-format data
@@ -48,13 +40,5 @@ export class GroupComponent {
             response => this._msg[response.success ? 'success' : 'error'](response.success ? 'Done' : 'Failed'),
             error => console.error(`Error while create group - ${error}`)
         );
-    }
-
-    jsonParse(data) {
-        try {
-            return JSON.parse(data);
-        } catch (e) {
-            return {};
-        }
     }
 }
