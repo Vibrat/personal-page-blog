@@ -6,7 +6,8 @@ import {
   ListGroupInput,
   IsGroupExist,
   DeleteGroup,
-  CreateGroup
+  CreateGroup,
+  PermissionUpdate
 } from "../../../services/group.service";
 import { map } from "rxjs/operators";
 
@@ -48,4 +49,8 @@ export class GroupTagModel {
           map (response => (response.success ? response.data.api : []))
       );
   };
+
+  public updatePermission(data: PermissionUpdate) {
+    return this._group.updatePermission(data);
+  }
 }

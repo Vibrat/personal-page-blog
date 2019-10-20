@@ -1,10 +1,12 @@
 import { Component } from "@angular/core";
+import { Observable } from "rxjs";
+import { map, first } from "rxjs/operators";
 import { GroupTagModel, CreateGroup, ListGroupResponse } from "../../models/group-tag.model";
 import { AppConfig } from "~/app/_init/app-config.service";
 import { GroupData } from "../../components/new-group/new-group.component";
 import { MessageService } from "~/app/shared/services/message.service";
-import { Observable } from "rxjs";
-import { map, first } from "rxjs/operators";
+import { OnPermissionChange} from "../../components/group-list/group-list.component";
+
 
 @Component({
     selector: 'dashboard-group',
@@ -17,6 +19,9 @@ export class GroupComponent {
     groupPermissions$;
     groups$: Observable<ListGroupResponse>;
     userDelayDetection = AppConfig.get('userDelayDetection');
+
+    // Event Key Hanlders
+    permissionStates = [];
 
     constructor(private _group: GroupTagModel, private _msg: MessageService) {
         this.groupPermissions$ = this._group.listAllPermissions();
@@ -64,6 +69,19 @@ export class GroupComponent {
                 this.notify(response.success);
             },
             error    => console.error(`Error while create group - ${error}`)
+        );
+    }
+
+    onPermissionChange(state: OnPermissionChange) {
+      this._group.updatePermission(state)
+        .pipe(first())
+        .subscribe(
+          response =>  {
+            this.notify(response.success);
+          },
+          error => {
+            throw new Error(error)
+          },
         );
     }
 

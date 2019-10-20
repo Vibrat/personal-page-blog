@@ -8,5 +8,6 @@
 <!-- End New Group Button -->
 <dashboard-group-list
   [groups]="(groups$ | async)?.data"
-  (onDelete)="onGroupDelete($event)">
+  (onDelete)="onGroupDelete($event)"
+  (onPermissionChange)="onPermissionChange($event)">
 </dashboard-group-list>

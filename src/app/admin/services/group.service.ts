@@ -100,6 +100,17 @@ export interface ListAllPermissionsResponse {
   };
 }
 
+export interface PermissionUpdate {
+  state: boolean;
+  group: string;
+  permission: string | string [];
+}
+
+export interface PermissionUpdateResponse {
+  success: boolean;
+  message?: string;
+}
+
 @Injectable()
 export class GroupService {
   private _token: string | false;
@@ -187,5 +198,17 @@ export class GroupService {
       "domain"
     )}api=account/group-permission/list-all-permissions&token=${this._token}`;
     return <Observable<ListAllPermissionsResponse>>this._http.get(api);
+  }
+
+  public updatePermission(data: PermissionUpdate) {
+
+    const api = `${AppConfig.get("domain")}api=account/group-permission/permission-update?token=${this._http}`;
+    const formData = new FormData();
+
+    formData.append('state', JSON.stringify(data.state));
+    formData.append('group', data.group);
+    formData.append('permission', JSON.stringify(data.permission));
+
+    return <Observable<PermissionUpdateResponse>>this._http.put(api, formData)
   }
 }

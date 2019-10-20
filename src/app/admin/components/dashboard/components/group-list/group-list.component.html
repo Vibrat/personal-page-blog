@@ -27,8 +27,14 @@
       </td>
       <td>
         <ng-container
-          *ngFor="let permission of jsonParse(group.permission)?.api">
-           {{ permission }}
+          *ngFor="let permission of jsonParse(group.permission)?.api; index as i">
+          <div>
+          <label
+            nz-checkbox
+            [(ngModel)]="permissionState[i]"
+            [nzValue]="permission"
+            (ngModelChange)="changePermission($event, group.name, permission)">{{ permission }}</label>
+          </div>
         </ng-container>
       </td>
       <td>
