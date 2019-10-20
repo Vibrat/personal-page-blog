@@ -3,7 +3,8 @@ import { GroupTagModel, CreateGroup, ListGroupResponse } from "../../models/grou
 import { AppConfig } from "~/app/_init/app-config.service";
 import { GroupData } from "../../components/new-group/new-group.component";
 import { MessageService } from "~/app/shared/services/message.service";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
+import { map, first } from "rxjs/operators";
 
 @Component({
     selector: 'dashboard-group',
@@ -36,9 +37,38 @@ export class GroupComponent {
             }
         };
 
-        this._group.createGroup(groupData).subscribe(
-            response => this._msg[response.success ? 'success' : 'error'](response.success ? 'Done' : 'Failed'),
-            error => console.error(`Error while create group - ${error}`)
+        // subscribe to change, and unsubribe since we will create new everytime
+        this._group.createGroup(groupData)
+        .pipe(first())
+        .subscribe(
+            response => {
+                this.notify(response.success);
+                this.groups$ = this.groups$.pipe(
+                    map(groups => {
+                        groups.data.push();
+                        return groups;
+                    })
+                );
+            },
+            error    => console.error(`Error while create group - ${error}`)
         );
     }
+
+    onGroupDelete(group: GroupData) {
+        let params = {
+            name: group.name
+        }
+
+        this._group.deleteGroup(params).subscribe(
+            response => {
+                this.notify(response.success);
+            },
+            error    => console.error(`Error while create group - ${error}`)
+        );
+    }
+
+    notify(success: boolean) {
+        this._msg[success ? 'success' : 'error'](success ? 'Done' : 'Failed');
+    }
+
 }

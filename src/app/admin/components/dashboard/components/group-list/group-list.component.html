@@ -20,18 +20,15 @@
   <tbody>
     <tr *ngFor="let group of rows.data">
       <td>
-        <ng-container>
-          {{ group.id }}
-        </ng-container>
+        <ng-container>{{ group.id }}</ng-container>
       </td>
       <td>
-        <ng-container>
-          {{ group.name }}
-        </ng-container>
+        <ng-container>{{ group.name }}</ng-container>
       </td>
       <td>
-        <ng-container *ngFor="let per of jsonParse(group.permission).api">
-          {{ per }}
+        <ng-container
+          *ngFor="let permission of jsonParse(group.permission)?.api">
+           {{ permission }}
         </ng-container>
       </td>
       <td>
@@ -41,9 +38,7 @@
               <a
                 nz-popconfirm
                 nzTitle="Sure to delete?"
-                (nzOnConfirm)="deleteGroup(group.id)"
-                >Delete</a
-              >
+                (nzOnConfirm)="deleteGroup(group.id)">Delete</a>
             </div>
             <div class="btn-group">
               button here

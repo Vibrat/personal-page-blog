@@ -7,5 +7,6 @@
 </dashboard-new-group>
 <!-- End New Group Button -->
 <dashboard-group-list
-  [groups]="(groups$ | async)?.data">
+  [groups]="(groups$ | async)?.data"
+  (onDelete)="onGroupDelete($event)">
 </dashboard-group-list>

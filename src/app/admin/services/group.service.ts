@@ -158,7 +158,7 @@ export class GroupService {
   public deleteGroup(data: DeleteGroup) {
     const api = `${AppConfig.get(
       "domain"
-    )}api=account/group-permission/delete&name=${data.name}`;
+    )}api=account/group-permission/delete&name=${data.name}&token=${this._token}`;
     return <Observable<DeleteGroupResponse>>this._http.delete(api);
   }
 
