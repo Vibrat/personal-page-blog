@@ -202,12 +202,12 @@ export class GroupService {
 
   public updatePermission(data: PermissionUpdate) {
 
-    const api = `${AppConfig.get("domain")}api=account/group-permission/permission-update?token=${this._http}`;
+    const api = `${AppConfig.get("domain")}api=account/group-permission/update-permission&token=${this._token}`;
     const formData = new FormData();
 
     formData.append('state', JSON.stringify(data.state));
     formData.append('group', data.group);
-    formData.append('permission', JSON.stringify(data.permission));
+    formData.append('permission', typeof data.permission == 'string' ? data.permission : JSON.stringify(data.permission));
 
     return <Observable<PermissionUpdateResponse>>this._http.put(api, formData)
   }
