@@ -1,18 +1,18 @@
 <!-- Table Content-->
-<nz-table #rows nzBordered [nzData]="groups">
+<nz-table class="group-table" #rows nzBordered [nzData]="groups">
   <!-- Table header-->
   <thead>
     <tr>
-      <th nzWidth="10%">
+      <th nzWidth="10%" i18n="GroupId|Group Id@@GroupId">
         Id
       </th>
-      <th nzWidth="15%" nzCustomFilter>
+      <th nzWidth="15%" nzCustomFilter i18n="GroupName|Group Name@@GroupName">
         Group
       </th>
-      <th nzCustomFilter>
+      <th nzCustomFilter i18n="GroupPermissions|Group Permissions@@GroupPermissions">
         Permissions
       </th>
-      <th>Action</th>
+      <th i18n="GroupAction|Group Action@@GroupAction" class="group-col-action"></th>
     </tr>
   </thead>
   <!-- End Table header-->
@@ -23,31 +23,33 @@
         <ng-container>{{ group.id }}</ng-container>
       </td>
       <td>
-        <ng-container>{{ group.name }}</ng-container>
-      </td>
-      <td>
-        <ng-container
-          *ngFor="let permission of jsonParse(group.permission)?.api; index as i">
-          <div>
-          <label
-            nz-checkbox
-            [(ngModel)]="permissionState[i]"
-            [nzValue]="permission"
-            (ngModelChange)="changePermission($event, group.name, permission)">{{ permission }}</label>
-          </div>
+        <ng-container>
+          <nz-tag>{{ group.name }}</nz-tag>
         </ng-container>
       </td>
-      <td>
+      <td data-permissions>
+        <div
+          class="group-permissions">
+          <div class="permission" *ngFor="let permission of jsonParse(group.permission)?.api; index as i">
+            <label
+              nz-checkbox
+              [(ngModel)]="permissionState[i]"
+              [nzValue]="permission"
+              (ngModelChange)="changePermission($event, group.name, permission)">{{ permission }}</label>
+          </div>
+        </div>
+      </td>
+      <td data-actions>
         <div class="editable-row-operations">
           <ng-container>
             <div class="btn-group">
               <a
                 nz-popconfirm
                 nzTitle="Sure to delete?"
-                (nzOnConfirm)="deleteGroup(group.id)">Delete</a>
-            </div>
-            <div class="btn-group">
-              button here
+                (nzOnConfirm)="deleteGroup(group.id)"
+                class="circle round">
+                <i class="btn-delete" nz-icon nzType="delete" nzTheme="outline"></i>
+              </a>
             </div>
           </ng-container>
         </div>

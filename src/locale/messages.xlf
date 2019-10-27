@@ -2,6 +2,48 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="GroupId" datatype="html">
+        <source>
+        Id
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/components/dashboard/components/group-list/group-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Group Id</note>
+        <note priority="1" from="meaning">GroupId</note>
+      </trans-unit>
+      <trans-unit id="GroupName" datatype="html">
+        <source>
+        Group
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/components/dashboard/components/group-list/group-list.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <note priority="1" from="description">Group Name</note>
+        <note priority="1" from="meaning">GroupName</note>
+      </trans-unit>
+      <trans-unit id="GroupPermissions" datatype="html">
+        <source>
+        Permissions
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/components/dashboard/components/group-list/group-list.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Group Permissions</note>
+        <note priority="1" from="meaning">GroupPermissions</note>
+      </trans-unit>
+      <trans-unit id="GroupAction" datatype="html">
+        <source>Action</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/admin/components/dashboard/components/group-list/group-list.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Group Action</note>
+        <note priority="1" from="meaning">GroupAction</note>
+      </trans-unit>
       <trans-unit id="passwordError" datatype="html">
         <source>
             Your password confirm is not correct!

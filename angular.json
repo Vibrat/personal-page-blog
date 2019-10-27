@@ -45,12 +45,12 @@
           "configurations": {
             "dev": {
               "aot": true,
-              "outputPath": "dist/vn-vi/",
-              "i18nFile": "src/locale/messages.vn-vi.xlf",
-              "baseHref": "/vn-vi/",
+              "outputPath": "dist/en/",
+              "i18nFile": "src/locale/messages.xlf",
+              "baseHref": "/en/",
               "i18nFormat": "xlf",
-              "i18nLocale": "vn-vi",
-              "i18nMissingTranslation": "error"
+              "i18nLocale": "en",
+              "i18nMissingTranslation": "ignore"
             },
             "production": {
               "fileReplacements": [
@@ -68,11 +68,12 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "outputPath": "dist/vn-vi/",
-              "baseHref": "/vn-vi/",
-              "i18nFile": "src/locale/messages.vn-vi.xlf",
+              "outputPath": "dist/en/",
+              "baseHref": "/en/",
+              "i18nFile": "src/locale/messages.xlf",
               "i18nFormat": "xlf",
-              "i18nLocale": "vn-vi"
+              "i18nLocale": "en",
+              "i18nMissingTranslation": "ignore"
             }
           }
         },

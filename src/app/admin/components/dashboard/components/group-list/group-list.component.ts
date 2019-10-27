@@ -15,8 +15,9 @@ export interface OnPermissionChange {
 }
 
 @Component({
-  selector: "dashboard-group-list",
-  templateUrl: "group-list.component.html"
+  selector: 'dashboard-group-list',
+  templateUrl: 'group-list.component.html',
+  styleUrls: ['group-list.component.scss']
 })
 export class GroupListComponent {
 

@@ -37,7 +37,7 @@ export interface OnClostTagState {
   success: boolean;
   data: {
     id: number;
-    groupname: string; 
+    groupname: string;
   } | null;
 }
 
@@ -60,35 +60,35 @@ export class GroupTagComponent {
   tags: TagsMap = {};
   optionsStore = []; // cache for options
 
-  isTag(id: string) {
+  isTag(id: number) {
     return this.tags.hasOwnProperty(id) && this.tags[id];
   }
 
   /**
    * @Output Decorator
    * Delete tags
-   * 
+   *
    * @param number id represent a tag
    */
   onCloseGroupTag(event, id: number, deletedValue: string) {
-    
+
     if (this.data.group.hasOwnProperty(id)) {
 
         // Targeted snapshot
       let tag: OnClostTagState["data"] = {
-        id: this.data.id, 
+        id: this.data.id,
         groupname: this.data.group[id]
       };
-      
+
       delete this.tags[id];
       delete this.data.group[id];
-      
+
       this.onCloseTag.emit({
         success: true,
         data: tag
       });
       return;
-    } 
+    }
 
     // Prevent data to be disappeared
     event.preventDefault();
@@ -127,10 +127,10 @@ export class GroupTagComponent {
   /**
    * @Output when user
    *  - Hit enter
-   *  - or click out side components 
-   * 
-   * @param groupName 
-   * @param id 
+   *  - or click out side components
+   *
+   * @param groupName
+   * @param id
    */
   handleGroupConfirm(groupName, id) {
     // Hide input tags
