@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output } from "@angular/core";
+import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, Renderer2 } from "@angular/core";
 
 export interface GroupInput {
   id: string;
@@ -19,13 +19,20 @@ export interface OnPermissionChange {
   templateUrl: 'group-list.component.html',
   styleUrls: ['group-list.component.scss']
 })
-export class GroupListComponent {
+export class GroupListComponent implements OnChanges {
 
   @Input() groups: GroupInput[];
   @Output() onDelete: EventEmitter<GroupInput> = new EventEmitter();
   @Output() onPermissionChange: EventEmitter<OnPermissionChange> = new EventEmitter();
 
   permissionState: boolean[];
+  permissionShow: boolean[];
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['groups'] && !changes['groups'].firstChange) {
+      this.permissionShow = this.groups.map(_ => false);
+    }
+  }
 
   // Emit GroupInput[]
   deleteGroup(id: string) {
@@ -33,6 +40,14 @@ export class GroupListComponent {
 
     this.groups = this.groups.filter(item => item !== deletedGroup);
     this.onDelete.emit(deletedGroup);
+  }
+
+  showPermission(groupId: number) {
+    const index = groupId - 1;
+    if (!this.permissionShow[index]) {
+      this.permissionShow[index] = false;
+    }
+    this.permissionShow[index] = !this.permissionShow[index];
   }
 
   changePermission(event: boolean, groupName: string, permission: string) {

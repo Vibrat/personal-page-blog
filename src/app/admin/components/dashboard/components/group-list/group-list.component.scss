@@ -1,9 +1,49 @@
+.group-table {
+  .group-col-action {
+    width: 50px;
+  }
+  tbody {
+    tr {
+      font-family: 'PingFang SC';
+      font-size: 12px;
+      td {
+        padding: 0 16px;
+
+        &[data-permissions] {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+
 [data-permissions] {
-  padding: 0;
+  vertical-align: top;
   .group-permissions {
     max-height: 180px;
     overflow-y: scroll;
     position: relative;
+    &::-webkit-scrollbar {
+      width: 0px;  /* Remove scrollbar space */
+      background: transparent;  /* Optional: just make scrollbar invisible */
+    }
+
+    &.active {
+      &::-webkit-scrollbar {
+        width: 4px;  /* Remove scrollbar space */
+        background: #e6f7ff;  /* Optional: just make scrollbar invisible */
+        border-left: 1px solid #e8e8e8;
+      }
+      /* Optional: show position indicator in red */
+      &::-webkit-scrollbar-thumb {
+        background: #e8e8e8;
+      }
+      .row.sticky {
+        border-bottom: 1px solid #e8e8e8;
+        background-color: #e6f7ff;
+      }
+    }
 
     > * {
       margin: 8px 16px;
@@ -27,12 +67,31 @@
         color: rgba(0,0,0, 0.65);
       }
     }
+
+    .row {
+      &.sticky {
+        z-index: 1;
+        margin: 0;
+        padding: 16px;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background-color: transparent;
+
+        &:hover {
+          background-color: #e6f7ff;
+        }
+
+        .toggler {
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 
 [data-actions] {
   vertical-align: top;
-  padding: 16px 6px;
   .editable-row-operations {
     display: flex;
     flex-direction: column;
@@ -41,7 +100,7 @@
     .btn-group {
       margin: 6px;
       &:first-child {
-        margin-top: 0;
+        margin-top: 12px;
       }
 
       &:last-child {
@@ -70,18 +129,6 @@
           background-color: rgba(0,0,0, 0.04);
         }
       }
-    }
-  }
-}
-
-.group-table {
-  .group-col-action {
-    width: 50px;
-  }
-  tbody {
-    tr {
-      font-family: 'PingFang SC';
-      font-size: 12px;
     }
   }
 }

@@ -28,15 +28,19 @@
         </ng-container>
       </td>
       <td data-permissions>
-        <div
-          class="group-permissions">
-          <div class="permission" *ngFor="let permission of jsonParse(group.permission)?.api; index as i">
-            <label
-              nz-checkbox
-              [(ngModel)]="permissionState[i]"
-              [nzValue]="permission"
-              (ngModelChange)="changePermission($event, group.name, permission)">{{ permission }}</label>
+        <div [class.active]="permissionShow[group.id - 1]" class="group-permissions">
+          <div class="row action sticky">
+            <nz-tag (click)="showPermission(group.id)" class="toggler permissions">Permissions</nz-tag>
           </div>
+          <ng-container *ngIf="permissionShow[group.id - 1]">
+            <div class="permission" *ngFor="let permission of jsonParse(group.permission)?.api; index as i">
+              <label
+                nz-checkbox
+                [(ngModel)]="permissionState[i]"
+                [nzValue]="permission"
+                (ngModelChange)="changePermission($event, group.name, permission)">{{ permission }}</label>
+            </div>
+          </ng-container>
         </div>
       </td>
       <td data-actions>
