@@ -89,7 +89,13 @@ export class NewGroupComponent implements OnInit {
   submitForm() {
     this.closeModal();
     this.onSubmit.emit(this.data);
+    this.resetComponentData();
+  }
+
+  resetComponentData() {
     this.formData.reset();
+    this.data.permissions = [];
+    this.currentStep = 0;
     this.isSelectedAll = false;
     this.checked = {};
     this.currentStep = 0;
@@ -101,6 +107,7 @@ export class NewGroupComponent implements OnInit {
 
   closeModal() {
     this.display = false;
+    this.resetComponentData();
   }
 
   selectAll() {
