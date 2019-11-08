@@ -3,9 +3,7 @@ import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, Rende
 export interface GroupInput {
   id: string;
   name: string;
-  permission: {
-    [name: string]: string;
-  };
+  permission: string;
 }
 
 export interface OnPermissionChange {
@@ -22,10 +20,11 @@ export interface OnPermissionChange {
 export class GroupListComponent implements OnChanges {
 
   @Input() groups: GroupInput[];
+  @Input() permissions: string[];
   @Output() onDelete: EventEmitter<GroupInput> = new EventEmitter();
   @Output() onPermissionChange: EventEmitter<OnPermissionChange> = new EventEmitter();
 
-  permissionState: boolean[];
+  permissionState;
   permissionShow: boolean[];
 
   ngOnChanges(changes: SimpleChanges) {
@@ -63,25 +62,31 @@ export class GroupListComponent implements OnChanges {
     this.onPermissionChange.emit(state);
   }
 
-  initPermissionState(index: number) {
+  initPermissionState(groupId: number, index: number, permissions,  allPermissions, init = false) {
     if (!this.permissionState) this.permissionState = [];
-    if (!this.permissionState[index]) this.permissionState[index] = true;
+    if (!this.permissionState[groupId]) this.permissionState[groupId] = [];
+    if (!this.permissionState[groupId][index]) this.permissionState[groupId][index] = init;
+
+    const isPermissionExist = permissions.hasOwnProperty('api') && permissions.api.indexOf(allPermissions[index]) !== -1;
+    if (isPermissionExist) {
+      this.permissionState[groupId][index] = true;
+    }
   }
 
   // Parse json from string
-  jsonParse(data: string) {
+  jsonParse(data: string, groupId: number) {
+
+    let permissions;
     try {
-
-      let permissions = JSON.parse(data);
-
-      // Parse Permissions' API
-      for (let i =0; i < permissions.api.length; i++) {
-        this.initPermissionState(i);
-      }
-
-      return permissions;
+      permissions = JSON.parse(data);
     } catch (e) {
-      return {};
+      permissions = {};
+    } finally {
+      // Parse Permissions' API
+      for (let i = 0; i < this.permissions.length; i++) {
+        this.initPermissionState(groupId, i, permissions, this.permissions);
+      }
+      return this.permissions;
     }
   }
 }
