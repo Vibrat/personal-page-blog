@@ -1,3 +1,9 @@
+:host {
+  width: 100%;
+  display: block;
+  text-align: right;
+}
+
 .btn-blank {
   border: none;
   background: none;
@@ -7,9 +13,14 @@
 }
 
 .btn-group {
-  padding-bottom: 12px;
+  padding-bottom: 24px;
+  display: inline-block;
   .btn-permissions {
     font-size: 85%;
+  }
+
+  .btn-item {
+    margin-left: 8px;
   }
 }
 
@@ -40,7 +51,7 @@
         margin-bottom: 4px;
       }
   }
-  
+
 }
 
 .steps-content {
@@ -54,10 +65,6 @@
 
 .steps-action {
   margin-top: 24px;
-}
-
-button {
-  margin-right: 8px;
 }
 
 nz-checkbox-wrapper {
