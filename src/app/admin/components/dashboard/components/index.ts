@@ -5,7 +5,7 @@ import { GroupTagDirective } from "./group-tag/group-tag.directive";
 import { GroupTagComponent } from "./group-tag/group-tag.component";
 import { GroupListComponent } from "./group-list/group-list.component";
 import { SearchComponent } from "./search/search.component";
-
+import { SideBarComponent } from "./sidebar/sidebar.component";
 
 export const AdminDashboardComponents = [
   AdminDashboardPasswordComponent,
@@ -15,5 +15,6 @@ export const AdminDashboardComponents = [
   GroupTagDirective,
   GroupTagComponent,
   GroupListComponent,
-  SearchComponent
+  SearchComponent,
+  SideBarComponent
 ];

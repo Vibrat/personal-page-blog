@@ -1,7 +1,14 @@
-<nz-layout class="layout">
-    <container-header></container-header>    
-</nz-layout>
-<nz-content>
-    <container-main></container-main>
-    <container-footer></container-footer>
-</nz-content>
+<div class="global-layout">
+    <nz-layout class="sidebar">
+        <router-outlet name="admin-menu"></router-outlet>
+    </nz-layout>
+    <nz-layout class="main-layout">
+        <nz-layout>
+            <container-header></container-header>
+        </nz-layout>
+        <nz-content>
+            <container-main></container-main>
+            <container-footer></container-footer>
+        </nz-content>
+    </nz-layout>
+</div>

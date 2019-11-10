@@ -10,7 +10,7 @@
         <search-comp (onCommit)="onSearchUsername($event)" ></search-comp>
       </th>
       <th nzCustomFilter>
-        Group 
+        Group
         <search-comp (onCommit)="onSearchGroup($event)" ></search-comp>
       </th>
       <th>Action</th>
@@ -29,7 +29,7 @@
         </ng-container>
       </td>
       <td>
-        <dashboard-admin-tag 
+        <dashboard-admin-tag
           [data]="data"
           [options]="options"
           (onConfirm)="onGroupConfirmation($event)"
@@ -48,7 +48,7 @@
               >
             </div>
             <div class="btn-group">
-              <admin-dashboard-password 
+              <admin-dashboard-password
                 [display]="displayAdminPasswordInput[data.id]"
                 [username]="data.username"
                 (credentials)="changePassword($event, data.id)">

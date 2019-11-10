@@ -4,3 +4,21 @@ nz-content {
         margin: 0 16px;
     }
 }
+
+.global-layout {
+    display: flex;
+    justify-content: space-between;
+
+    .main-layout {
+        width: auto;
+        flex: 1 1 auto;
+    }
+    .sidebar {
+        flex: 0 0 auto;
+        max-width: 200px;
+        background-color: #001529;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+}
