@@ -12,8 +12,10 @@ nz-content {
     .main-layout {
         width: auto;
         flex: 1 1 auto;
+        z-index: 0;
     }
     .sidebar {
+        z-index: 1;
         flex: 0 0 auto;
         max-width: 200px;
         background-color: #001529;

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { trigger, state, style } from '@angular/animations';
 
 export interface MenuData {
   enable: boolean;
@@ -26,6 +27,69 @@ export const defaultMenuData: DefaultMenuData = {
       url: '/dashboard/group',
       text: 'Group',
       icon: 'team',
+      data: [
+        {
+          url: '/dashboard/group',
+          text: 'Group 2',
+          icon: 'team'
+        },
+        {
+          url: '/dashboard/group',
+          text: 'Group 2',
+          icon: 'team'
+        }
+      ]
+    },
+    {
+      url: '/dashboard/group',
+      text: 'Group',
+      icon: 'team',
+      data: [
+        {
+          url: '/dashboard/group',
+          text: 'Group 2',
+          icon: 'team'
+        },
+        {
+          url: '/dashboard/group',
+          text: 'Group 2',
+          icon: 'team'
+        }
+      ]
+    },
+    {
+      url: '/dashboard/group',
+      text: 'Group',
+      icon: 'team',
+      data: [
+        {
+          url: '/dashboard/group',
+          text: 'Group 2',
+          icon: 'team'
+        },
+        {
+          url: '/dashboard/group',
+          text: 'Group 2',
+          icon: 'team'
+        }
+      ]
+    },
+    {
+      url: '/dashboard/group',
+      text: 'Group',
+      icon: 'team',
+      data: [
+        {
+          url: '/dashboard/group',
+          text: 'Group 2',
+          icon: 'team'
+        },
+        {
+          url: '/dashboard/group',
+          text: 'Group 2',
+          icon: 'team'
+        }
+      ]
     }
   ],
   options: {
@@ -36,7 +100,18 @@ export const defaultMenuData: DefaultMenuData = {
 @Component({
   selector: 'sidebar',
   templateUrl: `sidebar.component.html`,
-  styleUrls: ['sidebar.component.scss']
+  styleUrls: ['sidebar.component.scss'],
+  animations: [
+    trigger('menuWidth', [
+      state('small', style({
+        width: '80px',
+        'text-align': 'center'
+      })),
+      state('medium', style({
+        width: '200px'
+      }))
+    ])
+  ]
 })
 export class SideBarComponent {
   isCollapsed = true;

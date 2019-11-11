@@ -7,4 +7,36 @@ nz-sider {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  [nz-menu-item] {
+    overflow: hidden;
+
+    .menu-content {
+      display: inline-block;
+    }
+
+    .menu-pag {
+      display: flex;
+      height: 40px;
+      float: right;
+      align-items: center;
+      margin-right: 0;
+    }
+
+    &:hover {
+      overflow: visible;
+    }
+    &:hover .sub-menu {
+      display: initial;
+      background: #001529;
+    }
+
+    .sub-menu {
+      position: absolute;
+      margin-left: 100%;
+      max-width: 200px;
+      top: 0;
+      left: 0;
+      display: none;
+    }
+  }
 }

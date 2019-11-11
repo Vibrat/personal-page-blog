@@ -1,15 +1,28 @@
 <nz-sider *ngIf="menus?.enable" nzCollapsible [(nzCollapsed)]="isCollapsed" nzWidth="200px">
     <div class="logo"></div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <ng-container *ngFor="let menu of menus?.data">
-          <li nz-menu-item>
-            <i nz-icon [nzType]="menu?.icon"></i>
-            <span>{{ menu.text }}</span>
-          </li>
-      </ng-container>
+      <ng-container *ngTemplateOutlet="menuRef; context: { $implicit: menus }"></ng-container>
+      <ng-template #menuRef let-menus>
+        <ng-container *ngFor="let menu of menus.data">
+            <li *ngIf="!menu?.data" nz-menu-item>
+              <i nz-icon [nzType]="menu?.icon"></i>
+              <span>{{ menu.text }}</span>
+            </li>
+            <li *ngIf="menu?.data" nz-menu-item>
+              <ul [@menuWidth]="isCollapsed ? 'small' : 'medium'" class="sub-menu">
+                <ng-container *ngTemplateOutlet="menuRef; context: { $implicit: menu }"></ng-container>
+              </ul>
+              <span class="menu-content">
+                <i nz-icon [nzType]="menu?.icon"></i>
+                <span>{{ menu.text }}</span>
+              </span>
+              <i [hidden]="isCollapsed" nz-icon nzType="double-right" class="menu-pag"></i>
+            </li>
+        </ng-container>
+      </ng-template>
       <li nz-menu-item *ngIf="menus?.options?.enableFileManager">
         <i nz-icon nzType="file"></i>
         <span>File</span>
       </li>
     </ul>
-  </nz-sider>
+</nz-sider>
