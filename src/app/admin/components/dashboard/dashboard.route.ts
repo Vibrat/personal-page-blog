@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { AccountComponent } from "./containers/account/account.component";
 import { GroupComponent } from "./containers/group/group.component";
 import { SideBarComponent } from "./components/sidebar/sidebar.component";
+import { SideBarResolver } from "./models/sidebar.model";
 
 export const dashboardRoutes: Routes = [
     {
@@ -10,6 +11,9 @@ export const dashboardRoutes: Routes = [
     },
     {
         path: 'account',
+        resolve: {
+            sidebar: SideBarResolver
+        },
         children: [
             {
                 path: '',
@@ -24,6 +28,9 @@ export const dashboardRoutes: Routes = [
     },
     {
         path: 'group',
+        resolve: {
+            sidebar: SideBarResolver
+        },
         children: [
             {
                 path: '',

@@ -10,6 +10,7 @@ import { AccountComponent } from "./containers/account/account.component";
 import { GroupComponent } from "./containers/group/group.component";
 import { AccountModel } from "./models/account.model";
 import { GroupTagModel } from "./models/group-tag.model";
+import { SideBarResolver } from "./models/sidebar.model";
 
 @NgModule({
   imports: [
@@ -22,6 +23,6 @@ import { GroupTagModel } from "./models/group-tag.model";
   ],
   declarations: [AccountComponent, GroupComponent, AdminDashboardComponents],
   exports: [AccountComponent, GroupComponent],
-  providers: [AccountModel, GroupTagModel]
+  providers: [AccountModel, GroupTagModel, SideBarResolver]
 })
 export class DashboardModule {}

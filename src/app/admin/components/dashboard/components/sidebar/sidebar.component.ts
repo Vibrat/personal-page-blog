@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { trigger, state, style } from '@angular/animations';
+import { ActivatedRoute } from '@angular/router';
 
 export interface MenuData {
   enable: boolean;
@@ -40,57 +41,6 @@ export const defaultMenuData: DefaultMenuData = {
         }
       ]
     },
-    {
-      url: '/dashboard/group',
-      text: 'Group',
-      icon: 'team',
-      data: [
-        {
-          url: '/dashboard/group',
-          text: 'Group 2',
-          icon: 'team'
-        },
-        {
-          url: '/dashboard/group',
-          text: 'Group 2',
-          icon: 'team'
-        }
-      ]
-    },
-    {
-      url: '/dashboard/group',
-      text: 'Group',
-      icon: 'team',
-      data: [
-        {
-          url: '/dashboard/group',
-          text: 'Group 2',
-          icon: 'team'
-        },
-        {
-          url: '/dashboard/group',
-          text: 'Group 2',
-          icon: 'team'
-        }
-      ]
-    },
-    {
-      url: '/dashboard/group',
-      text: 'Group',
-      icon: 'team',
-      data: [
-        {
-          url: '/dashboard/group',
-          text: 'Group 2',
-          icon: 'team'
-        },
-        {
-          url: '/dashboard/group',
-          text: 'Group 2',
-          icon: 'team'
-        }
-      ]
-    }
   ],
   options: {
     enableFileManager: true
@@ -116,4 +66,8 @@ export const defaultMenuData: DefaultMenuData = {
 export class SideBarComponent {
   isCollapsed = true;
   @Input() menus: MenuData = defaultMenuData;
+
+  constructor(private route: ActivatedRoute) {
+    this.menus.data = this.route.snapshot.data.sidebar.menu;
+  }
 }
