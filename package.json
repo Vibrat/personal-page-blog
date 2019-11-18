@@ -9,7 +9,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "start:dev": "ng serve --configuration=dev --open",
     "xi18n": "ng xi18n --output-path locale",
     "build": "ng build",
@@ -34,6 +34,7 @@
     "@angular/router": "~8.2.6",
     "@open-e/oe-coordinator": "^1.0.18",
     "core-js": "^2.6.9",
+    "express": "^4.17.1",
     "marked": "^0.7.0",
     "nativescript-angular": "^8.2.2",
     "nativescript-theme-core": "~2.0.20",
