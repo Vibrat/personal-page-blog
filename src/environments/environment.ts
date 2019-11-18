@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  domain:  "http://localhost:81/index.php?",
+  domain:  "https://backend-api-vibrat.herokuapp.com/index.php?",
   userDelayDetection: 500,
 };
 

@@ -1,7 +1,5 @@
 // server.js
 const express = require('express');
-const http = require('http');
-const https = require('https');
 const app = express();
 const port = process.env.PORT || 8088;
 
@@ -14,6 +12,6 @@ app.get('*', function (req, response) {
 
 // Start the app by listening on the default
 // Heroku port
-const httpsServer = https.createServer(app);
-
-httpsServer.listen(port);
+app.listen( port , () => {
+  console.log('on getting request ', port);
+});
