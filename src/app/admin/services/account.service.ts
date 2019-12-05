@@ -101,11 +101,11 @@ export class AccountService {
 
   /**
    * Change password by admin
-   * 
-   * @param ChangePassword data 
+   *
+   * @param ChangePassword data
    */
   public changePassword(data: ChangePassword): Observable<ChangPasswordReponse> {
-    
+
     const api = `${AppConfig.get('domain')}api=account/basic-auth/change-password-by-admin&token=${this._auth.getToken()}`;
     const payload = new FormData();
     payload.append('username', data.username);
