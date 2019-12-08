@@ -1,30 +1,18 @@
 import { Injectable } from "@angular/core";
 import { Resolve } from "@angular/router";
+import { Observable } from "rxjs";
+import {
+  NavigationService,
+  GetNavigationByTokenResponse
+} from "../../../services/navigation.service";
 
 @Injectable()
 export class SideBarResolver implements Resolve<any> {
-  constructor() {}
+  constructor(private nav: NavigationService) {}
+
   resolve() {
-    return {
-      menu: [
-        {
-          url: "/admin/dashboard/account",
-          text: "Group",
-          icon: "team",
-          data: [
-            {
-              url: "/admin/dashboard/group",
-              text: "Group 2",
-              icon: "team"
-            },
-            {
-              url: "/admin/dashboard/group",
-              text: "Group 2",
-              icon: "team"
-            }
-          ]
-        }
-      ]
-    };
+    return <Observable<GetNavigationByTokenResponse>>(
+      this.nav.getNavigationByToken()
+    );
   }
 }

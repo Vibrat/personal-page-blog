@@ -9,6 +9,7 @@ export interface GetNavigationByTokenResponse {
   success: boolean;
   code: number;
   data: Navigation[];
+  raw: Navigation[];
 }
 
 export interface Navigation {

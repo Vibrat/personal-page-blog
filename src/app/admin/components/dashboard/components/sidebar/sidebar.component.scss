@@ -22,6 +22,10 @@ nz-sider {
       margin-right: 0;
     }
 
+    .menu-title { 
+      text-transform: capitalize;
+    }
+
     &:hover {
       overflow: visible;
     }

@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component } from "@angular/core";
 import { trigger, state, style } from "@angular/animations";
 import { ActivatedRoute, Router } from "@angular/router";
 
@@ -9,10 +9,10 @@ export interface MenuData {
 }
 
 export interface MenuItem {
-  url: string;
-  text: string;
+  link: string;
+  menu: string;
   icon?: string;
-  data?: MenuItem[];
+  children?: MenuItem[];
 }
 
 export interface MenuOptions {
@@ -23,25 +23,7 @@ export type DefaultMenuData = MenuData | undefined;
 
 export const defaultMenuData: DefaultMenuData = {
   enable: true,
-  data: [
-    {
-      url: "/dashboard/group",
-      text: "Group",
-      icon: "team",
-      data: [
-        {
-          url: "/dashboard/group",
-          text: "Group 2",
-          icon: "team"
-        },
-        {
-          url: "/dashboard/group",
-          text: "Group 2",
-          icon: "team"
-        }
-      ]
-    }
-  ],
+  data: [],
   options: {
     enableFileManager: true
   }
@@ -71,10 +53,14 @@ export const defaultMenuData: DefaultMenuData = {
 })
 export class SideBarComponent {
   isCollapsed = true;
-  @Input() menus: MenuData = defaultMenuData;
+  menus: MenuData = defaultMenuData;
 
   constructor(private route: ActivatedRoute, private router: Router) {
-    this.menus.data = this.route.snapshot.data.sidebar.menu;
+    const sidebar = this.route.snapshot.data.sidebar;
+    this.menus = {
+      ...defaultMenuData,
+      data: sidebar.data
+    };
   }
 
   navigate(url) {
