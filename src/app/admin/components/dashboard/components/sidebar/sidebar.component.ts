@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 export interface MenuData {
   enable: boolean;
-  data: MenuItem[];
+  children: MenuItem[];
   options: MenuOptions;
 }
 
@@ -23,10 +23,7 @@ export type DefaultMenuData = MenuData | undefined;
 
 export const defaultMenuData: DefaultMenuData = {
   enable: true,
-  data: [],
-  options: {
-    enableFileManager: true
-  }
+  children: [],
 };
 
 @Component({
@@ -59,7 +56,7 @@ export class SideBarComponent {
     const sidebar = this.route.snapshot.data.sidebar;
     this.menus = {
       ...defaultMenuData,
-      data: sidebar.data
+      children: sidebar.data
     };
   }
 
