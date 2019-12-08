@@ -9,6 +9,8 @@ nz-sider {
   height: 100%;
   [nz-menu-item] {
     overflow: hidden;
+    margin-top: 0;
+    margin-bottom: 0;
 
     .menu-content {
       display: inline-block;

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 export interface MenuData {
   enable: boolean;
   children: MenuItem[];
-  options: MenuOptions;
+  options?: MenuOptions;
 }
 
 export interface MenuItem {
