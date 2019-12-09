@@ -15,8 +15,9 @@ export interface GetNavigationByTokenResponse {
 export interface Navigation {
   id: string | number;
   menu: string;
+  icon: string;
   link: string;
-  children: string | string[];
+  children: Navigation[] | "" | [];
 }
 
 @Injectable()
