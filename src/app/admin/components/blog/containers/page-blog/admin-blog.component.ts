@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 import { HttpClient } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd';
 
-import { ViewportService } from "../../../shared/services/viewport.service";
+import { ViewportService } from "~/app/shared/services/viewport.service";
 
 const count = 5;
 const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';

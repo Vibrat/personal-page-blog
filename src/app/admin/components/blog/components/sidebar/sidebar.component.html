@@ -1,0 +1,24 @@
+<nz-sider *ngIf="menus?.enable" nzCollapsible [(nzCollapsed)]="isCollapsed" nzWidth="200px">
+    <div class="logo"></div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <ng-container *ngTemplateOutlet="menuRef; context: { $implicit: menus }"></ng-container>
+      <ng-template #menuRef let-menus>
+        <ng-container *ngFor="let menu of menus.children">
+            <li *ngIf="!menu?.children || menu.children == ''" nz-menu-item (click)="navigate(menu.link)">
+              <i nz-icon [nzType]="menu?.icon"></i>
+              <span class="menu-title">{{ menu.menu }}</span>
+            </li>
+            <li *ngIf="menu?.children != ''" nz-menu-item (click)="navigate(menu.link)">
+              <ul [@menuWidth]="isCollapsed ? 'small' : 'medium'" class="sub-menu">
+                <ng-container *ngTemplateOutlet="menuRef; context: { $implicit: menu }"></ng-container>
+              </ul>
+              <span class="menu-content">
+                <i nz-icon [nzType]="menu?.icon"></i>
+                <span class="menu-title">{{ menu.menu }}</span>
+              </span>
+              <i [hidden]="isCollapsed" nz-icon nzType="double-right" class="menu-pag"></i>
+            </li>
+        </ng-container>
+      </ng-template>
+    </ul>
+</nz-sider>

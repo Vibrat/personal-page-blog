@@ -2,7 +2,6 @@ import { Routes } from "@angular/router";
 
 import { PageLoginComponent } from "./containers/page-login/page-login.component";
 import { PageRegisterComponent } from "./containers/page-register/page-register.component";
-import { PageBlogComponent } from "./containers/page-blog/page-blog.component";
 import { PageNewBlogComponent } from "./containers/page-new-blog/page-new-blog.component";
 
 import { AdminActivateService } from "./admin-activate.service";
@@ -33,7 +32,7 @@ export const routes: Routes = [
             },
             {
                 path: 'blog',
-                component: PageBlogComponent
+                loadChildren: './components/blog/blog.module#AdminBlogModule'
             },
             {
                 path: 'new-blog',
