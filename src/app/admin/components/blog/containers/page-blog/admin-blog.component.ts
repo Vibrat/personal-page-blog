@@ -52,32 +52,6 @@ export class AdminBlogComponent implements OnInit {
     }
   };
 
-  listOfSelection = [
-    {
-      text: "Select All Row",
-      onSelect: () => {
-        this.checkAll(true);
-      }
-    },
-    {
-      text: "Select Odd Row",
-      onSelect: () => {
-        this.listOfDisplayData.forEach(
-          (data, index) => (this.mapOfCheckedId[data.id] = index % 2 !== 0)
-        );
-        this.refreshStatus();
-      }
-    },
-    {
-      text: "Select Even Row",
-      onSelect: () => {
-        this.listOfDisplayData.forEach(
-          (data, index) => (this.mapOfCheckedId[data.id] = index % 2 === 0)
-        );
-        this.refreshStatus();
-      }
-    }
-  ];
   isAllDisplayDataChecked = false;
   isIndeterminate = false;
   listOfDisplayData: ItemData[] = [];
