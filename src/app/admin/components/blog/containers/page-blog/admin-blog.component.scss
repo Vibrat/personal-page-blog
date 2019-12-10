@@ -1,20 +1,6 @@
-.demo-loadmore-list {
-  min-height: 350px;
-}
-.loadmore {
-  text-align: center;
-  margin-top: 12px;
-  height: 32px;
-  line-height: 32px;
-}
-
-.custom-width {
-  width: 32px;
-}
-
 .action-bar {
   [nz-col] {
-    padding: 8px 0;
+    padding: 15px 0;
 
     .action-btn {
       padding: 0 8px;
@@ -46,4 +32,8 @@ nz-skeleton {
     font-size: 20px;
     margin-bottom: 0;
   }
+}
+
+.select-action {
+  width: 60px;
 }

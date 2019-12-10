@@ -16,35 +16,48 @@
   </div>
 </div>
 
-<nz-list
-  class="demo-loadmore-list"
-  [nzDataSource]="list"
-  [nzItemLayout]="'horizontal'"
-  [nzLoading]="initLoading"
-  [nzRenderItem]="item"
-  [nzLoadMore]="loadMore">
-  <ng-template #item let-item>
-    <nz-list-item
-      [nzContent]="item.loading ? '' : ''"
-      [nzActions]="item.loading ? [] : [editAction, moreAction]">
-      <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzLoading]="item.loading">
-        <ng-template #editAction><a (click)="edit(item)">Edit</a></ng-template>
-        <ng-template #moreAction><a (click)="edit(item)">Delete</a></ng-template>
-        <nz-list-item-meta
-          [nzTitle]="nzTitle"
-          nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-          nzDescription="Ant Design, a design language for background applications, is refined by Ant UED Team"
-        >
-          <ng-template #nzTitle>
-            <a href="https://ng.ant.design">{{ item.name.last }}</a>
-          </ng-template>
-        </nz-list-item-meta>
-      </nz-skeleton>
-    </nz-list-item>
-  </ng-template>
-  <ng-template #loadMore>
-    <div class="loadmore">
-      <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()">loading more</button>
-    </div>
-  </ng-template>
-</nz-list>
+<nz-table
+  #rowSelectionTable
+  nzShowSizeChanger
+  [nzData]="listOfAllData"
+  (nzCurrentPageDataChange)="currentPageDataChange($event)"
+>
+  <thead>
+    <tr>
+      <th
+        class="select-action"
+        nzShowCheckbox
+        nzShowRowSelection
+        [nzSelections]="listOfSelection"
+        [(nzChecked)]="isAllDisplayDataChecked"
+        [nzIndeterminate]="isIndeterminate"
+        (nzCheckedChange)="checkAll($event)"
+      ></th>
+      <th>Title</th>
+      <th>Category</th>
+      <th>Author</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of rowSelectionTable.data">
+      <td
+        nzShowCheckbox
+        [(nzChecked)]="mapOfCheckedId[data.id]"
+        (nzCheckedChange)="refreshStatus()"
+      ></td>
+      <td>{{ data.name }}</td>
+      <td>Trend</td>
+      <td>Lam Nguyen</td>
+      <td>{{ data.address }}</td>
+      <td><nz-tag [nzColor]="'green'">active</nz-tag></td>
+      <td>
+          Edit
+          <nz-divider nzType="vertical"></nz-divider>
+          Delete
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
