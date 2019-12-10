@@ -1,8 +1,8 @@
 import { Routes } from "@angular/router";
 import { AdminBlogComponent } from "./containers/page-blog/admin-blog.component";
-import { NewBlogActionComponent } from "./containers/new-blog/new-blog.action.component";
 import { SideBarComponent } from "./components/sidebar/sidebar.component";
 import { SideBarResolver } from "./models/sidebar.model";
+import { PageNewComponent } from "./containers/page-new/page-new.component";
 
 export const AdminBlogRoutes: Routes = [
   {
@@ -30,7 +30,7 @@ export const AdminBlogRoutes: Routes = [
     children: [
       {
         path: "",
-        component: NewBlogActionComponent
+        component: PageNewComponent
       },
       {
         path: "",
