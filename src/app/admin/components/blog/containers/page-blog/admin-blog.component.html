@@ -1,9 +1,18 @@
+<div class="header-container" nz-row>
+  <div nz-col [nzXs]="style.title.xs" [nzLg]="style.title.lg">
+    <h2 class="title">Blog</h2>
+  </div>
+  <div nz-col [nzXs]="style.search.xs" [nzLg]="style.search.lg">
+    <search-action></search-action>
+  </div>
+</div>
+
 <div class="action-bar" nz-row>
   <div nz-col [nzXs]="style.action.xs" [nzLg]="style.action.lg">
-   <new-blog-action></new-blog-action>
-  </div>
-  <div nz-col [nzXs]="style.search.xs" [nzLg]="style.search.lg" style="margin-bottom: 16px;">
-    <search-action></search-action>
+    <new-blog-action class="action-btn"></new-blog-action>
+    <delete-all-button class="action-btn"></delete-all-button>
+    <deactivate-button class="action-btn"></deactivate-button>
+    <activate-button class="action-btn"></activate-button>
   </div>
 </div>
 

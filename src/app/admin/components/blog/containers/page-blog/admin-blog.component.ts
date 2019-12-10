@@ -22,13 +22,23 @@ export class AdminBlogComponent implements OnInit {
   data: any[] = [];
   list: Array<{ loading: boolean; name: any }> = [];
   style = {
-    action: {
+    title: {
       xs: {
         span: 16,
         offset: 0
       },
       lg: {
         span: 8,
+        offset: 0
+      }
+    },
+    action: {
+      xs: {
+        span: 24,
+        offset: 0
+      },
+      lg: {
+        span: 24,
         offset: 0
       }
     },
