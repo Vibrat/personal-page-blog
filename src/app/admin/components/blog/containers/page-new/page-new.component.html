@@ -3,6 +3,9 @@
     <ng-container *ngIf="tab == 'General'">
       <ng-container *ngTemplateOutlet="general"></ng-container>
     </ng-container>
+    <ng-container *ngIf="tab == 'Description'">
+      <ng-container *ngTemplateOutlet="content"></ng-container>
+    </ng-container>
   </nz-tab>
 </nz-tabset>
 
@@ -80,4 +83,8 @@
       Preview SEO
     </div>
   </div>
+</ng-template>
+
+<ng-template #content>
+  <md-editor></md-editor>
 </ng-template>

@@ -43,6 +43,7 @@
     "reflect-metadata": "~0.1.12",
     "rxjs": "^6.5.3",
     "rxjs-compat": "^6.5.3",
+    "simplemde": "^1.11.2",
     "tns-core-modules": "~6.1.1",
     "zone.js": "^0.10.2"
   },

@@ -4,6 +4,7 @@ import { NewBlogActionComponent } from "./new-blog/new-blog.action.component";
 import { DeleteAllButton } from "./delete-all/delete-all.component";
 import { DeactivateButton } from "./deactivate/deactivate.component";
 import { ActivateButton } from "./activate/activate.component";
+import { EditorComponent } from "./editor/editor.component";
 
 export const AdminBlogComponents = [
   SearchActionComponent,
@@ -11,5 +12,6 @@ export const AdminBlogComponents = [
   NewBlogActionComponent,
   DeleteAllButton,
   DeactivateButton,
-  ActivateButton
+  ActivateButton,
+  EditorComponent
 ];
