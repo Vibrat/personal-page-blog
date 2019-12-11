@@ -1,5 +1,19 @@
 [nz-form] {
   max-width: 600px;
+  nz-form-label {
+    text-align: left;
+  }
+}
+
+.main-action {
+  margin: 0 2px;
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .phone-select {
