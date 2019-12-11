@@ -5,6 +5,7 @@ import { DeleteAllButton } from "./delete-all/delete-all.component";
 import { DeactivateButton } from "./deactivate/deactivate.component";
 import { ActivateButton } from "./activate/activate.component";
 import { EditorComponent } from "./editor/editor.component";
+import { PreviewSeoComponent } from "./preview-seo/preview-seo.component";
 
 export const AdminBlogComponents = [
   SearchActionComponent,
@@ -13,5 +14,6 @@ export const AdminBlogComponents = [
   DeleteAllButton,
   DeactivateButton,
   ActivateButton,
-  EditorComponent
+  EditorComponent,
+  PreviewSeoComponent
 ];

@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { SeoData } from "../../components/preview-seo/preview-seo.component";
 
 @Component({
   selector: `page-new`,
@@ -9,6 +10,12 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 export class PageNewComponent implements OnInit {
   validateForm: FormGroup;
   tabs = ["General", "Description"];
+  preview: SeoData = {
+    title: "Welcome to our page",
+    url: "https://tuidoc.com/welcome",
+    des:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta? Refert tamen, quo modo."
+  };
 
   constructor(private fb: FormBuilder) {}
 
